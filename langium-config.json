@@ -1,0 +1,15 @@
+{
+    "projectName": "Statetree",
+    "languages": [{
+        "id": "statetree",
+        "grammar": "src/language/statetree.langium",
+        "fileExtensions": [".statetree"],
+        "textMate": {
+            "out": "syntaxes/statetree.tmLanguage.json"
+        },
+        "monarch": {
+            "out": "syntaxes/statetree.monarch.ts"
+        }
+    }],
+    "out": "src/language/generated"
+}
