@@ -1,18 +1,29 @@
-grammar Statetree
+grammar Statemachine
 
-entry Model:
-    (persons+=Person | greetings+=Greeting)*;
+entry Statemachine:
+    'statemachine' name=ID
+    ('events' events+=Event+)?
+    ('commands'    commands+=Command+)?
+    'initialState' init=[State]
+    states+=State*;
 
-Person:
-    'person' name=ID;
+Event:
+    name=ID;
 
-Greeting:
-    'Hello' person=[Person:ID] '!';
+Command:
+    name=ID;
+
+State:
+    'state' name=ID
+        ('actions' '{' actions+=[Command]+ '}')?
+        transitions+=Transition*
+    'end';
+
+Transition:
+    event=[Event] '=>' state=[State];
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
-terminal INT returns number: /[0-9]+/;
-terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
 
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
