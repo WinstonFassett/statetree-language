@@ -1,4 +1,4 @@
-grammar Statemachine
+grammar Statetree
 
 entry Statemachine:
     'statemachine' name=ID
