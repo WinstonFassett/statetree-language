@@ -2,25 +2,24 @@ grammar Statetree
 
 entry Statemachine:
     'statemachine' name=ID
-    ('events' events+=Event+)?
-    ('commands'    commands+=Command+)?
     'initialState' init=[State]
     states+=State*;
 
 Event:
     name=ID;
 
-Command:
-    name=ID;
-
 State:
-    'state' name=ID
-        ('actions' '{' actions+=[Command]+ '}')?
+    'state' name=QualifiedName
+        ('initialState' init=[State])?
         transitions+=Transition*
+        states+=State*
     'end';
 
 Transition:
-    event=[Event] '=>' state=[State];
+    event=ID '=>' state=[State:QualifiedName];
+
+QualifiedName returns string:
+    ID ('.' ID)*;
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;

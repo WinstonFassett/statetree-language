@@ -1,26 +1,28 @@
 statemachine TrafficLight
 
-events 
-    switchCapacity
-    next
+initialState Unpowered
 
-initialState PowerOff
+state Powered
+  powerFailed => Unpowered
 
-state PowerOff
-    switchCapacity => RedLight
+  state Green
+    tick => Powered.Yellow
+  end
+
+  state Yellow
+    tick => Powered.Red
+  end
+  state Red
+    tick => Powered.Green
+  end
 end
+state Unpowered
+  powerRestored => Powered
 
-state RedLight
-    switchCapacity => PowerOff
-    next => GreenLight
-end
-
-state YellowLight
-    switchCapacity => PowerOff
-    next => RedLight
-end
-
-state GreenLight
-    switchCapacity => PowerOff
-    next => YellowLight
+  state Red_On
+    tick => Unpowered.Red_Off
+  end
+  state Red_Off
+    tick => Unpowered.Red_On
+  end
 end
