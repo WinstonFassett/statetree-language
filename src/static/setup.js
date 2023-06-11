@@ -13,34 +13,18 @@ editorConfig.setMainLanguageId('statetree');
 editorConfig.setMonarchTokensProvider(monarchSyntax);
 
 editorConfig.setMainCode(`
-statemachine TrafficLight
-
-initialState Unpowered
-
-state Powered
-  powerFailed => Unpowered
-
-  state Green
-    tick => Powered.Yellow
-  end
-
-  state Yellow
-    tick => Powered.Red
-  end
-  state Red
-    tick => Powered.Green
-  end
-end
-state Unpowered
-  powerRestored => Powered
-
-  state Red_On
-    tick => Unpowered.Red_Off
-  end
-  state Red_Off
-    tick => Unpowered.Red_On
-  end
-end
+PoweredOn {
+    Red then
+    Green { 
+      fail => Broken.RedOn
+      skip => PoweredOn.Red
+    } then
+    Yellow then Red
+  } 
+  fail Broken {
+    green => PoweredOn.Green
+    RedOn flash RedOff flash RedOn
+  } fix On
 `);
 
 editorConfig.theme = 'vs-dark';
