@@ -1,29 +1,39 @@
 grammar Statetree
 
 entry Statemachine:
-    'statemachine' name=ID
-    'initialState' init=[State]
+    ('initialState' init=[State:QualifiedName])?
     states+=State*;
 
-Event:
-    name=ID;
-
 State:
-    'state' name=QualifiedName
-        ('initialState' init=[State])?
-        transitions+=Transition*
-        states+=State*
-    'end';
-
+    name=UCID 
+    ('{'
+    transitions+=Transition*
+    ('initialState' init=[State:QualifiedName])?
+    states+=State*
+    '}')?
+    (inlineTransition=NextStateTransition)?
+;
+NextStateTransition: (
+   (event=LCID ('=>')?)?|'=>'
+);
 Transition:
-    event=ID '=>' state=[State:QualifiedName];
+    event=LCID
+    '=>' 
+    to=[State:QualifiedName]
+;
 
 QualifiedName returns string:
-    ID ('.' ID)*;
+    AnyId ('.' AnyId)*;
+
+AnyId returns string: UCID | LCID;
+
+IdOrString returns string: AnyId|STRING;
 
 hidden terminal WS: /\s+/;
-terminal ID_OR_STRING: ID | STRING;
-terminal ID: /[_a-zA-Z][\w_]*/;
+terminal UCID: /[A-Z][\w_]*/;
+terminal LCID: /[_a-z][\w_]*/;
+// terminal ID: /[_a-zA-Z][\w_]*/;
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
+hidden terminal HASH_COMMENT: /\#[^\n\r]*/;
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
