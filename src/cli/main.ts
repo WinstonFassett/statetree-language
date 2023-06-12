@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
-import { Model } from '../language/generated/ast';
+import { Statemachine } from '../language/generated/ast';
 import { StatetreeLanguageMetaData } from '../language/generated/module';
 import { createStatetreeServices } from '../language/statetree-module';
 import { extractAstNode } from './cli-util';
@@ -9,7 +9,7 @@ import { NodeFileSystem } from 'langium/node';
 
 export const generateAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createStatetreeServices(NodeFileSystem).Statetree;
-    const model = await extractAstNode<Model>(fileName, services);
+    const model = await extractAstNode<Statemachine>(fileName, services);
     const generatedFilePath = generateJavaScript(model, fileName, opts.destination);
     console.log(chalk.green(`JavaScript code generated successfully: ${generatedFilePath}`));
 };
