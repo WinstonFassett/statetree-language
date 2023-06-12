@@ -3,8 +3,7 @@
     "description": "Please enter a brief description here",
     "version": "0.0.1",
     "files": [
-        "out",
-        "src"
+        "bin"
     ],
     "scripts": {
         "build": "tsc -b tsconfig.json",
@@ -25,6 +24,8 @@
     "dependencies": {
         "langium": "~1.2.0",
         "vscode-languageclient": "~8.0.2",
+        "chalk": "~4.1.2",
+        "commander": "~10.0.0",
         "express": "~4.18.2",
         "monaco-editor-workers": "~0.34.2",
         "monaco-editor-wrapper": "~1.6.0"
@@ -43,7 +44,8 @@
     },
     "displayName": "statetree-language",
     "engines": {
-        "vscode": "^1.67.0"
+        "vscode": "^1.67.0",
+        "node": ">=14.0.0"
     },
     "categories": [
         "Programming Languages"
@@ -71,5 +73,8 @@
     "activationEvents": [
         "onLanguage:statetree"
     ],
-    "main": "./out/extension/main.js"
+    "main": "./out/extension/main.js",
+    "bin": {
+        "statetree-cli": "./bin/cli"
+    }
 }
