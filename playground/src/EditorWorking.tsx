@@ -1,6 +1,3 @@
-import styles from './Editor.module.css';
-import monarchSyntax from "../../syntaxes/statetree.monarch";
-import example from '../../example/trafficlight.statetree?raw'
 import React from 'react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
