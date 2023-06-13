@@ -1,5 +1,6 @@
 import {
-    createDefaultModule, createDefaultSharedModule, DefaultSharedModuleContext, inject,
+    AbstractExecuteCommandHandler,
+    createDefaultModule, createDefaultSharedModule, DefaultSharedModuleContext, ExecuteCommandAcceptor, inject,
     LangiumServices, LangiumSharedServices, Module, PartialLangiumServices
 } from 'langium';
 import { StatetreeGeneratedModule, StatetreeGeneratedSharedModule } from './generated/module';
@@ -8,7 +9,7 @@ import { QualifiedNameProvider } from './statetree-naming';
 import { StatetreeFormatter } from './statetree-formatter';
 import { StatetreeRenameProvider } from './statetree-rename-refactoring';
 import { StatetreeScopeComputation } from './statetree-scope';
-
+import { parseAndGenerate } from './generator';
 
 
 
@@ -77,7 +78,18 @@ export function createStatetreeServices(context: DefaultSharedModuleContext): {
         StatetreeGeneratedModule,
         StatetreeModule
     );
+    shared.lsp.ExecuteCommandHandler = new StatetreeCommandHandler();
     shared.ServiceRegistry.register(Statetree);
     registerValidationChecks(Statetree);
     return { shared, Statetree };
+}
+
+class StatetreeCommandHandler extends AbstractExecuteCommandHandler {
+    registerCommands(acceptor: ExecuteCommandAcceptor): void {
+        // accept a single command called 'parseAndGenerate'
+        acceptor('parseAndGenerate', args => {
+            // invoke generator on this data, and return the response
+            return parseAndGenerate(args[0]);
+        });
+    }
 }

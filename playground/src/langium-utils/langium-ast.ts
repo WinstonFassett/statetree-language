@@ -1,3 +1,5 @@
+import {  LangiumServices } from "langium";
+import { URI } from "vscode-uri";
 
 /**
  * Provides utilities for deserializing Langium ASTs
@@ -148,4 +150,20 @@ export interface AstNode {
 export interface Reference<T extends AstNode = AstNode> {
     ref?: T;
     $ref: string
+}
+
+
+/**
+ * Extracts an AST node from a virtual document, represented as a string
+ * @param content Content to create virtual document from
+ * @param services For constructing & building a virtual document
+ * @returns A promise for the parsed result of the document
+ */
+ export async function extractAstNodeFromString<T extends AstNode>(content: string, services: LangiumServices): Promise<T> {
+    // create a document from a string instead of a file
+    const doc = services.shared.workspace.LangiumDocumentFactory.fromString(content, URI.parse('memory://minilogo.document'));
+    // proceed with build & validation
+    await services.shared.workspace.DocumentBuilder.build([doc], { validationChecks: 'all' });
+    // get the parse result (root of our AST)
+    return doc.parseResult?.value as T;
 }

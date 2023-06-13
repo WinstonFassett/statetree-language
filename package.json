@@ -14,10 +14,10 @@
         "vscode:prepublish": "npm run build && npm run lint",
         "build:worker": "esbuild --minify ./out/language/main-browser.js --bundle --format=iife --outfile=./playground/src/generated/statetree-server-worker.js",
         "old:prepare:public": "shx mkdir -p ./public && shx cp -fr ./src/static/* ./public/",
-        "copy:monaco-editor-wrapper": "shx cp -fr ./node_modules/monaco-editor-wrapper/bundle ./playground/public/monaco-editor-wrapper",
-        "copy:monaco-workers": "shx cp -fr ./node_modules/monaco-editor-workers/dist/ ./playground/public/monaco-editor-workers",
+        "copy:monaco-editor-wrapper": "shx cp -fr ./node_modules/monaco-editor-wrapper/bundle ./playground/src/generated/monaco-editor-wrapper",
+        "copy:monaco-workers": "shx cp -fr ./node_modules/monaco-editor-workers/dist/ ./playground/src/generated/monaco-editor-workers",
         "copy:monarch-syntax": "shx cp -fr ./out/syntaxes/ ./playground/src/generated/syntaxes",
-        "old:build:web": "npm run build && npm run build:monarch && npm run build:worker && npm run copy:monaco-editor-wrapper && npm run copy:monaco-workers && npm run copy:monarch-syntax",
+        "build:deps": "npm run build && npm run build:monarch && npm run build:worker && npm run copy:monaco-editor-wrapper && npm run copy:monaco-workers && npm run copy:monarch-syntax",
         "build:monarch": "tsc -b tsconfig.monarch.json",
         "old:serve": "node ./out/web/app.js"
     },
@@ -26,13 +26,10 @@
         "commander": "~10.0.0",
         "@types/react": "^18.2.11",
         "express": "~4.18.2",
-        "langium": "~1.2.0",
-        "monaco-editor-workers": "~0.34.2",
-        "monaco-editor-wrapper": "~1.6.0",
+        "langium": "~1.2.0",    
         "vscode-languageclient": "~8.0.2"
     },
     "devDependencies": {
-        "@typefox/monaco-editor-react": "1.0.0-next.6",
         "@types/express": "^4.17.17",
         "@types/node": "~16.18.11",
         "@types/vscode": "~1.67.0",
