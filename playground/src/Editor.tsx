@@ -4,16 +4,12 @@ import example from '../../example/trafficlight.statetree?raw'
 import React from 'react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
-// import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
-// import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
 import statetreeWorkerUrl from './generated/statetree-server-worker.js?url'
 import languageConfigurationRaw from '../../language-configuration.json?raw'
-import responseStatetreeTmRaw from '../../out/syntaxes/statetree.monarch.js?raw'
+import responseStatetreeTmRaw from './generated/syntaxes/statetree.monarch.js?raw'
 import './userWorker'
-
-
-// import { buildWorkerDefinition } from 'monaco-editor-workers';
-// buildWorkerDefinition('../node_modules/monaco-editor-workers/dist/workers', import.meta.url, false);
+import { useDebouncedCallback } from 'use-debounce'
+import { generateStatements } from '../../src/codegen';
 
 const extensionFilesOrContents = new Map<string, string | URL>();
 console.log({
@@ -104,8 +100,13 @@ const userConfig: UserConfig = {
 };
 
 export function Editor () {
+  const handleTextChanged = useDebouncedCallback((text: string) => {
+    console.log('text changed', text)
+    // generateStatements(text)
+  }, 500)
   return <MonacoEditorReactComp
       userConfig={userConfig}
+      onTextChanged={(text, isDirty) => { handleTextChanged(text) }}
       style={{
           'paddingTop': '5px',
           'height': '80vh'

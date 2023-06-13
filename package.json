@@ -13,11 +13,8 @@
         "langium:watch": "langium generate --watch",
         "vscode:prepublish": "npm run build && npm run lint",
         "build:worker": "esbuild --minify ./src/language/main-browser.js --bundle --format=iife --outfile=./out/statetree-server-worker.js",
-        "old:prepare:public": "shx mkdir -p ./public && shx cp -fr ./src/static/* ./public/",
-        "copy:monaco-editor-wrapper": "shx cp -fr ./node_modules/monaco-editor-wrapper/bundle ./playground/src/generated/monaco-editor-wrapper",
-        "copy:monaco-workers": "shx cp -fr ./node_modules/monaco-editor-workers/dist/ ./playground/src/generated/monaco-editor-workers",
-        "copy:monarch-syntax": "shx cp -fr ./out/syntaxes/ ./playground/src/generated/syntaxes",
-        "build:deps": "npm run build && npm run build:monarch && npm run build:worker && npm run copy:monarch-syntax",
+        "old:prepare:public": "shx mkdir -p ./public && shx cp -fr ./src/static/* ./public/",        
+        "build:deps": "npm run build && npm run build:worker && npm run build:monarch",
         "build:monarch": "tsc -b tsconfig.monarch.json",
         "old:serve": "node ./out/web/app.js"
     },
