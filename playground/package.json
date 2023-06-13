@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "prebuild": "npm run copy:worker && npm run copy:monarch-syntax",
+    "copy:worker": "shx cp -fr ../out/statetree-server-worker.js ./libs/statetree-server-worker.js",
+    "copy:monarch-syntax": "shx cp -fr ../out/syntaxes/ ./dist/syntaxes",
     "start": "npx serve dist",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
