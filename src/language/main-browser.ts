@@ -1,8 +1,7 @@
 import { DocumentState, EmptyFileSystem, startLanguageServer } from 'langium';
-import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser';
+import type { Diagnostic } from 'vscode-languageserver/browser';
+import { BrowserMessageReader, BrowserMessageWriter, NotificationType, createConnection } from 'vscode-languageserver/browser';
 import { createStatetreeServices } from './statetree-module';
-import { Diagnostic, NotificationType } from 'vscode-languageclient';
-
 declare const self: DedicatedWorkerGlobalScope;
 
 const messageReader = new BrowserMessageReader(self);
