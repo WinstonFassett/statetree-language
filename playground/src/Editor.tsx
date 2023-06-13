@@ -9,10 +9,11 @@ import { UserConfig } from 'monaco-editor-wrapper';
 import statetreeWorkerUrl from './generated/statetree-server-worker.js?url'
 import languageConfigurationRaw from '../../language-configuration.json?raw'
 import responseStatetreeTmRaw from '../../out/syntaxes/statetree.monarch.js?raw'
+import './userWorker'
 
 
-import { buildWorkerDefinition } from 'monaco-editor-workers';
-buildWorkerDefinition('../node_modules/monaco-editor-workers/dist/workers', import.meta.url, false);
+// import { buildWorkerDefinition } from 'monaco-editor-workers';
+// buildWorkerDefinition('../node_modules/monaco-editor-workers/dist/workers', import.meta.url, false);
 
 const extensionFilesOrContents = new Map<string, string | URL>();
 console.log({
