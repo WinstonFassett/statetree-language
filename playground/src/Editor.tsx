@@ -83,8 +83,13 @@ const userConfig: UserConfig = {
     editorConfig: {
         languageId: 'statetree',
         useDiffEditor: false,
+        automaticLayout: true,
         theme: 'vs-dark',
-        code: example
+        code: example,
+        editorOptions: {
+            theme: 'vs-dark',
+            minimap: { enabled: false }
+        }
     },
     languageClientConfig: {
         enabled: true,
