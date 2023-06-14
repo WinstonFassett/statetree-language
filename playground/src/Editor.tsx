@@ -4,9 +4,9 @@ import example from '../../example/trafficlight.statetree?raw'
 import React, { useRef } from 'react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
-import statetreeWorkerUrl from './generated/statetree-server-worker.js?url'
+import statetreeWorkerUrl from '../libs/statetree-server-worker.js?url'
 import languageConfigurationRaw from '../../language-configuration.json?raw'
-import responseStatetreeTmRaw from './generated/syntaxes/statetree.monarch.js?raw'
+import responseStatetreeTmRaw from '../../out/syntaxes/statetree.monarch.js?raw'
 import './userWorker'
 import { useDebouncedCallback } from 'use-debounce'
 import { generateStatements } from '../../src/codegen';

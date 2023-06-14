@@ -161,7 +161,7 @@ export interface Reference<T extends AstNode = AstNode> {
  */
  export async function extractAstNodeFromString<T extends AstNode>(content: string, services: LangiumServices): Promise<T> {
     // create a document from a string instead of a file
-    const doc = services.shared.workspace.LangiumDocumentFactory.fromString(content, URI.parse('memory://minilogo.document'));
+    const doc = services.shared.workspace.LangiumDocumentFactory.fromString(content, URI.parse('memory://statetree.document'));
     // proceed with build & validation
     await services.shared.workspace.DocumentBuilder.build([doc], { validationChecks: 'all' });
     // get the parse result (root of our AST)
