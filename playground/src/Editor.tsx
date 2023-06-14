@@ -144,7 +144,7 @@ export function Editor ({ onModelCreated }: { onModelCreated: (model:Statemachin
       onTextChanged={(text, isDirty) => { handleTextChanged(text) }}
       style={{
           'paddingTop': '5px',
-          'height': '80vh'
+          'height': '100%'
       }}
   />;
 }
