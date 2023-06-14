@@ -12,7 +12,7 @@
         "langium:generate": "langium generate",
         "langium:watch": "langium generate --watch",
         "vscode:prepublish": "npm run build && npm run lint",
-        "build:worker": "esbuild --minify ./src/language/main-browser.js --bundle --format=iife --outfile=./out/statetree-server-worker.js",
+        "build:worker": "esbuild --minify ./src/language/statetree-worker-main.js --bundle --format=iife --outfile=./out/language/statetree-server-worker.js",
         "old:prepare:public": "shx mkdir -p ./public && shx cp -fr ./src/static/* ./public/",
         "build:deps": "npm run langium:generate && npm run build && npm run build:worker && npm run build:monarch",
         "build:monarch": "tsc -b tsconfig.monarch.json",
