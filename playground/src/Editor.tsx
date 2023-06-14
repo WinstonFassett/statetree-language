@@ -1,7 +1,7 @@
 import styles from './Editor.module.css';
 import monarchSyntaxRaw from "../../syntaxes/statetree.tmLanguage.json?raw";
 import example from '../../example/trafficlight.statetree?raw'
-import React from 'react';
+import React, { useRef } from 'react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
 import statetreeWorkerUrl from './generated/statetree-server-worker.js?url'
@@ -10,6 +10,8 @@ import responseStatetreeTmRaw from './generated/syntaxes/statetree.monarch.js?ra
 import './userWorker'
 import { useDebouncedCallback } from 'use-debounce'
 import { generateStatements } from '../../src/codegen';
+import { DocumentChangeResponse, LangiumAST } from '../../src/langium-utils/langium-ast';
+import { Statemachine } from '../../src/language/generated/ast';
 
 const extensionFilesOrContents = new Map<string, string | URL>();
 console.log({
@@ -100,12 +102,44 @@ const userConfig: UserConfig = {
 };
 
 export function Editor () {
+  const monacoEditor = useRef<MonacoEditorReactComp>(null)
   const handleTextChanged = useDebouncedCallback((text: string) => {
     console.log('text changed', text)
     // generateStatements(text)
   }, 500)
   return <MonacoEditorReactComp
+      ref={monacoEditor}
       userConfig={userConfig}
+      onLoad={() => {
+        console.log('loaded', monacoEditor.current)
+        if (!monacoEditor.current) {
+            throw new Error("Unable to get a reference to the Monaco Editor");
+        }
+        // verify we can get a ref to the language client
+        const lc = monacoEditor.current.getEditorWrapper()
+            ?.getLanguageClient();
+        if (!lc) {
+            throw new Error("Could not get handle to Language Client on mount");
+        }
+
+        // register to receive DocumentChange notifications
+        lc.onNotification("browser/DocumentChange", (resp: DocumentChangeResponse) =>{
+            console.log('change!', resp)
+            // decode the received Ast
+            const statemachineAst = new LangiumAST().deserializeAST(resp.content) as Statemachine;
+            // this.preview.current?.startPreview(statemachineAst, resp.diagnostics);
+            console.log({ statemachineAst })
+        });
+
+        /**
+         * Callback invoked when the document processed by the LS changes
+         * Invoked on startup as well
+         * @param resp Response data
+         */
+        function onDocumentChange(resp: DocumentChangeResponse) {
+
+        }
+      }}
       onTextChanged={(text, isDirty) => { handleTextChanged(text) }}
       style={{
           'paddingTop': '5px',

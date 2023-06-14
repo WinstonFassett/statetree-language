@@ -2,7 +2,7 @@ import { EmptyFileSystem } from "langium";
 // import { createHelloWorldServices } from '../language-server/hello-world-module';
 import { Statemachine } from "./generated/ast";
 // import { generateCommands } from '../generator/generator';
-import { extractAstNodeFromString } from "../../playground/src/langium-utils/langium-ast";
+import { extractAstNodeFromString } from "../langium-utils/langium-ast";
 import { createStatetreeServices } from "./statetree-module"
 import { generateStatements } from '../codegen'
 /**

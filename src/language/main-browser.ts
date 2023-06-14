@@ -10,7 +10,7 @@ const messageWriter = new BrowserMessageWriter(self);
 const connection = createConnection(messageReader, messageWriter);
 
 const { shared, Statetree } = createStatetreeServices({ connection, ...EmptyFileSystem });
-
+console.log('starting language server!!')
 startLanguageServer(shared);
 
 // Send a notification with the serialized AST after every document change
