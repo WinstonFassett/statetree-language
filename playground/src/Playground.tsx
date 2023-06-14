@@ -8,7 +8,7 @@ import { Visualization } from "./Visualization";
 export function Playground() {
   const [model, setModel] = useState<Statemachine>()
   return <div>
-    <h2>Statetree Playground</h2>    
+    <h2 className="text-3xl">Statetree Playground</h2>    
     {/* <Editor
         height="50vh"
         defaultLanguage="json"
