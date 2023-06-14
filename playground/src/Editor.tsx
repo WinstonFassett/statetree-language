@@ -101,7 +101,7 @@ const userConfig: UserConfig = {
     }
 };
 
-export function Editor () {
+export function Editor ({ onModelCreated }: { onModelCreated: (model:Statemachine) => void }) {
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
   const handleTextChanged = useDebouncedCallback((text: string) => {
     console.log('text changed', text)
@@ -111,7 +111,7 @@ export function Editor () {
       ref={monacoEditor}
       userConfig={userConfig}
       onLoad={() => {
-        console.log('loaded', monacoEditor.current)
+        // console.log('loaded', monacoEditor.current)
         if (!monacoEditor.current) {
             throw new Error("Unable to get a reference to the Monaco Editor");
         }
@@ -124,11 +124,12 @@ export function Editor () {
 
         // register to receive DocumentChange notifications
         lc.onNotification("browser/DocumentChange", (resp: DocumentChangeResponse) =>{
-            console.log('change!', resp)
+            // console.log('change!', resp)
             // decode the received Ast
             const statemachineAst = new LangiumAST().deserializeAST(resp.content) as Statemachine;
             // this.preview.current?.startPreview(statemachineAst, resp.diagnostics);
-            console.log({ statemachineAst })
+            // console.log({ statemachineAst })
+            onModelCreated(statemachineAst)
         });
 
         /**

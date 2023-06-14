@@ -1,12 +1,10 @@
 PoweredOn {
-  Red then
-  Green { 
-    fail => Broken.RedOn
-    skip => PoweredOn.Red
-  } then
-  Yellow then Red
+  break => Broken
+  Red { tick => PoweredOn.Green }
+  Green { tick => PoweredOn.Yellow }
+  Yellow { tick => PoweredOn.Red }
 } 
-fail Broken {
-  green => PoweredOn.Green
-  RedOn flash RedOff flash RedOn
-} fix On
+Broken {
+  rescue => PoweredOn
+  RedOn flash RedOff flash 
+}
