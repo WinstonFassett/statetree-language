@@ -8,17 +8,17 @@ import { Visualization } from "./Visualization";
 export function Playground() {
   const [model, setModel] = useState<Statemachine>()
   return <div>
-    <h2>Playground</h2>
+    <h2>Statetree Playground</h2>    
     {/* <Editor
         height="50vh"
         defaultLanguage="json"
         defaultValue={JSON.stringify({ abcd: 1234 }, null, 2)}
       /> */}
       <div style={{ display: 'flex', alignItems: 'stretch', justifyContent: 'stretch' }}>
-        <div style={{ flex: 1, wasbackground: 'green', paddingTop: 10 }}>
+        <div style={{ flex: 1, paddingTop: 10 }}>
           <Editor onModelCreated={(model) => { setModel(model) }} />
         </div>
-        <div style={{ flex: 1, wasbackground: 'black', color: 'white' }}>
+        <div style={{ flex: 1 }}>
           {!!model && <Visualization model={model} />}
         </div>
       </div>
