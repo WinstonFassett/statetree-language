@@ -7,9 +7,9 @@ export function Visualization({ model }: { model: Statemachine }) {
 
 function StateList({states, path=[]}:{states: State[], path?: State[]}) {
   return <ul className="pl-4">
-    {states.map(state => {
+    {states.map((state, index) => {
       const { name, states: substates, transitions } = state
-      return <li key={name}>
+      return <li key={index}>
         <p className="text-xl">{name}</p>
         {!!transitions && <TransitionList transitions={transitions} />}
         {!!substates && <StateList states={substates} />}
@@ -20,10 +20,10 @@ function StateList({states, path=[]}:{states: State[], path?: State[]}) {
 
 function TransitionList({ transitions }: { transitions: Transition[] }) {
   return <div>
-    {transitions.map(transition => {
+    {transitions.map((transition, index) => {
       const { event, to } = transition
-      return <div key={event}>
-        <p><a href="#">{event}</a> {'->'} {to.ref?.name}</p>
+      return <div key={event||index}>
+        <p><a href="#">{event}</a> {'->'} {to?.ref?.name}</p>
       </div>
     })}
   </div>
