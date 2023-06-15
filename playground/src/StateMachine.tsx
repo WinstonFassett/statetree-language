@@ -1,41 +1,36 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { State, Statemachine, Transition } from "../../src/language/generated/ast";
 import { Button } from "./components/ui/button";
 
-export function StateMachine({ model }: { model: Statemachine }) {
-  console.log('states', model.states)
-  const{ states } = model
-  const [state, send] = useStateMachine(model)
-  const getState = (name: string) => state
-  return <div>
-    <p>State: {state.name}</p>
-    <StateList states={states} state={state} send={send} />
-  </div>
+function getParentState (state: State) {
+  const { $container } = state
+  if ($container && $container.$type === 'State') {
+    return $container
+  }
+  return undefined
 }
 
-// type View = {
-//   model: Statemachine
-//   state: State
-//   stateName: string
-// }
-// function useView (model: Statemachine) {
-//   const { states } = model
-//   const stateIndex = useMemo(() => {
-//     const index = {} as Record<string, State>
-//     indexStates(states)
-//     function indexStates (states: State[]) {
-//       states.forEach(state => {
-//         index[state.name] = state
-//         const { states: childStates } = state
-//         if (childStates) { indexStates(childStates) }
-//       })
-//     }
-//   }, [states])
-//   const [state, send] = useStateMachine(model)
-//   const getState = (name: string) => state
-//   return { model, state, send, getState }
-// }
+export function StateMachine({ model }: { model: Statemachine }) {
+  const{ states } = model
+  const [curState, send] = useStateMachine(model)
 
+  const activeStates = useMemo(() => {
+    const items: State[] = []
+    let state: State | undefined = curState
+    while (state) {
+      items.push(state)
+      state = getParentState(state)
+    }
+    return items.reverse()
+  }, [states, curState])
+  console.log({ activeStates })
+  const getState = (name: string) => curState
+  return <div>
+    <p>State: {curState?.name}</p>
+    <p>Active States: {activeStates.map(state => state.name).join(', ')}</p>
+    <StateList states={states} state={curState} send={send} />
+  </div>
+}
 
 type Send = (event: string) => void
 
@@ -43,9 +38,12 @@ function StateList({state: currentState, states, send, path=[]}:{state: State, s
   return <ul className="pl-4 mt-2">
     {states.map((state, index) => {
       const { name, states: substates, transitions } = state
-      const active = state === currentState || name === currentState.name
+      const active = currentState && (state === currentState || name === currentState.name)
       return <li key={index} className={`border ${active ? 'border-green-500' : 'border-slate-700'} rounded p-4 mb-4`}>
-        <p className="">{name} {active ?'active': 'nope'}</p>
+        <p className="">
+          {name}
+          {/* {active ?'active': 'nope'} */}
+        </p>
         {!!transitions && <TransitionList transitions={transitions} send={send} />}
         {!!substates && <StateList states={substates} state={currentState} send={send} />}
       </li>;
@@ -67,16 +65,49 @@ function TransitionList({ transitions, send }: { transitions: Transition[], send
   </div>
 }
 
+function recurseStates<T>(states: State[], fn: (state: State) => T) {
+  for (let state of states) {
+    const found = fn(state)
+    if (found) return found;
+    if (state.states) { 
+      return recurseStates(state.states, fn)
+    }
+  }
+}
+
+function findState <T>(model: Statemachine, fn: (state: State) => T) {
+  return recurseStates<T>(model.states, fn)
+}
+
+function findStateByName (model: Statemachine, name: string) {
+  return findState(model, state => {
+    if (state.name === name) { return state }
+  })
+}
+
 function useStateMachine (model: Statemachine) {
-  const [state, setState] = useState(model.init?.ref ?? model.states[0])
-  function getTargetState (newState: State): State | undefined {
-    const initialState = newState.states?.[0]
-    const nestedInitialState = initialState && getTargetState(initialState)
-    return nestedInitialState ?? initialState
+  const [state, setState] = useState<State|undefined>(getTargetState(model.init?.ref ?? model.states[0]))
+    
+  useEffect(() => {
+    console.log('model changed')
+    // find current state by name
+    const previousState = state && findStateByName(model, state.name)
+    // const nextState = previousState // || model.init?.ref
+    const validState = previousState || model.init?.ref
+    if (validState) {
+      setState(getTargetState(validState))
+    }
+    // index the model?
+  }, [model])
+  
+  function getTargetState (newState: State): State {
+    const firstState = newState.states?.[0]
+    const nestedInitialState = firstState && getTargetState(firstState)
+    return nestedInitialState ?? firstState ?? newState
   }
   function updateState(state: State) {
     // handle default and initial states    
-    const newState = getTargetState(state) ?? state
+    const newState = (state && getTargetState(state)) ?? state
     setState(newState)
   }
   function send (event: string) {
@@ -89,13 +120,15 @@ function useStateMachine (model: Statemachine) {
 }
 
 function findTransition(state:State, event: string) {
-  while (state) {
-    const transition = state.transitions?.find(t => t.event === event)
+  let curState: State | undefined = state
+  while (curState) {
+    console.log('find', event, curState)
+    const transition = curState.transitions?.find(t => t.event === event)
     if (transition) return transition;
-    const { $container } = state
+    const $container: Statemachine | State = curState.$container
     if ($container && $container.$type === 'State') {
-      state = $container
-    }
+      curState = $container
+    } else { curState = undefined }  
   }
 }
 

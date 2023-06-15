@@ -1,10 +1,11 @@
 PoweredOn {
-  break => Broken
+  switch => Broken
   Red { tick => PoweredOn.Green }
   Green { tick => PoweredOn.Yellow }
   Yellow { tick => PoweredOn.Red }
 } 
 Broken {
-  rescue => PoweredOn
-  RedOn flash RedOff flash 
+  switch => PoweredOn
+  RedOn {flash => Broken.RedOff} 
+  RedOff {flash => Broken.RedOn} 
 }
