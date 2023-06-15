@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { State, Statemachine, Transition } from "../../src/language/generated/ast";
 import { Button } from "./components/ui/button";
+import useUndo from 'use-undo';
 
 function getParentState (state: State) {
   const { $container } = state
@@ -12,7 +13,7 @@ function getParentState (state: State) {
 
 export function StateMachine({ model }: { model: Statemachine }) {
   const{ states } = model
-  const [curState, send] = useStateMachine(model)
+  const [curState, { send, undo, redo, canUndo, canRedo, reset }] = useStateMachine(model)
 
   const activeStates = useMemo(() => {
     const items: State[] = []
@@ -28,6 +29,11 @@ export function StateMachine({ model }: { model: Statemachine }) {
   return <div>
     <p>State: {curState?.name}</p>
     <p>Active States: {activeStates.map(state => state.name).join(', ')}</p>
+    <div>
+      <Button onClick={reset}>Restart</Button>
+      {!!canUndo && <Button onClick={undo}>Undo</Button>}
+      {!!canRedo && <Button onClick={redo}>Redo</Button>}
+    </div>
     <StateList states={states} state={curState} send={send} />
   </div>
 }
@@ -86,12 +92,24 @@ function findStateByName (model: Statemachine, name: string) {
 }
 
 function useStateMachine (model: Statemachine) {
-  const [state, setState] = useState<State|undefined>(getTargetState(model.init?.ref ?? model.states[0]))
+  const [
+    stateHistory,
+    {
+      set: setState,
+      reset: resetState,
+      undo,
+      redo,
+      canUndo,
+      canRedo,
+    },
+  ] = useUndo<State|undefined>(getTargetState(model.init?.ref ?? model.states[0]))
+  const { present: state } = stateHistory;
+  // const [state, setState] = useState<State|undefined>(getTargetState(model.init?.ref ?? model.states[0]))
     
   useEffect(() => {
     console.log('model changed')
     // find current state by name
-    const previousState = state && findStateByName(model, state.name)
+    const previousState = state!== undefined && findStateByName(model, state.name)
     // const nextState = previousState // || model.init?.ref
     const validState = previousState || model.init?.ref
     if (validState) {
@@ -105,18 +123,29 @@ function useStateMachine (model: Statemachine) {
     const nestedInitialState = firstState && getTargetState(firstState)
     return nestedInitialState ?? firstState ?? newState
   }
-  function updateState(state: State) {
+  function updateState(state: State | undefined) {
     // handle default and initial states    
     const newState = (state && getTargetState(state)) ?? state
     setState(newState)
   }
   function send (event: string) {
     console.log('send', state, event)
-    const transition = findTransition(state, event)
+    const transition = state && findTransition(state, event)
     const newState = transition?.to?.ref
     newState && updateState(newState)
   }
-  return [state, send] as [State, typeof send]
+  function reset () {
+    const initialState = model.init?.ref ?? model.states[0]
+    resetState(initialState && getTargetState(initialState))
+  }
+  return [state, { send, undo, redo, canUndo, canRedo, reset }] as [State, { 
+    send: typeof send
+    undo: typeof undo
+    redo: typeof redo
+    canUndo: boolean
+    canRedo: boolean 
+    reset: typeof reset
+  }]
 }
 
 function findTransition(state:State, event: string) {
