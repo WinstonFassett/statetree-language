@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense } from "react";
 import { State, Statemachine } from "../../src/language/generated/ast";
-import { Visualization } from "./Visualization";
+import { Visualization } from "./AstVisualization";
 
 const Editor = lazy(
   () => import('./Editor').then(module => ({ default: module.Editor }))
@@ -12,7 +12,7 @@ export function Playground() {
       <div className="flex min-h-screen flex-col">
         <header className="sticky top-0 z-40 w-full border-b">
           <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-            <h1 className="text-3xl">Statetree Playground</h1>
+            <h1 className="text-3xl pl-2">Statetree Playground</h1>
 
             {/* <MainNav items={docsConfig.mainNav}>
               <DocsSidebarNav items={docsConfig.sidebarNav} />

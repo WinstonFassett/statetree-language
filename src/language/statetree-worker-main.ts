@@ -19,7 +19,6 @@ const documentChangeNotification = new NotificationType<DocumentChange>('browser
 
 const jsonSerializer = Statetree.serializer.JsonSerializer;
 shared.workspace.DocumentBuilder.onBuildPhase(DocumentState.Validated, documents => {
-    console.log('build phase!')
     for (const document of documents) {
         const json = jsonSerializer.serialize(document.parseResult.value);
         connection.sendNotification(documentChangeNotification, {

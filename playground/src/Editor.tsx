@@ -14,17 +14,11 @@ import { DocumentChangeResponse, LangiumAST } from '../../src/langium-utils/lang
 import { Statemachine } from '../../src/language/generated/ast';
 
 const extensionFilesOrContents = new Map<string, string | URL>();
-console.log({
-    languageConfigurationRaw,
-    responseStatetreeTmRaw
-})
 extensionFilesOrContents.set('/statetree-configuration.json', languageConfigurationRaw);
 extensionFilesOrContents.set('/statetree-grammar.json', monarchSyntaxRaw);
 
 // Language Server preparation
 const workerUrl = new URL(statetreeWorkerUrl, window.location.href);
-console.log(`Langium worker URL: ${workerUrl}`);
-
 
 const userConfig: UserConfig = {
     htmlElement: document.getElementById('monaco-editor-root') as HTMLElement,
@@ -103,15 +97,10 @@ const userConfig: UserConfig = {
 
 export function Editor ({ onModelCreated }: { onModelCreated: (model:Statemachine) => void }) {
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
-  const handleTextChanged = useDebouncedCallback((text: string) => {
-    console.log('text changed', text)
-    // generateStatements(text)
-  }, 500)
   return <MonacoEditorReactComp
       ref={monacoEditor}
       userConfig={userConfig}
       onLoad={() => {
-        // console.log('loaded', monacoEditor.current)
         if (!monacoEditor.current) {
             throw new Error("Unable to get a reference to the Monaco Editor");
         }
@@ -141,7 +130,7 @@ export function Editor ({ onModelCreated }: { onModelCreated: (model:Statemachin
 
         }
       }}
-      onTextChanged={(text, isDirty) => { handleTextChanged(text) }}
+    //   onTextChanged={(text, isDirty) => { handleTextChanged(text) }}
       style={{
           'paddingTop': '5px',
           'height': '100%'

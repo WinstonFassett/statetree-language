@@ -1,0 +1,22 @@
+Shopping {
+  startCheckout => CheckingOut
+}
+CheckingOut {
+  CompletingRequirements {
+    Buyer
+      CheckingOutAsGuest {
+        AwaitingEmail
+        CheckingEmail
+        AwaitingOtp
+        SubmittingOtp
+        OtpValid
+      }
+      CheckingOutAsSaved
+    ContactInfo
+    Billing
+    Payment
+  }
+}
+CheckedOut {
+  continue => Shopping
+}
