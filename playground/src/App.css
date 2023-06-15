@@ -23,5 +23,5 @@ body {
 }
 
 a {
-  /* color: var(--vscode-textLink-foreground); */
+  color: var(--vscode-textLink-foreground);
 }

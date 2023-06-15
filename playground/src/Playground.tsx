@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense } from "react";
 import { State, Statemachine } from "../../src/language/generated/ast";
-import { Visualization } from "./AstVisualization";
+import { StateMachine } from "./StateMachine";
 
 const Editor = lazy(
   () => import('./Editor').then(module => ({ default: module.Editor }))
@@ -50,7 +50,7 @@ export function Playground() {
             </Suspense>
           </div>
           <div className="flex-1 pt-2">
-            {!!model && <Visualization model={model} />}
+            {!!model && <StateMachine model={model} />}
           </div>
         </div>         
       </div>    
