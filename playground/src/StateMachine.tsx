@@ -69,13 +69,34 @@ function TransitionList({ transitions, send }: { transitions: Transition[], send
 
 function useStateMachine (model: Statemachine) {
   const [state, setState] = useState(model.init?.ref ?? model.states[0])
+  function getTargetState (newState: State): State | undefined {
+    const initialState = newState.states?.[0]
+    const nestedInitialState = initialState && getTargetState(initialState)
+    return nestedInitialState ?? initialState
+  }
+  function updateState(state: State) {
+    // handle default and initial states    
+    const newState = getTargetState(state) ?? state
+    setState(newState)
+  }
   function send (event: string) {
     console.log('send', state, event)
-    const transition = state.transitions?.find(t => t.event === event)
+    const transition = findTransition(state, event)
     const newState = transition?.to?.ref
-    newState && setState(newState)
+    newState && updateState(newState)
   }
   return [state, send] as [State, typeof send]
+}
+
+function findTransition(state:State, event: string) {
+  while (state) {
+    const transition = state.transitions?.find(t => t.event === event)
+    if (transition) return transition;
+    const { $container } = state
+    if ($container && $container.$type === 'State') {
+      state = $container
+    }
+  }
 }
 
 function resolveState (name: string, model: Statemachine) {
