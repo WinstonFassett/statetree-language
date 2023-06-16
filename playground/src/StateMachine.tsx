@@ -140,7 +140,7 @@ function useStateMachine (model: Statemachine) {
   }, [model])
   
   function getTargetState (newState: State): State {
-    const firstState = newState.states?.[0]
+    const firstState = newState?.states?.[0]
     const nestedInitialState = firstState && getTargetState(firstState)
     return nestedInitialState ?? firstState ?? newState
   }
