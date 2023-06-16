@@ -56,18 +56,18 @@ function MonacoEditor() {
 
 export default function MonacoSandpack() {
   return (
-    <SandpackProvider template="react" theme="dark" files={{
-      'machine.statetree': example,
-      '/Wrapper.js': `export default ({ children }) => (<h2>
-  Hello {children}!
-</h2>)`,
-      '/App.js': 
+    <SandpackProvider template="react-ts" theme="dark" files={{
+      '/App.tsx': 
 `import Wrapper from './Wrapper'
 export default function App() {
   return <div className="bg-green-500 rounded m-2 p-4 text-3xl">
     <Wrapper>World</Wrapper>
   </div>
-}`
+}`,
+'/Wrapper.tsx': `export default ({ children }) => (<h2>
+  Hello {children}!
+  </h2>)`,
+'machine.statetree': example,
     }} options={{
       externalResources: ["https://cdn.tailwindcss.com"]
     }}>
@@ -88,7 +88,7 @@ function getLanguageOfFile(filePath: string) {
     case "jsx":
     case "ts":
     case "tsx":
-      return "javascript";
+      return "typescript";
     case "vue":
     case "html":
       return "html";

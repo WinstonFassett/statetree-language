@@ -13,6 +13,9 @@ import { generateStatements } from '../../src/codegen';
 import { DocumentChangeResponse, LangiumAST } from '../../src/langium-utils/langium-ast';
 import { Statemachine } from '../../src/language/generated/ast';
 
+import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
+import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
+
 const extensionFilesOrContents = new Map<string, string | URL>();
 extensionFilesOrContents.set('/statetree-configuration.json', languageConfigurationRaw);
 extensionFilesOrContents.set('/statetree-grammar.json', monarchSyntaxRaw);
@@ -95,6 +98,25 @@ const baseConfig: UserConfig = {
     }
 };
 
+const altConfig: UserConfig = {
+    htmlElement: undefined as any,
+    wrapperConfig: {
+        useVscodeConfig: false
+    },
+    editorConfig: {
+        languageId: 'typescript',
+        useDiffEditor: false,
+        automaticLayout: true,
+        theme: 'vs-dark',
+        code: `function sayHello(): string {
+    return "Hello";
+};`
+    },
+    languageClientConfig: {
+        enabled: false
+    }
+};
+
 type Props = { 
     language: string
     file: string
@@ -106,7 +128,8 @@ type Props = {
 
 export function Editor ({ language, file, code, onChange, onModelCreated }: Props) {
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
-  const userConfig = useMemo(() => ({...baseConfig, editorConfig: { ...baseConfig.editorConfig, code, languageId: language }}), [code, language])
+  const userConfig = useMemo(() => ({...altConfig, editorConfig: { ...baseConfig.editorConfig, code, languageId: language }}), [code, language])
+  console.log('userConfig', userConfig)
   console.log(language, file)
   return <MonacoEditorReactComp
       ref={monacoEditor}
