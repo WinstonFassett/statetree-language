@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { State, Statemachine, Transition } from "../../src/language/generated/ast";
 import { Button } from "./components/ui/button";
 import useUndo from 'use-undo';
+import { generateStatements, generateXState } from "../../src/codegen";
 
 function getParentState (state: State) {
   const { $container } = state
@@ -30,13 +31,33 @@ export function StateMachine({ model }: { model: Statemachine }) {
     <p>State: {curState?.name}</p>
     <p>Active States: {activeStates.map(state => state.name).join(', ')}</p>
     <div>
+      <Button onClick={exportJS}>Export JS</Button>
+      <Button onClick={exportXState}>Export XState</Button>
+    </div>
+    <div>
       <Button onClick={reset}>Restart</Button>
       {!!canUndo && <Button onClick={undo}>Undo</Button>}
       {!!canRedo && <Button onClick={redo}>Redo</Button>}
     </div>
     <StateList states={states} state={curState} send={send} />
   </div>
+
+  function exportJS () {
+    const lines = generateStatements(model)
+    console.log('lines', lines)
+  }
+  function exportXState () {
+    const xstate = generateXState(model)
+    console.log(JSON.stringify(xstate, null,   2))
+    copyToClipboard(JSON.stringify(xstate, null,   2))
+  }
 }
+
+const copyToClipboard = (str: string) => {
+  if (navigator && navigator.clipboard && navigator.clipboard.writeText)
+    return navigator.clipboard.writeText(str);
+  return Promise.reject('The Clipboard API is not available.');
+};
 
 type Send = (event: string) => void
 
