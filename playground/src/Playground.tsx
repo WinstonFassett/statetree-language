@@ -1,6 +1,7 @@
 import { useState, lazy, Suspense } from "react";
 import { State, Statemachine } from "../../src/language/generated/ast";
 import { StateMachine } from "./StateMachine";
+import MonacoSandpack from "./MonacoSandpack";
 
 const Editor = lazy(
   () => import('./Editor').then(module => ({ default: module.Editor }))
@@ -46,7 +47,8 @@ export function Playground() {
         <div className="flex-1 flex items-stretch justify-stretch">
           <div style={{ flex: 1, position: 'relative' }}>
             <Suspense fallback={<div>Loading editor...</div>}>
-              <Editor onModelCreated={(model) => { setModel(model) }} />
+              {/* <Editor onModelCreated={(model) => { setModel(model) }} /> */}
+              <MonacoSandpack />
             </Suspense>
           </div>
           <div className="flex-1 pt-2">

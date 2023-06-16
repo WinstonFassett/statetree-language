@@ -1,9 +1,11 @@
 import './App.css'
-import {Playground} from './Playground'
+import MonacoSandpack from './MonacoSandpack'
+// import {Playground} from './Playground'
 
 function App() {
   return (
-    <Playground />
+    // <Playground />
+    <MonacoSandpack />
   )
 }
 
