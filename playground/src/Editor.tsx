@@ -1,7 +1,7 @@
 import styles from './Editor.module.css';
 import monarchSyntaxRaw from "../../syntaxes/statetree.tmLanguage.json?raw";
 import example from '../../example/trafficlight.statetree?raw'
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
 import statetreeWorkerUrl from '../libs/statetree-server-worker.js?url'
@@ -20,7 +20,7 @@ extensionFilesOrContents.set('/statetree-grammar.json', monarchSyntaxRaw);
 // Language Server preparation
 const workerUrl = new URL(statetreeWorkerUrl, window.location.href);
 
-const userConfig: UserConfig = {
+const baseConfig: UserConfig = {
     htmlElement: document.getElementById('monaco-editor-root') as HTMLElement,
     wrapperConfig: {
         useVscodeConfig: true,
@@ -95,8 +95,19 @@ const userConfig: UserConfig = {
     }
 };
 
-export function Editor ({ onModelCreated }: { onModelCreated: (model:Statemachine) => void }) {
+type Props = { 
+    language: string
+    file: string
+    theme: string
+    code: string
+    onChange: (code: string) => void
+    onModelCreated: (model:Statemachine) => void 
+}
+
+export function Editor ({ language, file, code, onChange, onModelCreated }: Props) {
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
+  const userConfig = useMemo(() => ({...baseConfig, editorConfig: { ...baseConfig.editorConfig, code, languageId: language }}), [code, language])
+  console.log(language, file)
   return <MonacoEditorReactComp
       ref={monacoEditor}
       userConfig={userConfig}
@@ -113,12 +124,14 @@ export function Editor ({ onModelCreated }: { onModelCreated: (model:Statemachin
 
         // register to receive DocumentChange notifications
         lc.onNotification("browser/DocumentChange", (resp: DocumentChangeResponse) =>{
-            // console.log('change!', resp)
-            // decode the received Ast
-            const statemachineAst = new LangiumAST().deserializeAST(resp.content) as Statemachine;
-            // this.preview.current?.startPreview(statemachineAst, resp.diagnostics);
-            // console.log({ statemachineAst })
-            onModelCreated(statemachineAst)
+            console.log('change!', file, resp)
+            if (file === '/machine.statetree') {
+                // decode the received Ast
+                const statemachineAst = new LangiumAST().deserializeAST(resp.content) as Statemachine;
+                // this.preview.current?.startPreview(statemachineAst, resp.diagnostics);
+                console.log({ statemachineAst })
+                onModelCreated(statemachineAst)
+            }
         });
 
         /**
@@ -130,6 +143,7 @@ export function Editor ({ onModelCreated }: { onModelCreated: (model:Statemachin
 
         }
       }}
+      onTextChanged={(text, dirty) => onChange(text)}
     //   onTextChanged={(text, isDirty) => { handleTextChanged(text) }}
       style={{
           'paddingTop': '5px',

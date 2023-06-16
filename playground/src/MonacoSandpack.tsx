@@ -8,10 +8,19 @@ import {
   FileTabs,
   useSandpack
 } from "@codesandbox/sandpack-react";
+import { Suspense, lazy, useState } from "react";
+import { Statemachine } from "../../src/language/generated/ast";
+import example from '../../example/trafficlight.statetree?raw'
 
-import Editor from "@monaco-editor/react";
+// import Editor from "@monaco-editor/react";
+
+const Editor = lazy(
+  () => import('./Editor').then(module => ({ default: module.Editor }))
+);
+
 
 function MonacoEditor() {
+  const [model, setModel] = useState<Statemachine>()
   const { code, updateCode } = useActiveCode();
   const { sandpack } = useSandpack();
   const { activeFile } = sandpack
@@ -21,7 +30,7 @@ function MonacoEditor() {
     <SandpackStack style={{ height: "100vh", margin: 0 }}>
       <FileTabs />
       <div style={{ flex: 1, paddingTop: 8, background: "#1e1e1e" }}>
-        <Editor
+        {/* <Editor
           width="100%"
           height="100%"
           language={language}
@@ -29,7 +38,17 @@ function MonacoEditor() {
           key={sandpack.activeFile}
           defaultValue={code}
           onChange={(value) => updateCode(value || "")}
-        />
+        /> */}
+        <Suspense fallback={<div>Loading editor...</div>}>
+          <Editor key={sandpack.activeFile} 
+            language={language}
+            file={sandpack.activeFile}
+            theme="vs-dark"
+            code={code} 
+            onChange={(value) => updateCode(value || "")} 
+            onModelCreated={(model) => { setModel(model) }} 
+          />
+        </Suspense>        
       </div>
     </SandpackStack>
   );
@@ -38,7 +57,10 @@ function MonacoEditor() {
 export default function MonacoSandpack() {
   return (
     <SandpackProvider template="react" theme="dark" files={{
-      '/Wrapper.js': `export default ({ children }) => (<h2>Hello {children}!</h2>)`,
+      'machine.statetree': example,
+      '/Wrapper.js': `export default ({ children }) => (<h2>
+  Hello {children}!
+</h2>)`,
       '/App.js': 
 `import Wrapper from './Wrapper'
 export default function App() {
@@ -61,7 +83,7 @@ function getLanguageOfFile(filePath: string) {
   const extensionDotIndex = filePath.lastIndexOf(".");
   const extension = filePath.slice(extensionDotIndex + 1);
 
-  switch (extension) {
+  switch (extension) {    
     case "js":
     case "jsx":
     case "ts":
@@ -75,6 +97,6 @@ function getLanguageOfFile(filePath: string) {
     case "less":
       return "css";
     default:
-      return "javascript";
+      return extension ?? "javascript";
   }
 }
