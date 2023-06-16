@@ -56,15 +56,15 @@ function MonacoEditor() {
 
 export default function MonacoSandpack() {
   return (
-    <SandpackProvider template="react-ts" theme="dark" files={{
-      '/App.tsx': 
+    <SandpackProvider template="react" theme="dark" was_files={{
+      '/App.js': 
 `import Wrapper from './Wrapper'
 export default function App() {
   return <div className="bg-green-500 rounded m-2 p-4 text-3xl">
     <Wrapper>World</Wrapper>
   </div>
 }`,
-'/Wrapper.tsx': `export default ({ children }) => (<h2>
+'/Wrapper.js': `export default ({ children }) => (<h2>
   Hello {children}!
   </h2>)`,
 'machine.statetree': example,

@@ -104,7 +104,7 @@ const altConfig: UserConfig = {
         useVscodeConfig: false
     },
     editorConfig: {
-        languageId: 'typescript',
+        languageId: 'javascript',
         useDiffEditor: false,
         automaticLayout: true,
         theme: 'vs-dark',
