@@ -15,6 +15,10 @@ import { Statemachine } from '../../src/language/generated/ast';
 
 import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
 import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
+// import * as monaco from 'monaco-editor';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
+// import { activateMonacoJSXHighlighter } from './MonacoJsx';
 
 const extensionFilesOrContents = new Map<string, string | URL>();
 extensionFilesOrContents.set('/statetree-configuration.json', languageConfigurationRaw);
@@ -126,6 +130,29 @@ type Props = {
     onModelCreated: (model:Statemachine) => void 
 }
 
+// This function is used to active the JSX syntax highlighting
+export const activateMonacoJSXHighlighter = async (monacoEditor, monaco) => {
+    const { default: traverse } = await import('@babel/traverse')
+    const { parse } = await import('@babel/parser')
+    const { default: MonacoJSXHighlighter } = await import(
+        'monaco-jsx-highlighter'
+    )
+
+    const monacoJSXHighlighter = new MonacoJSXHighlighter(
+        monaco,
+        parse,
+        traverse,
+        monacoEditor
+    )
+
+    monacoJSXHighlighter.highlightOnDidChangeModelContent()
+    monacoJSXHighlighter.addJSXCommentCommand()
+
+    return {
+        monacoJSXHighlighter,
+    }
+}
+
 export function Editor ({ language, file, code, onChange, onModelCreated }: Props) {
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
   const userConfig = useMemo(() => ({...altConfig, editorConfig: { ...baseConfig.editorConfig, code, languageId: language }}), [code, language])
@@ -138,24 +165,29 @@ export function Editor ({ language, file, code, onChange, onModelCreated }: Prop
         if (!monacoEditor.current) {
             throw new Error("Unable to get a reference to the Monaco Editor");
         }
+        const editor = monacoEditor.current.getEditorWrapper().getEditor()
+        // monacoEditor.current.getEditorWrapper().getMonacoEditorWrapper()?.getEditor()
+        // monacoEditor.current.getEditorWrapper().getMonacoEditorWrapper()?.getEditor
+        console.log('activate highlighter')
+        activateMonacoJSXHighlighter(editor, monaco)
         // verify we can get a ref to the language client
         const lc = monacoEditor.current.getEditorWrapper()
             ?.getLanguageClient();
-        if (!lc) {
-            throw new Error("Could not get handle to Language Client on mount");
-        }
+        // if (!lc) {
+        //     throw new Error("Could not get handle to Language Client on mount");
+        // }
 
-        // register to receive DocumentChange notifications
-        lc.onNotification("browser/DocumentChange", (resp: DocumentChangeResponse) =>{
-            console.log('change!', file, resp)
-            if (file === '/machine.statetree') {
-                // decode the received Ast
-                const statemachineAst = new LangiumAST().deserializeAST(resp.content) as Statemachine;
-                // this.preview.current?.startPreview(statemachineAst, resp.diagnostics);
-                console.log({ statemachineAst })
-                onModelCreated(statemachineAst)
-            }
-        });
+        // // register to receive DocumentChange notifications
+        // lc.onNotification("browser/DocumentChange", (resp: DocumentChangeResponse) =>{
+        //     console.log('change!', file, resp)
+        //     if (file === '/machine.statetree') {
+        //         // decode the received Ast
+        //         const statemachineAst = new LangiumAST().deserializeAST(resp.content) as Statemachine;
+        //         // this.preview.current?.startPreview(statemachineAst, resp.diagnostics);
+        //         console.log({ statemachineAst })
+        //         onModelCreated(statemachineAst)
+        //     }
+        // });
 
         /**
          * Callback invoked when the document processed by the LS changes
