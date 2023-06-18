@@ -11,7 +11,7 @@ import {
 import { Suspense, lazy, useState } from "react";
 import { Statemachine } from "../../src/language/generated/ast";
 import example from '../../example/trafficlight.statetree?raw'
-
+import MonacoReactEditor from './MonacoReactEditorWithJsxLibThing'
 // import Editor from "@monaco-editor/react";
 
 const Editor = lazy(
@@ -40,7 +40,7 @@ function MonacoEditor() {
           onChange={(value) => updateCode(value || "")}
         /> */}
         <Suspense fallback={<div>Loading editor...</div>}>
-          <Editor key={sandpack.activeFile} 
+          <MonacoReactEditor key={sandpack.activeFile} 
             language={language}
             file={sandpack.activeFile}
             theme="vs-dark"

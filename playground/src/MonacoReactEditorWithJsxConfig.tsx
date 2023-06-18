@@ -2,10 +2,10 @@ import Editor from '@monaco-editor/react';
 import reactTypesRaw from './react-types?raw'
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
-export default function MonacoReactEditor () {
+export default function MonacoReactEditor (props: any) {
   return <div>
     <h1>Monaco React Editor</h1>
-    <Editor defaultValue={code} height="90vh" defaultLanguage='javascript' onMount={(editor, monaco) => {
+    <Editor {...props} theme='vs-dark' defaultValue={code} height="90vh" defaultLanguage='javascript' onMount={(editor, monaco) => {
       monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
         target: monaco.languages.typescript.ScriptTarget.Latest,
         allowNonTsExtensions: true,
