@@ -6,7 +6,7 @@ type MonacoApi = typeof monacoApi
 export default function MonacoReactEditor (props: any) {
   return <div>
     <h1>Monaco React Editor</h1>
-    <Editor {...props} defaultValue={props.code ?? code} height="90vh" defaultLanguage='javascript' onMount={async (monacoEditor, monaco) => {
+    <Editor theme="vs-dark" {...props} defaultValue={props.code ?? code} height="90vh" defaultLanguage='javascript' onMount={async (monacoEditor, monaco) => {
       return await loadJSXHighlighter(monaco, monacoEditor);
     }} />
   </div>
@@ -32,6 +32,8 @@ async function loadJSXHighlighter(monaco: MonacoApi, monacoEditor: MonacoEditor.
   const { default: MonacoJSXHighlighter } = await import(
     'monaco-jsx-highlighter'
   );
+  import('./MonacoJsxSyntaxHighlighter.css')
+
 
   const monacoJSXHighlighter = new MonacoJSXHighlighter(
     monaco,

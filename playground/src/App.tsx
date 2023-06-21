@@ -3,8 +3,8 @@ import './App.css'
 // import {Playground} from './Playground'
 // import MonacoEditorJsx from './MonacoEditorJsx2'
 // import MonacoEditorJsx from './MonacoEditorJsx'
-// import MonacoReactEditor from './MonacoReactEditorWithJsxLibThing'
-import MonacoReactEditor from './MonacoReactEditorWithJsxConfig'
+import MonacoReactEditor from './MonacoReactEditorWithJsxLibThing'
+// import MonacoReactEditor from './MonacoReactEditorWithJsxConfig'
 // import MonacoEditorReactJsx from './MonacoEditorReactJsx'
 function App() {
   return (
