@@ -7,5 +7,10 @@ export default defineConfig({
   assetsInclude: ['**/*.wasm'],
   define: {
     'process.env.BABEL_TYPES_8_BREAKING': 'true'
+  },
+  optimizeDeps: {
+    exclude: [
+      'vscode-uri'
+    ]
   }
 })
