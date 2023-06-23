@@ -5,7 +5,7 @@ type MonacoApi = typeof monacoApi
 
 export default function MonacoReactEditor (props: { code: string, onChange: OnChange }) {
   const { code, ...editorProps } = props
-  console.log({ editorProps })
+  // console.log({ editorProps })
   return <div>
     {/* <h1>Monaco React Editor</h1> */}
     <Editor theme="vs-dark" {...editorProps} defaultValue={code} height="90vh" defaultLanguage='javascript' onMount={async (monacoEditor, monaco) => {

@@ -25,7 +25,7 @@ export function StateMachine({ model }: { model: Statemachine }) {
     }
     return items.reverse()
   }, [states, curState])
-  console.log({ activeStates })
+  // console.log({ activeStates })
   const getState = (name: string) => curState
   return <div>
     <p>State: {curState?.name}</p>
@@ -44,11 +44,11 @@ export function StateMachine({ model }: { model: Statemachine }) {
 
   function exportJS () {
     const lines = generateStatements(model)
-    console.log('lines', lines)
+    // console.log('lines', lines)
   }
   function exportXState () {
     const xstate = generateXState(model)
-    console.log(JSON.stringify(xstate, null,   2))
+    // console.log(JSON.stringify(xstate, null,   2))
     copyToClipboard(JSON.stringify(xstate, null,   2))
   }
 }
@@ -128,7 +128,7 @@ function useStateMachine (model: Statemachine) {
   // const [state, setState] = useState<State|undefined>(getTargetState(model.init?.ref ?? model.states[0]))
     
   useEffect(() => {
-    console.log('model changed')
+    // console.log('model changed')
     // find current state by name
     const previousState = state!== undefined && findStateByName(model, state.name)
     // const nextState = previousState // || model.init?.ref
@@ -150,7 +150,7 @@ function useStateMachine (model: Statemachine) {
     setState(newState)
   }
   function send (event: string) {
-    console.log('send', state, event)
+    // console.log('send', state, event)
     const transition = state && findTransition(state, event)
     const newState = transition?.to?.ref
     newState && updateState(newState)
@@ -172,7 +172,7 @@ function useStateMachine (model: Statemachine) {
 function findTransition(state:State, event: string) {
   let curState: State | undefined = state
   while (curState) {
-    console.log('find', event, curState)
+    // console.log('find', event, curState)
     const transition = curState.transitions?.find(t => t.event === event)
     if (transition) return transition;
     const $container: Statemachine | State = curState.$container

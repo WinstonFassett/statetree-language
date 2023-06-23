@@ -46,7 +46,7 @@ const headers: PanelCollection<IDockviewPanelHeaderProps> = {
         return (
             <div>
                 <span>{props.api.title}</span>
-                <span onClick={() => props.api.close()}>{'[x]'}</span>
+                {/* <span onClick={() => props.api.close()}>{'[x]'}</span> */}
             </div>
         );
     },
@@ -57,7 +57,7 @@ export const DockView = () => {
         event.api.addPanel({
           id: 'machine.statetree',
           component: 'statetree',
-          // tabComponent: 'customTab', // optional custom header
+          tabComponent: 'customTab', // optional custom header
           params: {
               someProps: 'machine.statetree',
           },
