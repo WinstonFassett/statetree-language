@@ -9,18 +9,40 @@ import {
   useSandpack
 } from "@codesandbox/sandpack-react";
 import { Suspense, lazy, useState } from "react";
+import { DockView } from "./DockView";
 import { Statemachine } from "../../src/language/generated/ast";
-import example from '../../example/trafficlight.statetree?raw'
-import MonacoReactEditor from './MonacoReactEditorWithJsxLibThing'
 import { getLanguageOfFile } from "./getLanguageOfFile";
-// import Editor from "@monaco-editor/react";
 
-const Editor = lazy(
-  () => import('./Editor').then(module => ({ default: module.Editor }))
-);
+export default function StatetreeSandpackFiddle() {
+  return (
+    <SandpackProvider template="react" theme="dark" files={{
+'/App.js': 
+`import Wrapper from './Wrapper'
+export default function App() {
+  return <div className="bg-green-500 rounded m-2 p-4 text-3xl">
+    <Wrapper>World</Wrapper>
+  </div>
+}`,
+'/Wrapper.js': `export default ({ children }) => (<h2>
+  Hello {children}!
+  </h2>)`,
+'machine.statetree': 'soon:example',
+    }} options={{
+      externalResources: ["https://cdn.tailwindcss.com"]
+    }}>
+      <SandpackLayout>
+        {/* <DockView /> */}
+        <TheStack />
+        {/* 
+        <SandpackPreview style={{ height: "100vh" }} /> */}
+      </SandpackLayout>
+
+    </SandpackProvider>
+  );
+}
 
 
-function MonacoEditor() {
+function TheStack() {
   const [model, setModel] = useState<Statemachine>()
   const { code, updateCode } = useActiveCode();
   const { sandpack } = useSandpack();
@@ -29,7 +51,7 @@ function MonacoEditor() {
 
   return (
     <SandpackStack style={{ height: "100vh", margin: 0 }}>
-      <FileTabs />
+      {/* <FileTabs /> */}
       <div style={{ flex: 1, paddingTop: 8, background: "#1e1e1e" }}>
         {/* <Editor
           width="100%"
@@ -40,7 +62,7 @@ function MonacoEditor() {
           defaultValue={code}
           onChange={(value) => updateCode(value || "")}
         /> */}
-        <Suspense fallback={<div>Loading editor...</div>}>
+        {/* <Suspense fallback={<div>Loading editor...</div>}>
           <MonacoReactEditor key={sandpack.activeFile} 
             language={language}
             file={sandpack.activeFile}
@@ -49,34 +71,9 @@ function MonacoEditor() {
             onChange={(value) => updateCode(value || "")} 
             onModelCreated={(model) => { setModel(model) }} 
           />
-        </Suspense>        
+        </Suspense>         */}
+        <DockView />
       </div>
     </SandpackStack>
   );
 }
-
-export default function MonacoSandpack() {
-  return (
-    <SandpackProvider template="react" theme="dark" was_files={{
-      '/App.js': 
-`import Wrapper from './Wrapper'
-export default function App() {
-  return <div className="bg-green-500 rounded m-2 p-4 text-3xl">
-    <Wrapper>World</Wrapper>
-  </div>
-}`,
-'/Wrapper.js': `export default ({ children }) => (<h2>
-  Hello {children}!
-  </h2>)`,
-'machine.statetree': example,
-    }} options={{
-      externalResources: ["https://cdn.tailwindcss.com"]
-    }}>
-      <SandpackLayout>
-        <MonacoEditor />
-        <SandpackPreview style={{ height: "100vh" }} />
-      </SandpackLayout>
-    </SandpackProvider>
-  );
-}
-

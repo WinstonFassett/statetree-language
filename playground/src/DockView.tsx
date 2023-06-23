@@ -7,18 +7,36 @@ import {
 } from 'dockview';
 import 'dockview/dist/styles/dockview.css';
 
+import { StatetreeEditor } from './StatetreeEditor'
+import { Visualization } from './AstVisualization';
+import { useContext } from 'react';
+import { ModelContext } from './ModelContext';
+import { SandpackPreview } from '@codesandbox/sandpack-react';
+import { SandpackMonacoEditor } from './SandpackMonacoEditor';
+
+
 const components: PanelCollection<IDockviewPanelProps> = {
     default: (props: IDockviewPanelProps<{ someProps: string }>) => {
       return <div>{props.params.someProps}</div>;
     },
     viz: (props: IDockviewPanelProps<{ someProps: string }>) => {
-      return <div>viz for:{props.params.someProps}</div>;
+      const { model, setModel } = useContext(ModelContext)
+      return <div>{!!model && <Visualization model={model} />}</div>;
+    },
+    statetree: (props: IDockviewPanelProps<{ someProps: string }>) => {
+      const {model, setModel} = useContext(ModelContext)
+      return <StatetreeEditor onModelCreated={setModel} />;
     },
     editor: (props: IDockviewPanelProps<{ someProps: string }>) => {
-      return <div>editor for:{props.params.someProps}</div>;
+      return <div>editor for:{props.params.someProps} or {props.params.someProps}
+        <SandpackMonacoEditor filename={props.params.someProps} />
+      </div>;
     },
     preview: (props: IDockviewPanelProps<{ someProps: string }>) => {
-      return <div>Preview for:{props.params.someProps}</div>;
+      return <div>
+        Preview for:{props.params.someProps}
+        <SandpackPreview style={{ height: "100vh" }} />
+      </div>;
     },
 };
 
@@ -37,7 +55,7 @@ export const DockView = () => {
     const onReady = (event: DockviewReadyEvent) => {
         event.api.addPanel({
           id: 'machine.statetree',
-          component: 'editor',
+          component: 'statetree',
           // tabComponent: 'customTab', // optional custom header
           params: {
               someProps: 'machine.statetree',
@@ -52,11 +70,11 @@ export const DockView = () => {
             position: { referencePanel: 'machine.statetree', direction: 'right' },
         });      
         event.api.addPanel({
-            id: 'App.jsx',
+            id: 'App.js',
             component: 'editor',
             // tabComponent: 'customTab', // optional custom header
             params: {
-                someProps: 'App',
+                someProps: '/App.js',
             },
             position: { referencePanel: 'machine.statetree', direction: 'below' },
         });
