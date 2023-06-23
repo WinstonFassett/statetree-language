@@ -28,7 +28,8 @@ export default function App() {
   </h2>)`,
 'machine.statetree': 'soon:example',
     }} options={{
-      externalResources: ["https://cdn.tailwindcss.com"]
+      externalResources: ["https://cdn.tailwindcss.com"],
+      recompileDelay:40
     }}>
       <SandpackLayout>
         {/* <DockView /> */}

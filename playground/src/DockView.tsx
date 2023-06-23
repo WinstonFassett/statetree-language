@@ -13,6 +13,7 @@ import { useContext } from 'react';
 import { ModelContext } from './ModelContext';
 import { SandpackPreview } from '@codesandbox/sandpack-react';
 import { SandpackMonacoEditor } from './SandpackMonacoEditor';
+import { StateMachinePane } from './StateMachinePane';
 
 
 const components: PanelCollection<IDockviewPanelProps> = {
@@ -20,15 +21,15 @@ const components: PanelCollection<IDockviewPanelProps> = {
       return <div>{props.params.someProps}</div>;
     },
     viz: (props: IDockviewPanelProps<{ someProps: string }>) => {
-      const { model, setModel } = useContext(ModelContext)
-      return <div>{!!model && <Visualization model={model} />}</div>;
+      return (<StateMachinePane />)
     },
     statetree: (props: IDockviewPanelProps<{ someProps: string }>) => {
       const {model, setModel} = useContext(ModelContext)
-      return <StatetreeEditor onModelCreated={setModel} />;
+      return <StatetreeEditor onModelCreated={setModel}  />;
     },
     editor: (props: IDockviewPanelProps<{ someProps: string }>) => {
-      return <div>editor for:{props.params.someProps} or {props.params.someProps}
+      return <div>
+        {/* editor for:{props.params.someProps} or {props.params.someProps} */}
         <SandpackMonacoEditor filename={props.params.someProps} />
       </div>;
     },

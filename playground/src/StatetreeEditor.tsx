@@ -69,9 +69,14 @@ const userConfig: UserConfig = {
                 },
                 
             },
-            extensionFilesOrContents: extensionFilesOrContents
-            
-        }
+            extensionFilesOrContents: extensionFilesOrContents,
+            userConfiguration: {
+                json: `{
+                    "editor.minimap.enabled": false
+                }`
+            }      
+        },
+
     },
     editorConfig: {
         languageId: 'statetree',
@@ -80,8 +85,7 @@ const userConfig: UserConfig = {
         theme: 'vs-dark',
         code: example,
         editorOptions: {
-            theme: 'vs-dark',
-            minimap: { enabled: false }
+            // theme: 'vs-dark',
         }
     },
     languageClientConfig: {
@@ -95,7 +99,7 @@ const userConfig: UserConfig = {
     }
 };
 
-export function StatetreeEditor ({ onModelCreated }: { onModelCreated: (model:Statemachine) => void }) {
+export function StatetreeEditor ({ onModelCreated, ...rest }: { onModelCreated: (model:Statemachine) => void } & Record<string,any>) {
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
   return <MonacoEditorReactComp
       ref={monacoEditor}

@@ -2,7 +2,7 @@ import Editor from '@monaco-editor/react';
 
 export default function MonacoReactEditor () {
   return <div>
-    <h1>Monaco React Editor</h1>
+    {/* <h1>Monaco React Editor</h1> */}
     <Editor defaultValue={code} height="90vh" defaultLanguage='javascript' />
   </div>
 }

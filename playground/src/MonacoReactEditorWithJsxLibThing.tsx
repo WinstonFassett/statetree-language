@@ -1,13 +1,14 @@
-import Editor from '@monaco-editor/react';
+import Editor, { OnChange } from '@monaco-editor/react';
 import type MonacoEditor from 'monaco-editor';
 import type * as monacoApi from 'monaco-editor/esm/vs/editor/editor.api';
 type MonacoApi = typeof monacoApi
 
-export default function MonacoReactEditor (props: { code: string }) {
-  const { code } = props
+export default function MonacoReactEditor (props: { code: string, onChange: OnChange }) {
+  const { code, ...editorProps } = props
+  console.log({ editorProps })
   return <div>
-    <h1>Monaco React Editor</h1>
-    <Editor theme="vs-dark" {...props} defaultValue={props.code ?? code} height="90vh" defaultLanguage='javascript' onMount={async (monacoEditor, monaco) => {
+    {/* <h1>Monaco React Editor</h1> */}
+    <Editor theme="vs-dark" {...editorProps} defaultValue={code} height="90vh" defaultLanguage='javascript' onMount={async (monacoEditor, monaco) => {
       return await loadJSXHighlighter(monaco, monacoEditor);
     }} />
   </div>

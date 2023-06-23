@@ -88,7 +88,6 @@ const baseConfig: UserConfig = {
         code: example,
         editorOptions: {
             theme: 'vs-dark',
-            minimap: { enabled: false }
         }
     },
     languageClientConfig: {

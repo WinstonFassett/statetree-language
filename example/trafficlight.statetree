@@ -1,3 +1,4 @@
+initialState PoweredOn
 PoweredOn {
   switch => Broken
   Red { tick => PoweredOn.Green }
