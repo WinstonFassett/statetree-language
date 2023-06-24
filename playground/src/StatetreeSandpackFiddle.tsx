@@ -8,15 +8,26 @@ import {
   FileTabs,
   useSandpack
 } from "@codesandbox/sandpack-react";
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { DockView } from "./DockView";
 import { Statemachine } from "../../src/language/generated/ast";
 import { getLanguageOfFile } from "./getLanguageOfFile";
+import { model as modelStore } from './store'
+import { useStore } from "@nanostores/react";
+import { generateXState } from "../../src/codegen";
 
 export default function StatetreeSandpackFiddle() {
   console.log({ window, globalThis})
+
   return (
-    <SandpackProvider template="react" theme="dark" files={{
+    <SandpackProvider template="react" theme="dark" 
+      customSetup={{ 
+        dependencies: { 
+          "nanostores": "latest",
+          "@nanostores/react": "latest" 
+        }
+      }}
+      files={{
 '/App.js': 
 `import Wrapper from './Wrapper'
 export default function App() {
@@ -27,7 +38,8 @@ export default function App() {
 '/Wrapper.js': `export default ({ children }) => (<h2>
   Hello {children}!
   </h2>)`,
-'machine.statetree': 'soon:example',
+'machine.statetree': '',
+'machine.json': '{}',
 'state.json': JSON.stringify(
   {
     p1: "v3",
@@ -53,9 +65,18 @@ export default function App() {
 
 
 function TheStack() {
-  const [model, setModel] = useState<Statemachine>()
-  const { code, updateCode } = useActiveCode();
   const { sandpack } = useSandpack();
+  const model = useStore(modelStore)
+  useEffect(() => {
+    if (model) {
+      const xstate = generateXState(model)
+      console.log({ xstate })
+      sandpack.updateFile('/machine.json', JSON.stringify(xstate, null, 2))
+    }
+    
+  },[model])
+  // const [model, setModel] = useState<Statemachine>()
+  const { code, updateCode } = useActiveCode();
   const { activeFile } = sandpack
   const language = activeFile && getLanguageOfFile(activeFile);
 

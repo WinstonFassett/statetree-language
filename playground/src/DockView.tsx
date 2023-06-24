@@ -63,6 +63,14 @@ const headers: PanelCollection<IDockviewPanelHeaderProps> = {
 export const DockView = () => {
     const onReady = (event: DockviewReadyEvent) => {
         event.api.addPanel({
+          id: 'machine.json',
+          component: 'editor',
+          // tabComponent: 'customTab', // optional custom header
+          params: {
+              someProps: '/machine.json',
+          },          
+        });
+        event.api.addPanel({
           id: 'machine.statetree',
           component: 'statetree',
           tabComponent: 'customTab', // optional custom header

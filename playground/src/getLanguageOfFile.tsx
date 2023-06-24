@@ -7,7 +7,7 @@ export function getLanguageOfFile(filePath: string) {
     case "jsx":
     case "ts":
     case "tsx":
-      return "typescript";
+      return "javascript";
     case "vue":
     case "html":
       return "html";

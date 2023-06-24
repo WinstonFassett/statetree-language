@@ -10,7 +10,7 @@ export default function MonacoReactEditor (props: { code: string, onChange: OnCh
   // console.log({ editorProps })
   return <div>
     {/* <h1>Monaco React Editor</h1> */}
-    <Editor theme="vs-dark" {...editorProps} defaultValue={code} height="90vh" defaultLanguage={language} onMount={async (monacoEditor, monaco) => {
+    <Editor theme="vs-dark" {...editorProps} value={code} height="90vh" defaultLanguage={language} onMount={async (monacoEditor, monaco) => {
       if (language in ['javascript', 'typescript']) {
         await loadJSXHighlighter(monaco, monacoEditor);
       }
