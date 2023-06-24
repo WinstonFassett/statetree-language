@@ -2,11 +2,11 @@ import { Store, atom, map } from 'nanostores'
 import { useStore } from '@nanostores/react'
 import * as store from './store'
 import { isStore, peek } from './lib/nanostore-utils'
-import { Inspector } from 'react-inspector'
+import { Inspector } from './Inspector'
 import { InspectorNodeRenderer } from './InspectorNodeRenderer'
 
 export function DebugPane({}) {
-  return <Inspector data={store} nodeRenderer={InspectorNodeRenderer}/>
+  return <Inspector data={store} />
 }
 
 export function DebugPane1({}) {
