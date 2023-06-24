@@ -22,19 +22,27 @@ export function StateMachine({ model, instance }: { model: Statemachine, instanc
   }, [states, curState])
   // console.log({ activeStates })
   const getState = (name: string) => curState
-  return <div>
-    <p>State: {curState?.name}</p>
-    <p>Active States: {activeStates.map(state => state.name).join(', ')}</p>
+  return <div className="h-full flex flex-col">
     <div>
-      <Button onClick={exportJS}>Export JS</Button>
-      <Button onClick={exportXState}>Export XState</Button>
+      <div className="flex gap-2">
+        <div className="flex-1 p-2">
+          <p>State: {curState?.name}</p>
+          <p>Active States: {activeStates.map(state => state.name).join(', ')}</p>
+        </div>
+        <div className="menu menu-horizontal">
+          {/* <button className="btn btn-sm btn-ghost rounded-btn" onClick={exportJS}>Export JS</button>
+          <button className="btn btn-sm btn-ghost rounded-btn" onClick={exportXState}>Export XState</button> */}
+          <button className="btn btn-sm btn-ghost rounded-btn" onClick={reset}>Restart</button>
+          <button disabled={!canUndo} className="btn btn-sm btn-ghost rounded-btn" onClick={undo}>Undo</button>
+          <button disabled={!canRedo} className="btn btn-sm btn-ghost rounded-btn" onClick={redo}>Redo</button>
+
+        </div>
+      </div>
+
     </div>
-    <div>
-      <Button onClick={reset}>Restart</Button>
-      {!!canUndo && <Button onClick={undo}>Undo</Button>}
-      {!!canRedo && <Button onClick={redo}>Redo</Button>}
+    <div className="flex-1 overflow-auto">
+      <StateList states={states} state={curState} send={send} />
     </div>
-    <StateList states={states} state={curState} send={send} />
   </div>
 
   function exportJS () {
@@ -57,17 +65,17 @@ const copyToClipboard = (str: string) => {
 type Send = (event: string) => void
 
 function StateList({state: currentState, states, send, path=[]}:{state: State, states: State[], send: Send, path?: State[]}) {
-  return <ul className="pl-4 mt-2">
+  return <ul className="pl-2 mt-2 flex flex-wrap gap-2">
     {states.map((state, index) => {
       const { name, states: substates, transitions } = state
       const active = currentState && (state === currentState || name === currentState.name)
-      return <li key={index} className={`border ${active ? 'border-green-500' : 'border-slate-700'} rounded p-4 mb-4`}>
+      return <li key={index} className={`border ${active ? 'border-green-500' : 'border-slate-700'} rounded p-2 mb-4`}>
         <p className="">
           {name}
           {/* {active ?'active': 'nope'} */}
         </p>
         {!!transitions && <TransitionList transitions={transitions} send={send} />}
-        {!!substates && <StateList states={substates} state={currentState} send={send} />}
+        {substates?.length > 0 && <StateList states={substates} state={currentState} send={send} />}
       </li>;
     })}
   </ul>;
