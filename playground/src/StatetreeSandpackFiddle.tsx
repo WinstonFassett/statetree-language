@@ -8,13 +8,15 @@ import {
   FileTabs,
   useSandpack
 } from "@codesandbox/sandpack-react";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { DockView } from "./DockView";
-import { Statemachine } from "../../src/language/generated/ast";
+import { State, Statemachine } from "../../src/language/generated/ast";
 import { getLanguageOfFile } from "./getLanguageOfFile";
-import { model as modelStore } from './store'
+import * as store from './store'
 import { useStore } from "@nanostores/react";
 import { generateXState } from "../../src/codegen";
+import { useStateMachineContext } from "./useStateMachine";
+import { getParentState } from "./getParentState";
 
 export default function StatetreeSandpackFiddle() {
   console.log({ window, globalThis})
@@ -29,10 +31,10 @@ export default function StatetreeSandpackFiddle() {
       }}
       files={{
 '/App.js': 
-`import Wrapper from './Wrapper'
+`import state from './state.json'
 export default function App() {
-  return <div className="bg-green-500 rounded m-2 p-4 text-3xl">
-    <Wrapper>World</Wrapper>
+  return <div className="rounded m-2 p-4 text-3xl">
+    Hello! The state is {state}
   </div>
 }`,
 '/Wrapper.js': `export default ({ children }) => (<h2>
@@ -40,14 +42,7 @@ export default function App() {
   </h2>)`,
 'machine.statetree': '',
 'machine.json': '{}',
-'state.json': JSON.stringify(
-  {
-    p1: "v3",
-    p2: false
-  },
-  null,
-  2
-)
+'state.json': '"not_set"'
     }} options={{
       externalResources: ["https://cdn.tailwindcss.com"],
       recompileDelay:40
@@ -66,15 +61,30 @@ export default function App() {
 
 function TheStack() {
   const { sandpack } = useSandpack();
-  const model = useStore(modelStore)
+  const model = useStore(store.model)
+  const [state, machine] = useStateMachineContext()
   useEffect(() => {
     if (model) {
       const xstate = generateXState(model)
       console.log({ xstate })
       sandpack.updateFile('/machine.json', JSON.stringify(xstate, null, 2))
-    }
-    
+    }    
   },[model])
+  const activeStates = useMemo(() => {
+    const items: State[] = []
+    let state: State | undefined = machine.state
+    while (state) {
+      items.push(state)
+      state = getParentState(state)
+    }
+    return items.reverse()
+  }, [model?.states, machine.state])
+  useEffect(() => {
+    if (machine) {
+      console.log('machine state', machine.state)
+      sandpack.updateFile('/state.json', JSON.stringify(machine.state?.name, null, 2))
+    }
+  }, [machine.state])
   // const [model, setModel] = useState<Statemachine>()
   const { code, updateCode } = useActiveCode();
   const { activeFile } = sandpack

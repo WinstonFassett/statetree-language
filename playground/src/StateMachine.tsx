@@ -4,19 +4,13 @@ import { Button } from "./components/ui/button";
 import useUndo from 'use-undo';
 import { generateStatements, generateXState } from "../../src/codegen";
 import { StateMachineInstance } from "./useStateMachine";
-
-function getParentState (state: State) {
-  const { $container } = state
-  if ($container && $container.$type === 'State') {
-    return $container
-  }
-  return undefined
-}
+import { getParentState } from "./getParentState";
 
 export function StateMachine({ model, instance }: { model: Statemachine, instance: StateMachineInstance }) {
   const{ states } = model
   const [curState, { send, undo, redo, canUndo, canRedo, reset }] = instance
 
+  // refactoring
   const activeStates = useMemo(() => {
     const items: State[] = []
     let state: State | undefined = curState

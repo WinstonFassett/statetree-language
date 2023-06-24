@@ -93,7 +93,15 @@ export const DockView = () => {
               someProps: 'World',
           },
           position: { referencePanel: 'viz', direction: 'right' },
-        });      
+        });
+        event.api.addPanel({
+          id: 'state.json',
+          component: 'editor',
+          // tabComponent: 'customTab', // optional custom header
+          params: {
+              someProps: '/state.json',
+          },
+      })
         event.api.addPanel({
             id: 'App.js',
             component: 'editor',

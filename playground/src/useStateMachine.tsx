@@ -73,6 +73,7 @@ export function useStateMachine ({model}:{model: Statemachine|undefined}) {
     const initialState = getInitState(model?.init, model?.states)
     resetState(initialState && getTargetState(initialState))
   }
+  function getActiveStates() {}
   return [state, { state, send, undo, redo, canUndo, canRedo, reset, model }] as [State, { 
     state: typeof state,
     model: Statemachine
