@@ -6,10 +6,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 
 export const Inspector = (...[{ data }]: Parameters<typeof ObjectInspector>) => {
-  console.log({ data })
+  // console.log({ data })
   const storeMap = useMemo(() => new WeakMap(), [])
   const nodeRenderer = useNodeRenderer(() => {
-    console.log('change')
+    // console.log('change')
   })
 
 
@@ -54,7 +54,7 @@ function createDeepOnChangeProxy(target: any, onChange: () => void): any {
             storeValue.__value = value
             onChange()
           })
-          console.log(property, {storeValue})
+          // console.log(property, {storeValue})
           return storeValue
         } else {
           const proxy = createDeepOnChangeProxy(item, onChange);
@@ -83,7 +83,7 @@ function createHandler<T>(path: string[] = []) {
 // const proxy = new Proxy(obj ,createHander<ObjectType>());
 
 function wrapStores(root: any, onChange: () => void, cache: WeakMap<Store, any>): any {
-  console.log('wrapStores', root)
+  // console.log('wrapStores', root)
   return createDeepOnChangeProxy(root, onChange)
   // if (root === undefined || typeof root !== 'object') return root;
   // let wrapper = cache.get(root)

@@ -19,14 +19,14 @@ export function useNodeRenderer(onChange: () => void) {
 
 export function createNodeRenderer(onChange: () => void) {
   const renderer = ({ depth, name, data, isNonenumerable, expanded }: Props) => {
-    console.log('render', name, data)
+    // console.log('render', name, data)
     // if (data && ) {
     //   return <StoreInspector onChange={onChange} renderer={renderer} {...{ depth, name, data, isNonenumerable, expanded}} />
     // }
     if (data?.__store) {
       data = data.__value
     }
-    console.log({name, depth, data })
+    // console.log({name, depth, data })
     return depth === 0
       ? <ObjectRootLabel name={name} data={data} />
       : <ObjectLabel name={name} data={data} isNonenumerable={isNonenumerable} />;
@@ -42,10 +42,10 @@ type StoreInspectorProps = Props & {
 }
 
 function StoreInspector({ renderer, onChange, depth, name, data, isNonenumerable, expanded }: StoreInspectorProps) {
-  console.log('store', name)
+  // console.log('store', name)
   const storeData = useStore(data)
   useEffect(() => {    
-    console.log('change', storeData)
+    // console.log('change', storeData)
   }, [storeData])
   return renderer({ depth, name, data, isNonenumerable, expanded})
   // return InspectorNodeRenderer({ depth, name, data: storeData, isNonenumerable, expanded})

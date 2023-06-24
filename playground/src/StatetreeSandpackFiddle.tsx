@@ -6,7 +6,8 @@ import {
   SandpackLayout,
   SandpackStack,
   FileTabs,
-  useSandpack
+  useSandpack,
+  SandpackState
 } from "@codesandbox/sandpack-react";
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { DockView } from "./DockView";
@@ -17,9 +18,9 @@ import { useStore } from "@nanostores/react";
 import { generateXState } from "../../src/codegen";
 import { useStateMachineContext } from "./useStateMachine";
 import { getParentState } from "./getParentState";
-
+import AppJS from './fiddle/App.js?raw'
 export default function StatetreeSandpackFiddle() {
-  console.log({ window, globalThis})
+  // console.log({ window, globalThis})
 
   return (
     <SandpackProvider template="react" theme="dark" 
@@ -30,13 +31,7 @@ export default function StatetreeSandpackFiddle() {
         }
       }}
       files={{
-'/App.js': 
-`import state from './state.json'
-export default function App() {
-  return <div className="rounded m-2 p-4 text-3xl">
-    Hello! The state is {state}
-  </div>
-}`,
+'/App.js': AppJS,
 '/Wrapper.js': `export default ({ children }) => (<h2>
   Hello {children}!
   </h2>)`,
@@ -66,8 +61,13 @@ function TheStack() {
   useEffect(() => {
     if (model) {
       const xstate = generateXState(model)
-      console.log({ xstate })
+      // console.log({ xstate })
       sandpack.updateFile('/machine.json', JSON.stringify(xstate, null, 2))
+      // console.log("update clients")
+      sentToClients(sandpack, {
+        type: 'model',
+        model: xstate
+      });
     }    
   },[model])
   const activeStates = useMemo(() => {
@@ -81,8 +81,12 @@ function TheStack() {
   }, [model?.states, machine.state])
   useEffect(() => {
     if (machine) {
-      console.log('machine state', machine.state)
+      // console.log('machine state', machine.state)
       sandpack.updateFile('/state.json', JSON.stringify(machine.state?.name, null, 2))
+      sentToClients(sandpack, {
+        type: 'state',
+        state: machine.state?.name
+      });
     }
   }, [machine.state])
   // const [model, setModel] = useState<Statemachine>()
@@ -118,3 +122,9 @@ function TheStack() {
     </SandpackStack>
   );
 }
+function sentToClients(sandpack: SandpackState, message: any) {
+  Object.values(sandpack.clients).forEach((client) => {
+    client.iframe.contentWindow?.postMessage(message, "*");    
+  });
+}
+

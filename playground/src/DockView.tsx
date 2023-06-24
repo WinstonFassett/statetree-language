@@ -42,10 +42,7 @@ const components: PanelCollection<IDockviewPanelProps> = {
       </div>;
     },
     preview: (props: IDockviewPanelProps<{ someProps: string }>) => {
-      return <div>
-        Preview for:{props.params.someProps}
-        <SandpackPreview style={{ height: "100vh" }} />
-      </div>;
+      return <SandpackPreview style={{ height: "100vh" }} />
     },
 };
 
@@ -62,14 +59,14 @@ const headers: PanelCollection<IDockviewPanelHeaderProps> = {
 
 export const DockView = () => {
     const onReady = (event: DockviewReadyEvent) => {
-        event.api.addPanel({
-          id: 'machine.json',
-          component: 'editor',
-          // tabComponent: 'customTab', // optional custom header
-          params: {
-              someProps: '/machine.json',
-          },          
-        });
+        // event.api.addPanel({
+        //   id: 'machine.json',
+        //   component: 'editor',
+        //   // tabComponent: 'customTab', // optional custom header
+        //   params: {
+        //       someProps: '/machine.json',
+        //   },          
+        // });
         event.api.addPanel({
           id: 'machine.statetree',
           component: 'statetree',
@@ -94,14 +91,14 @@ export const DockView = () => {
           },
           position: { referencePanel: 'viz', direction: 'right' },
         });
-        event.api.addPanel({
-          id: 'state.json',
-          component: 'editor',
-          // tabComponent: 'customTab', // optional custom header
-          params: {
-              someProps: '/state.json',
-          },
-      })
+        // event.api.addPanel({
+        //   id: 'state.json',
+        //   component: 'editor',
+        //   // tabComponent: 'customTab', // optional custom header
+        //   params: {
+        //       someProps: '/state.json',
+        //   },
+        // })
         event.api.addPanel({
             id: 'App.js',
             component: 'editor',
