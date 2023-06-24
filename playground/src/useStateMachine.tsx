@@ -2,6 +2,8 @@ import { createContext, useEffect } from 'react';
 import { State, Statemachine } from '../../src/language/generated/ast';
 import useUndo from 'use-undo';
 import constate from 'constate'
+import { Reference } from 'langium';
+// import { Reference } from '../../src/langium-utils/langium-ast';
 
 // import MonacoReactEditor from './MonacoReactEditorWithJsxConfig'
 // import MonacoEditorReactJsx from './MonacoEditorReactJsx'
@@ -30,7 +32,7 @@ export function useStateMachine ({model}:{model: Statemachine|undefined}) {
       canUndo,
       canRedo,
     },
-  ] = useUndo<State|undefined>(getTargetState(model?.init?.ref ?? model?.states[0]))
+  ] = useUndo<State|undefined>(getTargetState(getInitState(model?.init, model?.states)))
   const { present: state } = stateHistory;
   // const [state, setState] = useState<State|undefined>(getTargetState(model.init?.ref ?? model.states[0]))
     
@@ -39,13 +41,17 @@ export function useStateMachine ({model}:{model: Statemachine|undefined}) {
     // find current state by name
     const previousState = state!== undefined && model && findStateByName(model, state.name)
     // const nextState = previousState // || model.init?.ref
-    const validState = previousState || model?.init?.ref
+    const validState = previousState || getInitState(model?.init, model?.states)
     if (validState) {
       setState(getTargetState(validState))
     }
     // index the model?
   }, [model])
   
+  function getInitState (initialState: Reference<State> | undefined, states: State[] | undefined, ) {
+    return initialState?.ref ?? states?.[0]
+  }
+
   function getTargetState (newState: State|undefined): State | undefined {
     if (newState === undefined) return newState
     const firstState = newState?.states?.[0]
@@ -63,8 +69,8 @@ export function useStateMachine ({model}:{model: Statemachine|undefined}) {
     const newState = transition?.to?.ref
     newState && updateState(newState)
   }
-  function reset () {
-    const initialState = model?.init?.ref ?? model?.states[0]
+  function reset () {    
+    const initialState = getInitState(model?.init, model?.states)
     resetState(initialState && getTargetState(initialState))
   }
   return [state, { state, send, undo, redo, canUndo, canRedo, reset, model }] as [State, { 
