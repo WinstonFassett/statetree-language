@@ -14,9 +14,8 @@ export const Inspector = (...[{ data }]: Parameters<typeof ObjectInspector>) => 
 
 
   const wrapped = useDeepStoreProxy(data)
-  return <div>
-    inspector
-    <ObjectInspector data={wrapped} nodeRenderer={nodeRenderer}/>
+  return <div className="p-4 h-full bg-[rgb(36,36,36)]">
+    <ObjectInspector expandLevel={2} theme='chromeDark' data={wrapped} nodeRenderer={nodeRenderer}/>
   </div>
 }
 

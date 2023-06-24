@@ -3,10 +3,17 @@ import { useStore } from '@nanostores/react'
 import * as store from './store'
 import { isStore, peek } from './lib/nanostore-utils'
 import { Inspector } from './Inspector'
-import { InspectorNodeRenderer } from './InspectorNodeRenderer'
+// import { InspectorNodeRenderer } from './InspectorNodeRenderer'
+import { useStateMachineContext } from './useStateMachine'
 
 export function DebugPane({}) {
-  return <Inspector data={store} />
+  const [_, machine] = useStateMachineContext()
+  const { state, model } = machine
+  return <Inspector data={{
+    state, 
+    model,
+    // code: store.code
+  }} />
 }
 
 export function DebugPane1({}) {

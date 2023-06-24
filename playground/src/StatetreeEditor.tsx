@@ -12,6 +12,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import { generateStatements } from '../../src/codegen';
 import { DocumentChangeResponse, LangiumAST } from '../../src/langium-utils/langium-ast';
 import { Statemachine } from '../../src/language/generated/ast';
+import { code as codeStore } from './store'
 
 const extensionFilesOrContents = new Map<string, string | URL>();
 extensionFilesOrContents.set('/statetree-configuration.json', languageConfigurationRaw);
@@ -72,11 +73,16 @@ const userConfig: UserConfig = {
             extensionFilesOrContents: extensionFilesOrContents,
             userConfiguration: {
                 json: `{
-                    "editor.minimap.enabled": false
+                    "editor.minimap.enabled": false,
+                    "workbench.colorTheme": "Default Dark Modern",
+                    "editor.fontSize": 14,
+                    "editor.lightbulb.enabled": true,
+                    "editor.lineHeight": 20,
+                    "editor.guides.bracketPairsHorizontal": "active",
+                    "editor.lightbulb.enabled": true
                 }`
             }      
         },
-
     },
     editorConfig: {
         languageId: 'statetree',
@@ -103,7 +109,10 @@ export function StatetreeEditor ({ onModelCreated, ...rest }: { onModelCreated: 
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
   return <MonacoEditorReactComp
       ref={monacoEditor}
-      userConfig={userConfig}
+      userConfig={userConfig}      
+      onTextChanged={text => {
+        codeStore.set(text)
+      }}
       onLoad={() => {
         if (!monacoEditor.current) {
             throw new Error("Unable to get a reference to the Monaco Editor");

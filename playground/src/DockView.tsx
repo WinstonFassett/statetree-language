@@ -4,6 +4,10 @@ import {
     PanelCollection,
     IDockviewPanelProps,
     IDockviewPanelHeaderProps,
+    SplitviewReadyEvent,
+    SplitviewReact,
+    Orientation,
+    ISplitviewPanelProps,
 } from 'dockview';
 import 'dockview/dist/styles/dockview.css';
 
@@ -80,16 +84,17 @@ export const DockView = () => {
           params: {
               someProps: 'World',
           },
+          position: { referencePanel: 'viz', direction: 'right' },
         });      
-      //   event.api.addPanel({
-      //       id: 'App.js',
-      //       component: 'editor',
-      //       // tabComponent: 'customTab', // optional custom header
-      //       params: {
-      //           someProps: '/App.js',
-      //       },
-      //       position: { referencePanel: 'machine.statetree', direction: 'below' },
-      //   });
+        event.api.addPanel({
+            id: 'App.js',
+            component: 'editor',
+            // tabComponent: 'customTab', // optional custom header
+            params: {
+                someProps: '/App.js',
+            },
+            position: { referencePanel: 'machine.statetree', direction: 'below' },
+        });
       //   event.api.addPanel({
       //     id: 'state.json',
       //     component: 'editor',
@@ -100,14 +105,14 @@ export const DockView = () => {
       //     },
       //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
       // });
-      //   event.api.addPanel({
-      //       id: 'preview',
-      //       component: 'preview',
-      //       params: {
-      //           someProps: 'World',
-      //       },
-      //       position: { referencePanel: 'viz', direction: 'below' },
-      //   });
+        event.api.addPanel({
+            id: 'preview',
+            component: 'preview',
+            params: {
+                someProps: 'World',
+            },
+            position: { referencePanel: 'viz', direction: 'below' },
+        });
     };
 
     return (
@@ -117,4 +122,39 @@ export const DockView = () => {
             onReady={onReady}
         />
     );
+};
+const splitViewComponents = {
+  default: (props: ISplitviewPanelProps<{ title: string }>) => {
+      return <div style={{ padding: '20px' }}>{props.params.title}</div>;
+  },
+};
+
+export const DockView2 = () => {
+  const onReady = (event: SplitviewReadyEvent) => {
+      event.api.addPanel({
+          id: 'panel_1',
+          component: 'default',
+          params: {
+              title: 'Panel 1',
+          },
+      });
+      event.api.addPanel({
+          id: 'panel_2',
+          component: 'default',
+          params: {
+              title: 'Panel 2',
+          },
+      });
+
+      
+  };
+
+  return (
+      <SplitviewReact
+          components={splitViewComponents}
+          onReady={onReady}
+          orientation={Orientation.VERTICAL}
+          className="dockview-theme-abyss"
+      />
+  );
 };

@@ -16,8 +16,6 @@ const api  = {
     console.log('todo: send', event)
   }
 }
-const ast = atom()
-
 
 const machine = {
   mode: machineMode,
@@ -33,4 +31,4 @@ const app = {
 
 ;(window as any).app = app
 
-export { app, code, model, ast, machine }
+export { code, model }
