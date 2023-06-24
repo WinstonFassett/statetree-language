@@ -7,7 +7,7 @@ export function SandpackMonacoEditor ({ filename, ...rest }: { filename: string 
   // console.log('files', sandpack.files)
   const code = sandpack.files[filename].code
   return <div>
-    <p>monaco editor for {filename}</p>
+    {/* <p>monaco editor for {filename}</p> */}
     <MonacoReactEditor {...rest} code={code} onChange={code => {
       // console.log({code})
       sandpack.updateFile(filename, code)

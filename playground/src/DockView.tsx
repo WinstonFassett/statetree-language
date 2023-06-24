@@ -14,12 +14,16 @@ import { ModelContext } from './ModelContext';
 import { SandpackPreview } from '@codesandbox/sandpack-react';
 import { SandpackMonacoEditor } from './SandpackMonacoEditor';
 import { StateMachinePane } from './StateMachinePane';
+import { DebugPane } from './DebugPane';
 
 
 const components: PanelCollection<IDockviewPanelProps> = {
     default: (props: IDockviewPanelProps<{ someProps: string }>) => {
       return <div>{props.params.someProps}</div>;
     },
+    debug: (props: IDockviewPanelProps<{ someProps: string }>) => {
+      return (<DebugPane />)
+    },    
     viz: (props: IDockviewPanelProps<{ someProps: string }>) => {
       return (<StateMachinePane />)
     },
@@ -27,10 +31,10 @@ const components: PanelCollection<IDockviewPanelProps> = {
       const {model, setModel} = useContext(ModelContext)
       return <StatetreeEditor onModelCreated={setModel}  />;
     },
-    editor: (props: IDockviewPanelProps<{ someProps: string }>) => {
+    editor: (props: IDockviewPanelProps<{ someProps: string, language?: string }>) => {
       return <div>
         {/* editor for:{props.params.someProps} or {props.params.someProps} */}
-        <SandpackMonacoEditor filename={props.params.someProps} />
+        <SandpackMonacoEditor filename={props.params.someProps} language={props.params.language} />
       </div>;
     },
     preview: (props: IDockviewPanelProps<{ someProps: string }>) => {
@@ -69,24 +73,41 @@ export const DockView = () => {
                 someProps: 'World',
             },
             position: { referencePanel: 'machine.statetree', direction: 'right' },
+        });
+        event.api.addPanel({
+          id: 'debug',
+          component: 'debug',
+          params: {
+              someProps: 'World',
+          },
         });      
-        event.api.addPanel({
-            id: 'App.js',
-            component: 'editor',
-            // tabComponent: 'customTab', // optional custom header
-            params: {
-                someProps: '/App.js',
-            },
-            position: { referencePanel: 'machine.statetree', direction: 'below' },
-        });
-        event.api.addPanel({
-            id: 'preview',
-            component: 'preview',
-            params: {
-                someProps: 'World',
-            },
-            position: { referencePanel: 'viz', direction: 'below' },
-        });
+      //   event.api.addPanel({
+      //       id: 'App.js',
+      //       component: 'editor',
+      //       // tabComponent: 'customTab', // optional custom header
+      //       params: {
+      //           someProps: '/App.js',
+      //       },
+      //       position: { referencePanel: 'machine.statetree', direction: 'below' },
+      //   });
+      //   event.api.addPanel({
+      //     id: 'state.json',
+      //     component: 'editor',
+      //     // tabComponent: 'customTab', // optional custom header
+      //     params: {
+      //         someProps: '/state.json',
+      //         language: 'json'
+      //     },
+      //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
+      // });
+      //   event.api.addPanel({
+      //       id: 'preview',
+      //       component: 'preview',
+      //       params: {
+      //           someProps: 'World',
+      //       },
+      //       position: { referencePanel: 'viz', direction: 'below' },
+      //   });
     };
 
     return (

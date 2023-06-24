@@ -14,6 +14,7 @@ import { Statemachine } from "../../src/language/generated/ast";
 import { getLanguageOfFile } from "./getLanguageOfFile";
 
 export default function StatetreeSandpackFiddle() {
+  console.log({ window, globalThis})
   return (
     <SandpackProvider template="react" theme="dark" files={{
 '/App.js': 
@@ -27,6 +28,14 @@ export default function App() {
   Hello {children}!
   </h2>)`,
 'machine.statetree': 'soon:example',
+'state.json': JSON.stringify(
+  {
+    p1: "v3",
+    p2: false
+  },
+  null,
+  2
+)
     }} options={{
       externalResources: ["https://cdn.tailwindcss.com"],
       recompileDelay:40
