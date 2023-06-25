@@ -73,11 +73,11 @@ const userConfig: UserConfig = {
             extensionFilesOrContents: extensionFilesOrContents,
             userConfiguration: {
                 json: `{
-                    "editor.minimap.enabled": false,
+                    "editor.minimap.enabled": true,
                     "workbench.colorTheme": "Default Dark Modern",
                     "editor.fontSize": 12,
                     "editor.lightbulb.enabled": true,
-                    "editor.lineHeight": 20,
+                    // "editor.lineHeight": 20,
                     "editor.guides.bracketPairsHorizontal": "active",
                     "editor.lightbulb.enabled": true
                 }`

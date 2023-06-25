@@ -1,9 +1,8 @@
-import { ObjectInspector } from 'react-inspector'
+import { ObjectInspector, chromeLight, chromeDark } from 'react-inspector'
 import { createNodeRenderer, useNodeRenderer } from './InspectorNodeRenderer'
 import { Store } from 'nanostores'
 import { isStore, peek } from './lib/nanostore-utils'
 import { useEffect, useMemo, useRef, useState } from 'react'
-
 
 export const Inspector = (...[{ data }]: Parameters<typeof ObjectInspector>) => {
   // console.log({ data })
@@ -11,11 +10,10 @@ export const Inspector = (...[{ data }]: Parameters<typeof ObjectInspector>) => 
   const nodeRenderer = useNodeRenderer(() => {
     // console.log('change')
   })
-
-
+  console.log({ chromeDark})
   const wrapped = useDeepStoreProxy(data)
-  return <div className="p-4 h-full bg-[rgb(36,36,36)]">
-    <ObjectInspector expandLevel={2} theme='chromeDark' data={wrapped} nodeRenderer={nodeRenderer}/>
+  return <div className="pl-2 pt-1 h-full bg-[rgb(36,36,36)]">
+    <ObjectInspector expandLevel={2} theme={{ ...chromeDark,  BASE_FONT_SIZE: '12px', TREENODE_FONT_SIZE: '12px', TREENODE_LINE_HEIGHT: '18px'  }} data={wrapped} nodeRenderer={nodeRenderer}/>
   </div>
 }
 
