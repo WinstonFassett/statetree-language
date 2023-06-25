@@ -167,7 +167,7 @@ export const DockView2 = () => {
           components={splitViewComponents}
           onReady={onReady}
           orientation={Orientation.VERTICAL}
-          className="dockview-theme-abyss"
+          className="dockview-theme-dark"
       />
   );
 };

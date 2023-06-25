@@ -75,7 +75,7 @@ const userConfig: UserConfig = {
                 json: `{
                     "editor.minimap.enabled": false,
                     "workbench.colorTheme": "Default Dark Modern",
-                    "editor.fontSize": 14,
+                    "editor.fontSize": 12,
                     "editor.lightbulb.enabled": true,
                     "editor.lineHeight": 20,
                     "editor.guides.bracketPairsHorizontal": "active",
