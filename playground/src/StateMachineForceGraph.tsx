@@ -282,10 +282,7 @@ export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
     Graph.value = machine.state;
     Graph.graphData(diagram);
   }, [diagram, lastRenderInfo.stateFullName]);
-  return <div data-theme="light">
-    <h3 className='text-xl'>StateForceGraph</h3>
-    <div ref={graphElRef} />
-  </div>
+  return <div ref={graphElRef}  data-theme="light" />  
 }
 
 function escapeId(name: string): string {
