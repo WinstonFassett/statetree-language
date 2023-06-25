@@ -39,7 +39,10 @@ export default function StatetreeSandpackFiddle() {
 'machine.json': '{}',
 'state.json': '"not_set"'
     }} options={{
-      externalResources: ["https://cdn.tailwindcss.com"],
+      externalResources: [
+        "https://cdn.tailwindcss.com",
+        "https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css"
+      ],
       recompileDelay:40
     }}>
       <SandpackLayout>
