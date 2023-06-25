@@ -72,7 +72,7 @@ function TheStack() {
       // console.log({ xstate })
       sandpack.updateFile('/machine.json', JSON.stringify(xstate, null, 2))
       // console.log("update clients")
-      sentToClients(sandpack, {
+      sendToSandpackBundlers(sandpack, {
         type: 'model',
         model: xstate
       });
@@ -91,7 +91,7 @@ function TheStack() {
     if (machine) {
       // console.log('machine state', machine.state)
       sandpack.updateFile('/state.json', JSON.stringify(machine.state?.name, null, 2))
-      sentToClients(sandpack, {
+      sendToSandpackBundlers(sandpack, {
         type: 'state',
         state: machine.state?.name
       });
@@ -111,7 +111,7 @@ function TheStack() {
     </SandpackStack>
   );
 }
-function sentToClients(sandpack: SandpackState, message: any) {
+function sendToSandpackBundlers(sandpack: SandpackState, message: any) {
   Object.values(sandpack.clients).forEach((client) => {
     client.iframe.contentWindow?.postMessage(message, "*");    
   });
