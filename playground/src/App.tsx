@@ -30,9 +30,9 @@ function App() {
   return (<div data-theme="night">
     <ModelContext.Provider value={{model, setModel: innerSetModel}}>
       <StateMachineInstanceProvider model={model}>
-        <PlainSandpack />
+        {/* <PlainSandpack /> */}
         {/* <Playground /> */}
-        {/* <StatetreeSandpackFiddle /> */}
+        <StatetreeSandpackFiddle />
         {/* <MonacoSandpack /> */}
         {/* <MonacoEditorJsx /> */}
         {/* <MonacoReactEditor /> */}

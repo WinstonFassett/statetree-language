@@ -20,76 +20,63 @@ import { useStateMachineContext } from "./useStateMachine";
 import { getParentState } from "./getParentState";
 import AppJS from './fiddle/App.js?raw'
 import { sendToSandpackBundlers } from "./sendToSandpackBundlers";
-export default function StatetreeSandpackFiddle() {
-  // console.log({ window, globalThis})
 
+function addPrototypingResources (template: any = {}) {
+  template.options ||= {}
+  template.options.externalResources ||= []
+  template.options.externalResources.push(
+    "https://cdn.tailwindcss.com"
+  )
+  template.options.externalResources.push(
+    "https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css"
+  )            
+}
+const STATETREE_TEMPLATE: any = {
+  files: {
+    '/App.js': AppJS,
+    '/styles.css': REACT_TEMPLATE.files["/styles.css"].code + `
+    html, body, #root { height: 100%; }
+    `,
+    '/Wrapper.js': `export default ({ children }) => (<h2>
+      Hello {children}!
+      </h2>)`,
+    'machine.statetree': '',
+    'machine.json': '{}',
+    'state.json': '"not_set"'
+  },
+  customSetup: { 
+    dependencies: { 
+      "nanostores": "latest",
+      "@nanostores/react": "latest",
+      "@heroicons/react": "latest",
+    }
+  }
+}
+addPrototypingResources(STATETREE_TEMPLATE)
+
+export default function StatetreeSandpackFiddle() {
   return (
     <SandpackProvider template="react" theme="dark" 
-      customSetup={{ 
-        dependencies: { 
-          "nanostores": "latest",
-          "@nanostores/react": "latest",
-          "@heroicons/react": "latest",
-        }
-      }}
-      files={{
-'/App.js': AppJS,
-'/styles.css': REACT_TEMPLATE.files["/styles.css"].code + `
-html, body, #root { height: 100%; }
-`,
-'/Wrapper.js': `export default ({ children }) => (<h2>
-  Hello {children}!
-  </h2>)`,
-'machine.statetree': '',
-'machine.json': '{}',
-'state.json': '"not_set"'
-    }} options={{
-      externalResources: [
-        "https://cdn.tailwindcss.com",
-        "https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css",
-      ],
-      // recompileDelay:
-    }}>
+      customSetup={STATETREE_TEMPLATE.customSetup}
+      files={STATETREE_TEMPLATE.files} options={STATETREE_TEMPLATE.options}>
       <SandpackLayout>
-        {/* <DockView /> */}
         <TheStack />
-        {/* 
-        <SandpackPreview style={{ height: "100vh" }} /> */}
       </SandpackLayout>
-
     </SandpackProvider>
   );
 }
-
 
 function TheStack() {
   const { sandpack } = useSandpack();
   const model = useStore(store.model)
   const [state, machine] = useStateMachineContext()
   useEffect(() => {
-    if (model) {
-      const xstate = generateXState(model)
-      // console.log({ xstate })
-      sandpack.updateFile('/machine.json', JSON.stringify(xstate, null, 2))
-      // console.log("update clients")
-      sendToSandpackBundlers(sandpack, {
-        type: 'model',
-        model: xstate
-      });
-    }    
+    sendModelToSandpacks(model, sandpack);    
   },[model])
-  const activeStates = useMemo(() => {
-    const items: State[] = []
-    let state: State | undefined = machine.state
-    while (state) {
-      items.push(state)
-      state = getParentState(state)
-    }
-    return items.reverse()
-  }, [model?.states, machine.state])
+  // const { state } = machine
+  const activeStates = useMemo(() => getActiveStates(state), [model?.states, machine.state])
   useEffect(() => {
     if (machine) {
-      // console.log('machine state', machine.state)
       sandpack.updateFile('/state.json', JSON.stringify(machine.state?.name, null, 2))
       sendToSandpackBundlers(sandpack, {
         type: 'state',
@@ -97,18 +84,37 @@ function TheStack() {
       });
     }
   }, [machine.state])
-  // const [model, setModel] = useState<Statemachine>()
   const { code, updateCode } = useActiveCode();
   const { activeFile } = sandpack
   const language = activeFile && getLanguageOfFile(activeFile);
 
   return (
     <SandpackStack style={{ height: "100vh", margin: 0 }}>
-      {/* <FileTabs /> */}
       <div style={{ flex: 1 }}>
         <DockView />
       </div>
     </SandpackStack>
   );
+}
+
+function sendModelToSandpacks(model: Statemachine | undefined, sandpack) {
+  if (model) {
+    const xstate = generateXState(model);
+    sandpack.updateFile('/machine.json', JSON.stringify(xstate, null, 2));
+    sendToSandpackBundlers(sandpack, {
+      type: 'model',
+      model: xstate
+    });
+  }
+}
+
+function getActiveStates(state: State): State[] {
+  const items: State[] = [];
+  let aState: State | undefined = state;
+  while (aState) {
+    items.push(aState);
+    aState = getParentState(aState);
+  }
+  return items.reverse();
 }
 
