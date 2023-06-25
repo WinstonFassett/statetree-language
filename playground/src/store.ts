@@ -23,12 +23,14 @@ const machine = {
   ...api
 }
 
-const app = {
+const dark = atom(true)
+const theme = { dark }
+
+export { theme, code, model, machine }
+
+;(window as any).app = {
+  theme,
   code,
   model,
   machine
 }
-
-;(window as any).app = app
-
-export { code, model }
