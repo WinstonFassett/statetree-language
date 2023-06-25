@@ -1,4 +1,8 @@
-import React, { useEffect, useMemo } from "react";
+import ForceGraph from 'force-graph'
+
+import React, { useEffect, useMemo, useRef } from "react";
+import { StateMachineInstance } from './useStateMachine';
+import { State } from '../../src/language/generated/ast';
 
 function findNode(nodes, id) {
   return nodes.find((it) => it.id === id);
@@ -10,53 +14,40 @@ function canFire(machine, state, event) {
   return mode && mode.on && mode.on[event];
 }
 
-export default function StateForceGraph({
-  value,
-  lastEvent,
-  prevState,
-  definition,
-  dispatch
-}) {
-  const valueLatest = React.useRef();
-  const lastProps = React.useRef({ lastEvent, prevState, value });
-  const prevProps = React.useRef({});
-  useEffect(() => {
-    prevProps.current = lastProps.current;
-    lastProps.current = { lastEvent, prevState, value };
-  }, [value, lastEvent, prevState]);
-  useEffect(() => {
-    valueLatest.current = value;
-  }, [value]);
-  // console.log("lastevent:", { lastEvent, prevState });
-  const ref = React.useRef();
+export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
+  console.log({ machine })
+  const definition = machine.model
+  if (!definition) {
+    return <div>
+      Awaiting state machine definition
+    </div>
+  }
   const diagram = useMemo(() => {
     // generate list of nodes and edges with ids
-    const stateIds = Object.keys(definition.states);
-    const nodes = stateIds.map((key) => {
-      return { name: key, id: key, label: key.replaceAll("_", " ") };
+    const nodes = definition.states.map((state) => {
+      const { name } = state
+      return { name, id: name, label: escapeId(name) };
     });
-
-    const links = [];
-    stateIds.forEach((key) => {
-      const state = definition.states[key];
-      const source = findNode(nodes, key);
-      state.on &&
-        Object.keys(state.on).forEach((name) => {
-          const targetId = state.on[name];
-          const target = findNode(nodes, targetId); //definition.states[targetId];
-          const label = name.replaceAll("_", " ");
-          links.push({ name, label, source, target });
-        });
+    const links: { name: string, label: string, source: State, target: State }[] = [];
+    machine.model.states.forEach((state) => {
+      const { name } = state
+      const key = name
+      const label = escapeId(name);
+      state.transitions?.forEach(transition =>{
+        if (transition.to?.ref) {
+          links.push({ name, label, source: state, target: transition.to.ref });
+        }
+      })
     });
-
     return { nodes, links };
   }, [definition]);
-  // console.log("diagram", diagram);
-  // let Graph =
+  console.log({ diagram })
 
+  const graphElRef = useRef(null)
   useEffect(() => {
-    const Graph = ForceGraph()(ref.current);
-    ref.current.Graph = Graph;
+    console.log("let's GOOOOO")
+    const Graph = ForceGraph()(graphElRef.current);
+    graphElRef.current.Graph = Graph;
     Graph.height(300)
       // .linkDirectionalParticles(1)
       .linkCurvature("curvature")
@@ -73,7 +64,7 @@ export default function StateForceGraph({
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
         ctx.fillStyle =
-          node.name === lastProps.current.value ? "black" : "darkGrey"; //node.color;
+          node.name === (false && lastProps.current.value) ? "black" : "darkGrey"; //node.color;
         ctx.fillText(label, node.x - 2, node.y);
       })
       // edge labels
@@ -82,7 +73,7 @@ export default function StateForceGraph({
       .nodeAutoColorBy("name")
       .linkCanvasObjectMode(() => "after")
       .linkCanvasObject((link, ctx) => {
-        // console.log({link, lastEvent})
+        console.log({link, ctx })
         // console.log('link', link.curvature)
         // if (lastEvent !== link.name) {
         //   return
@@ -145,7 +136,7 @@ export default function StateForceGraph({
           (n) => n + fontSize * 0.2
         ); // some padding
 
-        // draw text label (with background rect)
+        console.log('// draw text label (with background rect)')
         ctx.save();
         ctx.translate(textPos.x, textPos.y);
         // ctx.translate(
@@ -163,10 +154,11 @@ export default function StateForceGraph({
           ...bckgDimensions
         );
         const color =
-          valueLatest.current === link.source.name &&
-          canFire(definition, valueLatest.current, link.name)
-            ? "blue"
-            : "darkgrey";
+          // valueLatest.current === link.source.name &&
+          // canFire(definition, valueLatest.current, link.name)
+          //   ? "blue"
+          //   : 
+            "darkgrey";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillStyle = color;
@@ -174,14 +166,15 @@ export default function StateForceGraph({
         ctx.restore();
       })
       .linkColor((link) =>
-        valueLatest.current === link.source.name &&
-        canFire(definition, valueLatest.current, link.name)
-          ? "blue"
-          : lastProps.current.prevState === link.source.name &&
-            lastProps.current.lastEvent &&
-            lastProps.current.lastEvent.type === link.name
-          ? "teal"
-          : "darkgrey"
+        // valueLatest.current === link.source.name &&
+        // canFire(definition, valueLatest.current, link.name)
+        //   ? "blue"
+        //   : lastProps.current.prevState === link.source.name &&
+        //     lastProps.current.lastEvent &&
+        //     lastProps.current.lastEvent.type === link.name
+        //   ? "teal"
+        //   : 
+          "darkgrey"
       )
       .linkDirectionalParticleColor(() => "teal")
       .linkDirectionalParticleSpeed(0.04)
@@ -191,6 +184,9 @@ export default function StateForceGraph({
         dispatch({ type: name });
         console.log("dispatched", name);
       });
+    
+    console.log('here now')
+    
     let selfLoopLinks = {};
     let sameNodesLinks = {};
     const curvatureMinMax = 0.5;
@@ -198,6 +194,7 @@ export default function StateForceGraph({
     // 1. assign each link a nodePairId that combines their source and target independent of the links direction
     // 2. group links together that share the same two nodes or are self-loops
     diagram.links.forEach((link) => {
+      console.log({ link })
       link.nodePairId =
         link.source <= link.target
           ? link.source + "_" + link.target
@@ -209,7 +206,7 @@ export default function StateForceGraph({
       map[link.nodePairId].push(link);
     });
 
-    // Compute the curvature for self-loop links to avoid overlaps
+    console.log('// Compute the curvature for self-loop links to avoid overlaps')
     Object.keys(selfLoopLinks).forEach((id) => {
       let links = selfLoopLinks[id];
       let lastIndex = links.length - 1;
@@ -239,8 +236,51 @@ export default function StateForceGraph({
         }
       });
 
-    // console.log("made graph", Graph);
-  }, [0]);
+    console.log("made graph", Graph);
+  }, []);
+  useEffect(() => {
+    // console.log("effect", ref.current, { definition, value });
+    // const Graph = ForceGraph()(ref.current);
+    const { Graph } = graphElRef.current as any;
+    Graph.value = machine.state;
+    Graph.graphData(diagram);
+    // if (Graph) {
+    // }
+  }, [diagram, machine.state]);
+  return <div data-theme="light">
+    <h3>Soon: StateForceGraph</h3>
+    <div ref={graphElRef} />
+  </div>
+}
+
+function escapeId(name: string): string {
+  return name.replace(/_/, " ");
+}
+
+export function StateForceGraph1({
+  value,
+  lastEvent,
+  prevState,
+  definition,
+  dispatch
+}) {
+  const valueLatest = React.useRef();
+  const lastProps = React.useRef({ lastEvent, prevState, value });
+  const prevProps = React.useRef({});
+  useEffect(() => {
+    prevProps.current = lastProps.current;
+    lastProps.current = { lastEvent, prevState, value };
+  }, [value, lastEvent, prevState]);
+  useEffect(() => {
+    valueLatest.current = value;
+  }, [value]);
+  // console.log("lastevent:", { lastEvent, prevState });
+  const ref = React.useRef();
+  
+  // console.log("diagram", diagram);
+  // let Graph =
+
+
   useEffect(() => {
     // console.log("effect", ref.current, { definition, value });
     // const Graph = ForceGraph()(ref.current);

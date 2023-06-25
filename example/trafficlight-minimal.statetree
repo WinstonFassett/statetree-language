@@ -1,0 +1,3 @@
+Red { tick => Green }
+Green { tick => Yellow }
+Yellow { tick => Red }

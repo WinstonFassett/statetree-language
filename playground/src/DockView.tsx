@@ -19,6 +19,7 @@ import { SandpackPreview } from '@codesandbox/sandpack-react';
 import { SandpackMonacoEditor } from './SandpackMonacoEditor';
 import { StateMachinePane } from './StateMachinePane';
 import { DebugPane } from './DebugPane';
+import { StateMachineForceGraph } from './StateMachineForceGraphPane';
 
 
 const components: PanelCollection<IDockviewPanelProps> = {
@@ -30,6 +31,9 @@ const components: PanelCollection<IDockviewPanelProps> = {
     },    
     viz: (props: IDockviewPanelProps<{ someProps: string }>) => {
       return (<StateMachinePane />)
+    },
+    forceGraph: (props: IDockviewPanelProps<{ someProps: string }>) => {
+      return (<StateMachineForceGraph />)
     },
     statetree: (props: IDockviewPanelProps<{ someProps: string }>) => {
       const {model, setModel} = useContext(ModelContext)
@@ -75,22 +79,30 @@ export const DockView = () => {
               someProps: 'machine.statetree',
           },
         });
+        // event.api.addPanel({
+        //     id: 'viz',
+        //     component: 'viz',
+        //     params: {
+        //         someProps: 'World',
+        //     },
+        //     position: { referencePanel: 'machine.statetree', direction: 'right' },
+        // });
+        // event.api.addPanel({
+        //   id: 'debug',
+        //   component: 'debug',
+        //   params: {
+        //       someProps: 'World',
+        //   },
+        //   position: { referencePanel: 'viz', direction: 'right' },
+        // });
         event.api.addPanel({
-            id: 'viz',
-            component: 'viz',
-            params: {
-                someProps: 'World',
-            },
-            position: { referencePanel: 'machine.statetree', direction: 'right' },
-        });
-        event.api.addPanel({
-          id: 'debug',
-          component: 'debug',
+          id: 'forceGraph',
+          component: 'forceGraph',
           params: {
               someProps: 'World',
           },
-          position: { referencePanel: 'viz', direction: 'right' },
-        });
+          // position: { referencePanel: 'machine.statetree', direction: 'right' },
+      });
         // event.api.addPanel({
         //   id: 'state.json',
         //   component: 'editor',
@@ -99,15 +111,15 @@ export const DockView = () => {
         //       someProps: '/state.json',
         //   },
         // })
-        event.api.addPanel({
-            id: 'App.js',
-            component: 'editor',
-            // tabComponent: 'customTab', // optional custom header
-            params: {
-                someProps: '/App.js',
-            },
-            position: { referencePanel: 'machine.statetree', direction: 'below' },
-        });
+        // event.api.addPanel({
+        //     id: 'App.js',
+        //     component: 'editor',
+        //     // tabComponent: 'customTab', // optional custom header
+        //     params: {
+        //         someProps: '/App.js',
+        //     },
+        //     position: { referencePanel: 'machine.statetree', direction: 'below' },
+        // });
       //   event.api.addPanel({
       //     id: 'state.json',
       //     component: 'editor',
@@ -118,14 +130,14 @@ export const DockView = () => {
       //     },
       //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
       // });
-        event.api.addPanel({
-            id: 'preview',
-            component: 'preview',
-            params: {
-                someProps: 'World',
-            },
-            position: { referencePanel: 'viz', direction: 'below' },
-        });
+        // event.api.addPanel({
+        //     id: 'preview',
+        //     component: 'preview',
+        //     params: {
+        //         someProps: 'World',
+        //     },
+        //     position: { referencePanel: 'viz', direction: 'below' },
+        // });
     };
 
     return (
