@@ -7,7 +7,8 @@ import {
   SandpackStack,
   FileTabs,
   useSandpack,
-  SandpackState
+  SandpackState,
+  REACT_TEMPLATE
 } from "@codesandbox/sandpack-react";
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { DockView } from "./DockView";
@@ -33,6 +34,9 @@ export default function StatetreeSandpackFiddle() {
       }}
       files={{
 '/App.js': AppJS,
+'/styles.css': REACT_TEMPLATE.files["/styles.css"].code + `
+html, body, #root { height: 100%; }
+`,
 '/Wrapper.js': `export default ({ children }) => (<h2>
   Hello {children}!
   </h2>)`,
@@ -44,7 +48,7 @@ export default function StatetreeSandpackFiddle() {
         "https://cdn.tailwindcss.com",
         "https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css",
       ],
-      recompileDelay:40
+      // recompileDelay:
     }}>
       <SandpackLayout>
         {/* <DockView /> */}
