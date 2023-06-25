@@ -6,10 +6,13 @@ import {
 import { DockView } from "./DockView";
 import { STATETREE_TEMPLATE } from "./STATETREE_TEMPLATE";
 import { useStatetreeSandpackFiddle } from "./useSandpackStatetreeFiddle";
+import { useStore } from "@nanostores/react";
+import * as store from './store'
 
 export default function StatetreeSandpackFiddle() {
+  const isDark = useStore(store.theme.dark)
   return (
-    <SandpackProvider template="react" theme="dark" 
+    <SandpackProvider template="react" theme={isDark ? "dark" : "light"} 
       customSetup={STATETREE_TEMPLATE.customSetup}
       files={STATETREE_TEMPLATE.files} options={STATETREE_TEMPLATE.options}>
       <SandpackLayout>
