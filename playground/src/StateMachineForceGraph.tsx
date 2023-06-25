@@ -26,7 +26,7 @@ function getStateFQN(state:State) {
 }
 
 export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
-  console.log({ machine })
+  // console.log({ machine })
   const definition = machine.model
   const { send } = machine
   if (!definition) {
@@ -34,6 +34,16 @@ export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
       Awaiting state machine definition
     </div>
   }
+  const lastRenderInfo = useMemo(() => {
+    const state = machine?.state
+    return {
+      stateFullName: state && getStateFQN(state)
+    }
+  }, [])
+  useEffect(() => {
+    lastRenderInfo.stateFullName = machine.state && getStateFQN(machine.state)
+  }, [machine.state])
+  
   const diagram = useMemo(() => {    
     const links: { name: string, label: string, source: string, target: string }[] = [];    
     const nodes:any[] = []
@@ -47,10 +57,10 @@ export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
         const key = name;
         const label = escapeId(name);
         const node = { name, id: name, label }
-        console.log({ node })
+        // console.log({ node })
         nodes.push(node)
         state.transitions?.forEach(transition => {
-          console.log({ transition });
+          // console.log({ transition });
           if (transition.to?.ref) {
             links.push({ name, label, source: name, target: getStateFQN(transition.to.ref) });
           }
@@ -65,11 +75,11 @@ export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
       });
     }    
   }, [definition]);
-  console.log({ diagram })
+  // console.log({ diagram })
 
   const graphElRef = useRef(null)
   useEffect(() => {
-    console.log("let's GOOOOO")
+    // console.log("let's GOOOOO")
     const Graph = ForceGraph()(graphElRef.current);
     graphElRef.current.Graph = Graph;
     Graph.height(500)
@@ -90,7 +100,7 @@ export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
         ctx.fillStyle =
-          node.name === machine.state?.name ? "black" : "darkGrey"; //node.color;
+          node.name === lastRenderInfo.stateFullName ? "black" : "darkGrey"; //node.color;
         ctx.fillText(label, node.x+6, node.y);
       })
       // edge labels
@@ -213,7 +223,7 @@ export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
       //   console.log("d3ed", name);
       // });
     
-    console.log('here now')
+    // console.log('here now')
     
     let selfLoopLinks = {};
     let sameNodesLinks = {};
@@ -264,13 +274,14 @@ export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
     //     }
     //   });
 
-    console.log("made graph", Graph);
+    // console.log("made graph", Graph);
   }, []);
+
   useEffect(() => {
     const { Graph } = graphElRef.current as any;
     Graph.value = machine.state;
     Graph.graphData(diagram);
-  }, [diagram, machine.state]);
+  }, [diagram, lastRenderInfo.stateFullName]);
   return <div data-theme="light">
     <h3 className='text-xl'>StateForceGraph</h3>
     <div ref={graphElRef} />

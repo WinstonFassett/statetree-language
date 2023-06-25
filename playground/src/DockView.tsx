@@ -79,14 +79,14 @@ export const DockView = () => {
               someProps: 'machine.statetree',
           },
         });
-        // event.api.addPanel({
-        //     id: 'viz',
-        //     component: 'viz',
-        //     params: {
-        //         someProps: 'World',
-        //     },
-        //     position: { referencePanel: 'machine.statetree', direction: 'right' },
-        // });
+        event.api.addPanel({
+            id: 'viz',
+            component: 'viz',
+            params: {
+                someProps: 'World',
+            },
+            position: { referencePanel: 'machine.statetree', direction: 'right' },
+        });
         // event.api.addPanel({
         //   id: 'debug',
         //   component: 'debug',
@@ -101,7 +101,7 @@ export const DockView = () => {
           params: {
               someProps: 'World',
           },
-          // position: { referencePanel: 'machine.statetree', direction: 'right' },
+          position: { referencePanel: 'viz', direction: 'below' },
       });
         // event.api.addPanel({
         //   id: 'state.json',
