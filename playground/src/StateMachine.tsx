@@ -6,6 +6,9 @@ import { generateStatements, generateXState } from "../../src/codegen";
 import { StateMachineInstance } from "./useStateMachine";
 import { getParentState } from "./getParentState";
 
+import { ArrowUturnLeftIcon, ArrowUturnRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
+
+
 export function StateMachine({ model, instance }: { model: Statemachine, instance: StateMachineInstance }) {
   const{ states } = model
   const [curState, { send, undo, redo, canUndo, canRedo, reset }] = instance
@@ -24,7 +27,7 @@ export function StateMachine({ model, instance }: { model: Statemachine, instanc
   const getState = (name: string) => curState
   return <div className="h-full flex flex-col bg-base-100" data-theme="night">
     <div>
-      <div className="flex gap-2 bg-primary text-primary-content">
+      <div className="flex gap-2 bg-base-200">
         <div className="flex-1 p-2">
           <p>State: {curState?.name}</p>
           <p>Active States: {activeStates.map(state => state.name).join(', ')}</p>
@@ -32,9 +35,15 @@ export function StateMachine({ model, instance }: { model: Statemachine, instanc
         <div className="menu menu-horizontal">
           {/* <button className="btn btn-sm btn-ghost rounded-btn" onClick={exportJS}>Export JS</button>
           <button className="btn btn-sm btn-ghost rounded-btn" onClick={exportXState}>Export XState</button> */}
-          <button className="btn btn-sm btn-ghost rounded-btn" onClick={reset}>Restart</button>
-          <button disabled={!canUndo} className="btn btn-sm btn-ghost rounded-btn" onClick={undo}>Undo</button>
-          <button disabled={!canRedo} className="btn btn-sm btn-ghost rounded-btn" onClick={redo}>Redo</button>
+          <button className="btn btn-sm btn-ghost rounded-btn" onClick={reset}>
+            <ArrowPathIcon className="h-6 w-6" />
+          </button>
+          <button disabled={!canUndo} className="btn btn-sm btn-ghost rounded-btn" onClick={undo}>
+            <ArrowUturnLeftIcon className="h-6 w-6" />
+          </button>
+          <button disabled={!canRedo} className="btn btn-sm btn-ghost rounded-btn" onClick={redo}>
+          <ArrowUturnRightIcon className="h-6 w-6" />
+          </button>
 
         </div>
       </div>

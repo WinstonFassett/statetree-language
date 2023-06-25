@@ -27,7 +27,8 @@ export default function StatetreeSandpackFiddle() {
       customSetup={{ 
         dependencies: { 
           "nanostores": "latest",
-          "@nanostores/react": "latest" 
+          "@nanostores/react": "latest",
+          "@heroicons/react": "latest",
         }
       }}
       files={{
@@ -41,7 +42,7 @@ export default function StatetreeSandpackFiddle() {
     }} options={{
       externalResources: [
         "https://cdn.tailwindcss.com",
-        "https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css"
+        "https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css",
       ],
       recompileDelay:40
     }}>
