@@ -7,7 +7,6 @@ import {
   SandpackStack,
   FileTabs,
   useSandpack,
-  SandpackState,
   REACT_TEMPLATE
 } from "@codesandbox/sandpack-react";
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
@@ -20,6 +19,7 @@ import { generateXState } from "../../src/codegen";
 import { useStateMachineContext } from "./useStateMachine";
 import { getParentState } from "./getParentState";
 import AppJS from './fiddle/App.js?raw'
+import { sendToSandpackBundlers } from "./sendToSandpackBundlers";
 export default function StatetreeSandpackFiddle() {
   // console.log({ window, globalThis})
 
@@ -110,10 +110,5 @@ function TheStack() {
       </div>
     </SandpackStack>
   );
-}
-function sendToSandpackBundlers(sandpack: SandpackState, message: any) {
-  Object.values(sandpack.clients).forEach((client) => {
-    client.iframe.contentWindow?.postMessage(message, "*");    
-  });
 }
 
