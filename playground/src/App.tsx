@@ -12,7 +12,7 @@ import StatetreeSandpackFiddle from './StatetreeSandpackFiddle'
 import * as store from './store'
 import { model as sharedModel } from './store'
 import { useStateMachine, StateMachineInstanceProvider } from './useStateMachine'
-
+import { PlainSandpack } from './PlainSandpack'
 console.log({ store, sharedModel })
 
 function App() {
@@ -30,8 +30,9 @@ function App() {
   return (<div data-theme="night">
     <ModelContext.Provider value={{model, setModel: innerSetModel}}>
       <StateMachineInstanceProvider model={model}>
+        <PlainSandpack />
         {/* <Playground /> */}
-        <StatetreeSandpackFiddle />
+        {/* <StatetreeSandpackFiddle /> */}
         {/* <MonacoSandpack /> */}
         {/* <MonacoEditorJsx /> */}
         {/* <MonacoReactEditor /> */}
