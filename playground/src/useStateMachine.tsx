@@ -1,8 +1,8 @@
 import constate from 'constate';
-import { Reference } from 'langium';
 import { useEffect } from 'react';
 import useUndo from 'use-undo';
 import { State, Statemachine } from '../../src/language/generated/ast';
+import { getInitState } from './getInitState';
 
 export const [StateMachineInstanceProvider, useStateMachineContext] = constate(useStateMachine)
 
@@ -16,8 +16,6 @@ export type StateMachineInstance = {
   canRedo: boolean 
   reset(): void
 }
-// ReturnType<typeof useStateMachine>
-
 export function useStateMachine ({model}:{model: Statemachine|undefined}) {
   const [
     stateHistory,
@@ -39,9 +37,7 @@ export function useStateMachine ({model}:{model: Statemachine|undefined}) {
     }
   }, [model])
   
-  function getInitState (initialState: Reference<State> | undefined, states: State[] | undefined, ) {
-    return initialState?.ref ?? states?.[0]
-  }
+
 
   function getTargetState (newState: State|undefined): State | undefined {
     if (newState === undefined) return newState
