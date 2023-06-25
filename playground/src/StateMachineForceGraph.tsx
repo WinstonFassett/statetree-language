@@ -26,6 +26,16 @@ function getStateFQN(state:State) {
 }
 
 export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
+  const graphElRef = useStateForceDiagram(machine)
+  return <div ref={graphElRef}  data-theme="light" />  
+}
+
+function escapeId(name: string): string {
+  return name.replace(/_/, " ");
+}
+
+function useStateForceDiagram (machine: StateMachineInstance) {
+  const graphElRef = useRef(null)
   // console.log({ machine })
   const definition = machine.model
   const { send } = machine
@@ -77,7 +87,6 @@ export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
   }, [definition]);
   // console.log({ diagram })
 
-  const graphElRef = useRef(null)
   useEffect(() => {
     // console.log("let's GOOOOO")
     const Graph = ForceGraph()(graphElRef.current);
@@ -282,11 +291,7 @@ export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
     Graph.value = machine.state;
     Graph.graphData(diagram);
   }, [diagram, lastRenderInfo.stateFullName]);
-  return <div ref={graphElRef}  data-theme="light" />  
-}
-
-function escapeId(name: string): string {
-  return name.replace(/_/, " ");
+  return graphElRef
 }
 
 export function StateForceGraph1({
