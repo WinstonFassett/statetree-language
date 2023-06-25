@@ -1,17 +1,12 @@
 import { REACT_TEMPLATE } from "@codesandbox/sandpack-react";
 import AppJS from './fiddle/App.js?raw';
 
-function addPrototypingResources(template: any = {}) {
-  template.options ||= {};
-  template.options.externalResources ||= [];
-  template.options.externalResources.push(
-    "https://cdn.tailwindcss.com"
-  );
-  template.options.externalResources.push(
-    "https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css"
-  );
-}
-export const STATETREE_TEMPLATE: any = {
+const externalResources = [
+  "https://cdn.tailwindcss.com",
+  "https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css"
+]
+
+export const STATETREE_TEMPLATE = {
   files: {
     '/App.js': AppJS,
     '/styles.css': REACT_TEMPLATE.files["/styles.css"].code + `
@@ -30,6 +25,8 @@ export const STATETREE_TEMPLATE: any = {
       "@nanostores/react": "latest",
       "@heroicons/react": "latest",
     }
+  }, 
+  options: { 
+    externalResources
   }
 };
-addPrototypingResources(STATETREE_TEMPLATE);
