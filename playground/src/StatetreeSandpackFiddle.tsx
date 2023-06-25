@@ -106,25 +106,6 @@ function TheStack() {
     <SandpackStack style={{ height: "100vh", margin: 0 }}>
       {/* <FileTabs /> */}
       <div style={{ flex: 1 }}>
-        {/* <Editor
-          width="100%"
-          height="100%"
-          language={language}
-          theme="vs-dark"
-          key={sandpack.activeFile}
-          defaultValue={code}
-          onChange={(value) => updateCode(value || "")}
-        /> */}
-        {/* <Suspense fallback={<div>Loading editor...</div>}>
-          <MonacoReactEditor key={sandpack.activeFile} 
-            language={language}
-            file={sandpack.activeFile}
-            theme="vs-dark"
-            code={code} 
-            onChange={(value) => updateCode(value || "")} 
-            onModelCreated={(model) => { setModel(model) }} 
-          />
-        </Suspense>         */}
         <DockView />
       </div>
     </SandpackStack>
