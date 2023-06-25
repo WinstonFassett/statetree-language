@@ -22,7 +22,7 @@ export function StateMachine({ model, instance }: { model: Statemachine, instanc
   }, [states, curState])
   // console.log({ activeStates })
   const getState = (name: string) => curState
-  return <div className="h-full flex flex-col">
+  return <div className="h-full flex flex-col bg-base-100">
     <div>
       <div className="flex gap-2">
         <div className="flex-1 p-2">
@@ -69,7 +69,22 @@ function StateList({state: currentState, states, send, path=[]}:{state: State, s
     {states.map((state, index) => {
       const { name, states: substates, transitions } = state
       const active = currentState && (state === currentState || name === currentState.name)
-      return <li key={index} className={`border ${active ? 'border-green-500' : 'border-slate-700'} rounded p-2 mb-4`}>
+      return (
+        <div key={state.name} className={`border card bg-base-100 shadow-xl ${active ? 'bg-slate-800 border border-accent' : 'bg-base-200 border-slate-700'} `} >
+          <div className={`card-body rounded p-2 mb-4`}>
+            <h2 className="card-title text-md"> {name}</h2>
+            {!!transitions && <TransitionList transitions={transitions} send={send} />}
+        {substates?.length > 0 && <StateList states={substates} state={currentState} send={send} />}
+
+            {/* <p>If a dog chews shoes whose shoes does he choose?</p> */}
+            {/* <div className="card-actions justify-end">
+              <button className="btn btn-primary">Buy Now</button>
+            </div> */}
+          </div>
+        </div>        
+      )
+      return <li key={index} className={`${active ? 'bg-base-300 border border-accent' : 'bg-base border border-slate-700'} rounded p-2 mb-4`}>
+        
         <p className="">
           {name}
           {/* {active ?'active': 'nope'} */}
@@ -86,10 +101,11 @@ function TransitionList({ transitions, send }: { transitions: Transition[], send
     {transitions.map((transition, index) => {
       const { event, to } = transition
       return <div key={event||index}>
-        <Button variant='link' size='sm' onClick={() => send(event)} className="text-[var(--vscode-textLink-foreground)]">
+        <button className="btn btn-sm btn-ghost rounded-btn normal-case" onClick={() => send(event)}>
           {event}
-        </Button>
-        {'->'} {to?.ref?.name}
+        </button> {'->'} {to?.ref?.name}
+        {/* <Button variant='ghost'  size='xs'  className="my-1 px-1">
+        </Button>  */}
       </div>
     })}
   </div>

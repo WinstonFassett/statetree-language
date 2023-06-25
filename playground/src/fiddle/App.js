@@ -20,10 +20,10 @@ export default function App() {
   }, [])
   
   return <div className="">
-    <div className='rounded p-4 text-3xl bg-green-200'>Hello!</div>
+    <div className='rounded p-4 text-3xl bg-primary text-primary-content'>Hello!</div>
     <div className='p-4'>
       <div>The state is 
-        <div className={`text-2xl bg-${mode?.toLowerCase() || "slate"}-500 rounded-full text-center my-4 p-4`}>
+        <div className={`text-2xl text-accent-content bg-${mode?.toLowerCase() || "slate"}-500 rounded-full text-center my-4 p-4`}>
           {mode ?? 'Unknown'}
         </div>
         {/*  */}
