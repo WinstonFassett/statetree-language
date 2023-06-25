@@ -1,25 +1,22 @@
-import { createContext, useEffect } from 'react';
-import { State, Statemachine } from '../../src/language/generated/ast';
-import useUndo from 'use-undo';
-import constate from 'constate'
+import constate from 'constate';
 import { Reference } from 'langium';
-// import { Reference } from '../../src/langium-utils/langium-ast';
-
-// import MonacoReactEditor from './MonacoReactEditorWithJsxConfig'
-// import MonacoEditorReactJsx from './MonacoEditorReactJsx'
-
-// type ModelState = {
-//   model: Statemachine|undefined
-//   setModel (model: Statemachine): void
-// }
-// export const ModelContext = createContext<ModelState>({
-//   model: undefined,
-//   setModel: () => {}
-// });
+import { useEffect } from 'react';
+import useUndo from 'use-undo';
+import { State, Statemachine } from '../../src/language/generated/ast';
 
 export const [StateMachineInstanceProvider, useStateMachineContext] = constate(useStateMachine)
 
-export type StateMachineInstance = ReturnType<typeof useStateMachine>
+export type StateMachineInstance = { 
+  state: State | undefined,
+  model: Statemachine
+  send(event: string): void 
+  undo(): void
+  redo(): void
+  canUndo: boolean
+  canRedo: boolean 
+  reset(): void
+}
+// ReturnType<typeof useStateMachine>
 
 export function useStateMachine ({model}:{model: Statemachine|undefined}) {
   const [
@@ -34,18 +31,12 @@ export function useStateMachine ({model}:{model: Statemachine|undefined}) {
     },
   ] = useUndo<State|undefined>(getTargetState(getInitState(model?.init, model?.states)))
   const { present: state } = stateHistory;
-  // const [state, setState] = useState<State|undefined>(getTargetState(model.init?.ref ?? model.states[0]))
-    
   useEffect(() => {
-    // console.log('model changed')
-    // find current state by name
     const previousState = state!== undefined && model && findStateByName(model, state.name)
-    // const nextState = previousState // || model.init?.ref
     const validState = previousState || getInitState(model?.init, model?.states)
     if (validState) {
       setState(getTargetState(validState))
     }
-    // index the model?
   }, [model])
   
   function getInitState (initialState: Reference<State> | undefined, states: State[] | undefined, ) {
@@ -74,16 +65,7 @@ export function useStateMachine ({model}:{model: Statemachine|undefined}) {
     resetState(initialState && getTargetState(initialState))
   }
   function getActiveStates() {}
-  return [state, { state, send, undo, redo, canUndo, canRedo, reset, model }] as [State, { 
-    state: typeof state,
-    model: Statemachine
-    send: typeof send
-    undo: typeof undo
-    redo: typeof redo
-    canUndo: boolean
-    canRedo: boolean 
-    reset: typeof reset
-  }]
+  return [state, { state, send, undo, redo, canUndo, canRedo, reset, model }] as [State, StateMachineInstance]
 }
 
 function recurseStates<T>(states: State[], fn: (state: State) => T) {
