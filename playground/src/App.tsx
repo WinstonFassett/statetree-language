@@ -27,7 +27,7 @@ function App() {
     ;(window as any).windowModel = model
   }, [model])
   // const instance = useStateMachine(model)
-  return (
+  return (<div data-theme="night">
     <ModelContext.Provider value={{model, setModel: innerSetModel}}>
       <StateMachineInstanceProvider model={model}>
         {/* <Playground /> */}
@@ -38,8 +38,8 @@ function App() {
         {/* <MonacoEditorReactJsx /> */}
         {/* <MonacoReactEditor /> */}
       </StateMachineInstanceProvider>
-  </ModelContext.Provider>
-  )
+    </ModelContext.Provider>
+    </div>)
 }
 
 export default App

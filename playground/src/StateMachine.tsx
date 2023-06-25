@@ -22,9 +22,9 @@ export function StateMachine({ model, instance }: { model: Statemachine, instanc
   }, [states, curState])
   // console.log({ activeStates })
   const getState = (name: string) => curState
-  return <div className="h-full flex flex-col bg-base-100">
+  return <div className="h-full flex flex-col bg-base-100" data-theme="night">
     <div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 bg-primary text-primary-content">
         <div className="flex-1 p-2">
           <p>State: {curState?.name}</p>
           <p>Active States: {activeStates.map(state => state.name).join(', ')}</p>

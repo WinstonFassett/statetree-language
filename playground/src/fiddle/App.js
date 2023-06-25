@@ -19,7 +19,7 @@ export default function App() {
     });
   }, [])
   
-  return <div className="">
+  return <div className="" data-theme="night">
     <div className='rounded p-4 text-3xl bg-primary text-primary-content'>Hello!</div>
     <div className='p-4'>
       <div>The state is 
