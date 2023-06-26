@@ -27,25 +27,17 @@ function App() {
     ;(window as any).windowModel = model
   }, [model])
   // const instance = useStateMachine(model)
-  return (<div data-theme="night" className='flex-1 flex flex-col'>
+  return (<div data-theme="night" className='h-full relative'>
     <ModelContext.Provider value={{model, setModel: innerSetModel}}>
       <StateMachineInstanceProvider model={model}>
-        <div className="flex items-center p-2">
-          <div className="pl-4 flex-1 text-2xl font-extrabold">
-            Statetree Fiddle
-          </div>
-        </div>
         {/* <PlainSandpack /> */}
         {/* <Playground /> */}
-        <div className="relative flex-1">
-          <StatetreeSandpackFiddle />
-          {/* <MonacoSandpack /> */}
-          {/* <MonacoEditorJsx /> */}
-          {/* <MonacoReactEditor /> */}
-          {/* <MonacoEditorReactJsx /> */}
-          {/* <MonacoReactEditor /> */}
-        </div>
-          
+        <StatetreeSandpackFiddle />
+        {/* <MonacoSandpack /> */}
+        {/* <MonacoEditorJsx /> */}
+        {/* <MonacoReactEditor /> */}
+        {/* <MonacoEditorReactJsx /> */}
+        {/* <MonacoReactEditor /> */}
       </StateMachineInstanceProvider>
     </ModelContext.Provider>
     </div>)
