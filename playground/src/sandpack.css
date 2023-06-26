@@ -1,0 +1,6 @@
+/* auto height */
+.sp-layout, 
+.sp-stack, 
+.sp-wrapper {
+    height: 100%;
+}

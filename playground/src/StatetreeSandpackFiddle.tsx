@@ -8,6 +8,7 @@ import { STATETREE_TEMPLATE } from "./STATETREE_TEMPLATE";
 import { useStatetreeSandpackFiddle } from "./useSandpackStatetreeFiddle";
 import { useStore } from "@nanostores/react";
 import * as store from './store'
+import './sandpack.css'
 
 export default function StatetreeSandpackFiddle() {
   const isDark = useStore(store.theme.dark)
@@ -25,7 +26,7 @@ export default function StatetreeSandpackFiddle() {
 function TheStack() {
   useStatetreeSandpackFiddle();
   return (
-    <SandpackStack style={{ height: "100vh", margin: 0 }}>
+    <SandpackStack style={{ height: "100%", margin: 0 }}>
       <DockView />
     </SandpackStack>
   );

@@ -80,7 +80,7 @@ function StateList({state: currentState, states, send, path=[]}:{state: State, s
       const active = currentState && (state === currentState || name === currentState.name)
       return (
         <div key={state.name} className={`border card bg-base-100 shadow-xl ${active ? 'bg-slate-800 border border-accent' : 'bg-base-200 border-slate-700'} `} >
-          <div className={`card-body rounded p-2 mb-4`}>
+          <div className={`card-body rounded py-2 px-2`}>
             <h2 className="card-title text-md"> {name}</h2>
             {!!transitions && <TransitionList transitions={transitions} send={send} />}
         {substates?.length > 0 && <StateList states={substates} state={currentState} send={send} />}

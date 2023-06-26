@@ -27,7 +27,7 @@ function getStateFQN(state:State) {
 
 export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
   const graphElRef = useStateForceDiagram(machine)
-  return <div ref={graphElRef}  data-theme="light" />  
+  return <div ref={graphElRef}  />  
 }
 
 function escapeId(name: string): string {
@@ -108,8 +108,9 @@ function useStateForceDiagram (machine: StateMachineInstance) {
         ctx.font = `${fontSize}px Sans-Serif`;
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
-        ctx.fillStyle =
-          node.name === lastRenderInfo.stateFullName ? "black" : "darkGrey"; //node.color;
+        // ctx.fillStyle =
+        //   node.name === lastRenderInfo.stateFullName ? "black" : "darkGrey"; //node.color;
+        
         ctx.fillText(label, node.x+6, node.y);
       })
       // edge labels
