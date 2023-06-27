@@ -20,6 +20,8 @@ import { SandpackMonacoEditor } from './SandpackMonacoEditor';
 import { StateMachinePane } from './StateMachinePane';
 import { DebugPane } from './DebugPane';
 import { StateMachineForceGraph } from './StateMachineForceGraphPane';
+import { useStore } from '@nanostores/react';
+import { theme } from './store';
 
 
 const components: PanelCollection<IDockviewPanelProps> = {
@@ -174,13 +176,13 @@ export const DockView2 = () => {
 
       
   };
-
+  const isDark = useStore(theme.dark)
   return (
       <SplitviewReact
           components={splitViewComponents}
           onReady={onReady}
           orientation={Orientation.VERTICAL}
-          className="dockview-theme-dark"
+          className={`dockview-theme-${isDark ? "dark" : "light"}`}
       />
   );
 };

@@ -1,16 +1,20 @@
 import Editor, { OnChange, Monaco } from '@monaco-editor/react';
+import { useStore } from '@nanostores/react';
 import type MonacoEditor from 'monaco-editor';
 import type * as monacoApi from 'monaco-editor/esm/vs/editor/editor.api';
+import { theme } from './store';
 type MonacoApi = typeof monacoApi
 
 
 
 export default function MonacoReactEditor (props: { code: string, onChange: OnChange, language: string }) {
   const { code, language = 'javascript', ...editorProps } = props
+  const isDark = useStore(theme.dark)
+
   // console.log({ editorProps })
   return <div>
     {/* <h1>Monaco React Editor</h1> */}
-    <Editor theme="vs-dark" {...editorProps} value={code} height="90vh" defaultLanguage={language} onMount={async (monacoEditor, monaco) => {
+    <Editor theme={isDark ? "vs-dark" : "vs-light" } {...editorProps} value={code} height="90vh" defaultLanguage={language} onMount={async (monacoEditor, monaco) => {
       if (language in ['javascript', 'typescript']) {
         await loadJSXHighlighter(monaco, monacoEditor);
       }

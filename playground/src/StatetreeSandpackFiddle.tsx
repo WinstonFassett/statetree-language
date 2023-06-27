@@ -30,6 +30,7 @@ export default function StatetreeSandpackFiddle() {
 
 function TheStack() {
   useStatetreeSandpackFiddle();
+  const isDark = useStore(store.theme.dark)
   return (
     <div className="h-full w-full">
       <SandpackStack className="m-0 flex flex-col">
@@ -37,6 +38,7 @@ function TheStack() {
           <div className="pl-4 flex-1 text-2xl font-extrabold">
             Statetree Fiddle
           </div>
+          <button className="btn btn-ghost" onClick={store.theme.toggleDark}>{isDark ? 'Dark' : 'Light'}</button>
         </div>
         <div className="relative flex-1">
           <DockView />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 export default function App() {
   const { mode, model } = useSharedState()
-  return <div className="h-full flex flex-col" data-theme="night">
+  return <div className="h-full flex flex-col" data-theme="light">
     <div className='rounded p-4 text-3xl bg-primary text-primary-content'>
       Hello!
     </div>

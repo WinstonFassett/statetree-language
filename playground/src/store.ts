@@ -24,7 +24,8 @@ const machine = {
 }
 
 const dark = atom(true)
-const theme = { dark }
+const toggleDark = () => dark.set(!dark.get())
+const theme = { dark, toggleDark }
 
 export { theme, code, model, machine }
 

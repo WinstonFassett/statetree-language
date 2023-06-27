@@ -7,9 +7,11 @@ import { StateMachineInstance } from "./useStateMachine";
 import { getParentState } from "./getParentState";
 
 import { ArrowUturnLeftIcon, ArrowUturnRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
+import { theme } from "./store";
 
 
 export function StateMachine({ model, instance }: { model: Statemachine, instance: StateMachineInstance }) {
+  const isDark = useState(theme.dark)
   const{ states } = model
   const [curState, { send, undo, redo, canUndo, canRedo, reset }] = instance
 
@@ -25,9 +27,9 @@ export function StateMachine({ model, instance }: { model: Statemachine, instanc
   }, [states, curState])
   // console.log({ activeStates })
   const getState = (name: string) => curState
-  return <div className="h-full flex flex-col bg-base-100" data-theme="night">
+  return <div className="h-full flex flex-col was-bg-base-100">
     <div>
-      <div className="flex gap-2 bg-base-200">
+      <div className="flex gap-2 was-bg-base-200">
         <div className="flex-1 p-2">
           <p>State: {curState?.name}</p>
           <p>Active States: {activeStates.map(state => state.name).join(', ')}</p>
@@ -79,7 +81,7 @@ function StateList({state: currentState, states, send, path=[]}:{state: State, s
       const { name, states: substates, transitions } = state
       const active = currentState && (state === currentState || name === currentState.name)
       return (
-        <div key={state.name} className={`border card bg-base-100 shadow-xl ${active ? 'bg-slate-800 border border-accent' : 'bg-base-200 border-slate-700'} `} >
+        <div key={state.name} className={`border card was-bg-base-100 shadow-xl ${active ? 'was-bg-slate-800 border border-accent' : 'was-bg-base-200 border-slate-700'} `} >
           <div className={`card-body rounded py-2 px-2`}>
             <h2 className="card-title text-md"> {name}</h2>
             {!!transitions && <TransitionList transitions={transitions} send={send} />}
@@ -92,7 +94,7 @@ function StateList({state: currentState, states, send, path=[]}:{state: State, s
           </div>
         </div>        
       )
-      return <li key={index} className={`${active ? 'bg-base-300 border border-accent' : 'bg-base border border-slate-700'} rounded p-2 mb-4`}>
+      return <li key={index} className={`${active ? 'was-bg-base-300 border border-accent' : 'was-bg-base border border-slate-700'} rounded p-2 mb-4`}>
         
         <p className="">
           {name}

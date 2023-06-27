@@ -41,13 +41,13 @@ function useStateForceDiagram (machine: StateMachineInstance) {
   const isDark = useStore(theme.dark)
   const contentColor = useMemo(() => {
     const { current} = graphElRef
-    console.log('compute', current)
+    // console.log('compute', current)
     const el = current || document.body
     const style = getComputedStyle(el)
     return style.getPropertyValue('color')    
   }, [graphElRef.current, isDark])
   
-  console.log({ contentColor })
+  // console.log({ contentColor })
   const definition = machine.model
   const { send } = machine
   if (!definition) {

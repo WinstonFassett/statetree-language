@@ -27,7 +27,7 @@ function App() {
     ;(window as any).windowModel = model
   }, [model])
   // const instance = useStateMachine(model)
-  return (<div data-theme="night" className='h-full relative'>
+  return (<div className='h-full relative'>
     <ModelContext.Provider value={{model, setModel: innerSetModel}}>
       <StateMachineInstanceProvider model={model}>
         {/* <PlainSandpack /> */}
