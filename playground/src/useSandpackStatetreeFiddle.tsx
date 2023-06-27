@@ -15,8 +15,10 @@ export function useStatetreeSandpackFiddle() {
   const { sandpack } = useSandpack();
   const model = useStore(store.model);
   const [state, machine] = useStateMachineContext();
+  const isDark = useStore(store.theme.dark)
   useEffect(() => { sendStateMachineToSandpack(model, sandpack); }, [model]);
   useEffect(() => { sendMachineToSandpacks(machine, sandpack); }, [machine.state]);
+  useEffect(() => { sendToSandpackBundlers(sandpack, { type: 'dark', dark: isDark }); }, [isDark]);
   return { model, state, machine };
 }
 function sendMachineToSandpacks(machine: StateMachineInstance, sandpack: SandpackState) {

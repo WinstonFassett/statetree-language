@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 export default function App() {
-  const { mode, model } = useSharedState()
-  return <div className="h-full flex flex-col" data-theme="light">
+  const { mode, model, isDark } = useSharedState()
+  return <div className="h-full flex flex-col" data-theme={isDark ? "dark" :"light"}>
     <div className='rounded p-4 text-3xl bg-primary text-primary-content'>
       Hello!
     </div>
@@ -18,6 +18,7 @@ export default function App() {
 function useSharedState () {
   const [model, setModel] = useState()
   const [mode, setMode] = useState()
+  const [isDark, setIsDark] = useState(true)
   useEffect(() => {
     window.addEventListener("message", (event) => {      
       let { data } = event
@@ -29,10 +30,13 @@ function useSharedState () {
         if (type === 'state') {
           setMode(data.state)
         }
+        if (type === 'dark') {
+          setIsDark(data.dark)
+        }
       }
     });
   }, [])
-  return { mode, model }
+  return { mode, model, isDark }
 }
 
 
