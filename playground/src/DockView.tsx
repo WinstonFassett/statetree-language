@@ -87,22 +87,23 @@ export const DockView = () => {
             },
             position: { referencePanel: 'machine.statetree', direction: 'right' },
         });
-        // event.api.addPanel({
-        //   id: 'debug',
-        //   component: 'debug',
-        //   params: {
-        //       someProps: 'World',
-        //   },
-        //   position: { referencePanel: 'viz', direction: 'right' },
-        // });
         event.api.addPanel({
           id: 'forceGraph',
           component: 'forceGraph',
           params: {
               someProps: 'World',
           },
-          position: { referencePanel: 'viz', direction: 'below' },
-      });
+          position: { referencePanel: 'viz', direction: 'right' },
+        });
+        event.api.addPanel({
+          id: 'debug',
+          component: 'debug',
+          params: {
+              someProps: 'World',
+          },
+          position: { referencePanel: 'forceGraph', direction: 'below' },
+        });
+        
         // event.api.addPanel({
         //   id: 'state.json',
         //   component: 'editor',
@@ -111,15 +112,15 @@ export const DockView = () => {
         //       someProps: '/state.json',
         //   },
         // })
-        // event.api.addPanel({
-        //     id: 'App.js',
-        //     component: 'editor',
-        //     // tabComponent: 'customTab', // optional custom header
-        //     params: {
-        //         someProps: '/App.js',
-        //     },
-        //     position: { referencePanel: 'machine.statetree', direction: 'below' },
-        // });
+        event.api.addPanel({
+            id: 'App.js',
+            component: 'editor',
+            // tabComponent: 'customTab', // optional custom header
+            params: {
+                someProps: '/App.js',
+            },
+            position: { referencePanel: 'machine.statetree', direction: 'below' },
+        });
       //   event.api.addPanel({
       //     id: 'state.json',
       //     component: 'editor',
@@ -130,14 +131,14 @@ export const DockView = () => {
       //     },
       //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
       // });
-        // event.api.addPanel({
-        //     id: 'preview',
-        //     component: 'preview',
-        //     params: {
-        //         someProps: 'World',
-        //     },
-        //     position: { referencePanel: 'viz', direction: 'below' },
-        // });
+        event.api.addPanel({
+            id: 'preview',
+            component: 'preview',
+            params: {
+                someProps: 'World',
+            },
+            position: { referencePanel: 'viz', direction: 'below' },
+        });
     };
 
     return (

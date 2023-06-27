@@ -4,6 +4,8 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { StateMachineInstance } from './useStateMachine';
 import { State } from '../../src/language/generated/ast';
 import { getInitState } from './getInitState';
+import { useStore } from '@nanostores/react';
+import { theme } from './store';
 
 function findNode(nodes, id) {
   return nodes.find((it) => it.id === id);
@@ -36,7 +38,16 @@ function escapeId(name: string): string {
 
 function useStateForceDiagram (machine: StateMachineInstance) {
   const graphElRef = useRef(null)
-  // console.log({ machine })
+  const isDark = useStore(theme.dark)
+  const contentColor = useMemo(() => {
+    const { current} = graphElRef
+    console.log('compute', current)
+    const el = current || document.body
+    const style = getComputedStyle(el)
+    return style.getPropertyValue('color')    
+  }, [graphElRef.current, isDark])
+  
+  console.log({ contentColor })
   const definition = machine.model
   const { send } = machine
   if (!definition) {
@@ -212,17 +223,20 @@ function useStateForceDiagram (machine: StateMachineInstance) {
       //   ctx.fillText(link.label, 0, 0); // +link.curvature + (link.flipped ? '-f' : '')+link.offset, 0, 0);
       //   ctx.restore();
       // })
-      // .linkColor((link) =>
-      //   // valueLatest.current === link.source.name &&
-      //   // canFire(definition, valueLatest.current, link.name)
-      //   //   ? "blue"
-      //   //   : lastProps.current.prevState === link.source.name &&
-      //   //     lastProps.current.lastEvent &&
-      //   //     lastProps.current.lastEvent.type === link.name
-      //   //   ? "teal"
-      //   //   : 
-      //     "darkgrey"
-      // )
+      .linkColor((link) =>
+        // valueLatest.current === link.source.name &&
+        // canFire(definition, valueLatest.current, link.name)
+        //   ? "blue"
+        //   : lastProps.current.prevState === link.source.name &&
+        //     lastProps.current.lastEvent &&
+        //     lastProps.current.lastEvent.type === link.name
+        //   ? "teal"
+        //   : 
+        // "darkgrey"
+        // contentColor        
+        // 'currentColor'
+        contentColor
+      )
       // .linkDirectionalParticleColor(() => "teal")
       // .linkDirectionalParticleSpeed(0.04)
       // .linkDirectionalParticleWidth(8)
