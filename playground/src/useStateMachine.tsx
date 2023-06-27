@@ -1,7 +1,7 @@
 import constate from 'constate';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import useUndo from 'use-undo';
-import { State, Statemachine } from '../../src/language/generated/ast';
+import { State, Statemachine, Transition } from '../../src/language/generated/ast';
 import { getInitState } from './getInitState';
 
 export const [StateMachineInstanceProvider, useStateMachineContext] = constate(useStateMachine)
@@ -15,8 +15,15 @@ export type StateMachineInstance = {
   canUndo: boolean
   canRedo: boolean 
   reset(): void
+  lastTransition: { from: State, transition: Transition } | undefined
 }
-export function useStateMachine ({model}:{model: Statemachine|undefined}) {
+
+type LastTransition = {
+  from: State
+  transition: Transition
+}
+
+export function useStateMachine ({ model }:{model: Statemachine|undefined }) {
   const [
     stateHistory,
     {
@@ -28,6 +35,8 @@ export function useStateMachine ({model}:{model: Statemachine|undefined}) {
       canRedo,
     },
   ] = useUndo<State|undefined>(getTargetState(getInitState(model?.init, model?.states)))
+  const memo = useMemo(() => ({ state: stateHistory, lastTransition: undefined as LastTransition | undefined }),[]) 
+  memo.state = stateHistory
   const { present: state } = stateHistory;
   useEffect(() => {
     const previousState = state!== undefined && model && findStateByName(model, state.name)
@@ -40,6 +49,7 @@ export function useStateMachine ({model}:{model: Statemachine|undefined}) {
 
 
   function getTargetState (newState: State|undefined): State | undefined {
+    // console.log('getTargetState', newState)
     if (newState === undefined) return newState
     const firstState = newState?.states?.[0]
     const nestedInitialState = firstState && getTargetState(firstState)
@@ -51,17 +61,26 @@ export function useStateMachine ({model}:{model: Statemachine|undefined}) {
     setState(newState)
   }
   function send (event: string) {
+    const state = memo.state.present
     // console.log('send', state, event)
     const transition = state && findTransition(state, event)
-    const newState = transition?.to?.ref
-    newState && updateState(newState)
+    if (state && transition) {
+      const newState = transition?.to?.ref
+      // console.log({ transition, newState })
+      newState && updateState(newState)
+      memo.lastTransition = {
+        from: state, 
+        transition
+      }
+    }
   }
   function reset () {    
     const initialState = getInitState(model?.init, model?.states)
     resetState(initialState && getTargetState(initialState))
   }
   function getActiveStates() {}
-  return [state, { state, send, undo, redo, canUndo, canRedo, reset, model }] as [State, StateMachineInstance]
+
+  return [state, { state, send, undo, redo, canUndo, canRedo, reset, model, lastTransition: memo.lastTransition }] as [State, StateMachineInstance]
 }
 
 function recurseStates<T>(states: State[], fn: (state: State) => T) {
