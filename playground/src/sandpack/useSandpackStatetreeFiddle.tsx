@@ -23,7 +23,7 @@ export function useStatetreeSandpackFiddle() {
 }
 function sendMachineToSandpacks(machine: StateMachineInstance, sandpack: SandpackState) {
   if (machine) {
-    sandpack.updateFile('/state.json', JSON.stringify(machine.state?.name, null, 2));
+    // sandpack.updateFile('/state.json', JSON.stringify(machine.state?.name, null, 2));
     sendToSandpackBundlers(sandpack, {
       type: 'state',
       state: machine.state?.name

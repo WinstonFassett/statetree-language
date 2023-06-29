@@ -17,7 +17,6 @@ export const STATETREE_TEMPLATE = {
       </h2>)`,
     'machine.statetree': '',
     'machine.json': '{}',
-    'state.json': '"not_set"'
   },
   customSetup: {
     dependencies: {
