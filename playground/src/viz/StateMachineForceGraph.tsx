@@ -1,21 +1,10 @@
 import ForceGraph from 'force-graph'
-
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { StateMachineInstance } from '../statetree-machine/useStateMachine';
 import { State } from '../../../src/language/generated/ast';
 import { getInitState } from '../statetree-machine/getInitState';
 import { useStore } from '@nanostores/react';
 import { theme } from '../store';
-
-function findNode(nodes, id) {
-  return nodes.find((it) => it.id === id);
-}
-
-function canFire(machine, state, event) {
-  // console.log({machine, state, event})
-  const mode = machine.states[state];
-  return mode && mode.on && mode.on[event];
-}
 
 function getStateFQN(state:State) {
   let it = state as any
@@ -56,6 +45,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
     lastRenderInfo.stateFullName = machine.state && getStateFQN(machine.state)
   }, [machine.state])
   
+  // generate diagram model
   const diagram = useMemo(() => {    
     const links: { name: string, label: string, source: string, target: string }[] = [];    
     const nodes:any[] = []
@@ -89,6 +79,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
   }, [definition]);
   // console.log({ diagram })
 
+  // setup diagram
   useEffect(() => {
     // console.log("let's GOOOOO")
     const Graph = ForceGraph()(graphElRef.current);
@@ -100,7 +91,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
       .linkDirectionalArrowLength(6)
       .linkDirectionalArrowRelPos(1)
       .nodeCanvasObjectMode(() => "after")
-      .nodeCanvasObject((node, ctx, globalScale) => {
+      .nodeCanvasObject((node: { label: any; name: string | undefined; x: number; y: any; }, ctx: { font: string; textAlign: string; textBaseline: string; fillStyle: string; fillText: (arg0: any, arg1: any, arg2: any) => void; }, globalScale: any) => {
         const label = node.label;
         const fontSize = 8; /// globalScale;
         ctx.font = `${fontSize}px Sans-Serif`;
@@ -116,13 +107,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
       .nodeLabel("name")
       .nodeAutoColorBy("name")
       .linkCanvasObjectMode(() => "after")
-      .linkCanvasObject((link, ctx) => {
-        // console.log('skip', {link, ctx })
-        // return 
-        // console.log('link', link.curvature)
-        // if (lastEvent !== link.name) {
-        //   return
-        // }
+      .linkCanvasObject((link: { source: { name: string | undefined; }; target: any; curvature: string | number; __controlPoints: any[]; label: any; }, ctx: { font: string; measureText: (arg0: string) => { (): any; new(): any; width: number; }; save: () => void; translate: (arg0: any, arg1: any) => void; rotate: (arg0: number) => void; fillStyle: string; fillRect: (arg0: number, arg1: number, arg2: any) => void; textAlign: string; textBaseline: string; fillText: (arg0: any, arg1: number, arg2: number) => void; restore: () => void; }) => {
         const MAX_FONT_SIZE = 4;
         const LABEL_NODE_MARGIN = Graph.nodeRelSize() * 1.5;
 
@@ -133,11 +118,10 @@ function useStateForceDiagram (machine: StateMachineInstance) {
         if (typeof start !== "object" || typeof end !== "object") return;
 
         // calculate label positioning
-        let textPos = Object.assign(
-          ...["x", "y"].map((c) => ({
-            [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
-          }))
-        );
+        let textPos = ["x", "y"].reduce((acc, c) => {
+            acc[c] = start[c] + (end[c] - start[c]) / 2 // calc middle point
+            return acc
+          }, {} as any);
 
         if (+link.curvature > 0) {
           // console.log( 'um', { start, link, end })
@@ -152,23 +136,18 @@ function useStateForceDiagram (machine: StateMachineInstance) {
               end.y
             );
         }
-
         // textPos.y += (link.curvature * 20)
         // textPos.x -= (link.curvature * 20)
-
         const relLink = { x: end.x - start.x, y: end.y - start.y };
-
         const maxTextLength =
           Math.sqrt(Math.pow(relLink.x, 2) + Math.pow(relLink.y, 2)) -
           LABEL_NODE_MARGIN * 2;
-
         let textAngle = Math.atan2(relLink.y, relLink.x);
         // maintain label vertical orientation for legibility
         if (textAngle > Math.PI / 2) textAngle = -(Math.PI - textAngle);
         if (textAngle < -Math.PI / 2) textAngle = -(-Math.PI - textAngle);
 
         const label = `${link.label}`;
-
         // estimate fontSize to fit in link length
         ctx.font = "1px Sans-Serif";
         const fontSize = Math.min(
@@ -215,7 +194,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
       .linkDirectionalParticleSpeed(0.04)
       .linkDirectionalParticleWidth(8)
       .linkHoverPrecision(10)
-      .onLinkClick(({ name }) => {
+      .onLinkClick(({ name }: { name: string }) => {
         // dispatch({ type: name });
         // send(name)
         // console.log("clicked", name);
@@ -272,15 +251,15 @@ function useStateForceDiagram (machine: StateMachineInstance) {
           }
         }
       });
-
     // console.log("made graph", Graph);
   }, []);
 
+  // rerender, update link color
   useEffect(() => {
     const { Graph } = graphElRef.current as any;
     Graph.value = machine.state;
     Graph
-        .linkColor((link) => {          
+        .linkColor((link: any) => {          
           return (
             isDark ? '#fff' : '#000'
           )
@@ -288,49 +267,29 @@ function useStateForceDiagram (machine: StateMachineInstance) {
       )
       .graphData(diagram);
   }, [diagram, lastRenderInfo.stateFullName, isDark]);
-  // emit particles on link click
 
+  // emit particles on link click
   useEffect(() => {
-    // console.log("lastEvent", machine.lastTransition);
     const { lastTransition } = lastRenderInfo
     if (!lastTransition) return;
     const { links } = diagram;
     const prevState = lastTransition.from
     const prevFullName = getStateFQN(prevState)
     if (prevState) {
-      // console.log("transition", lastTransition);
       const { event } = lastTransition.transition;
       const link = diagram.links.find(
         (it) => it.source.name === prevFullName && it.name === event
       );
-      // console.log("TRANSITION!", link, links);
       setTimeout(() => {
         graphElRef.current.Graph.emitParticle(link);
-        // console.log("emitted", link);
       }, 10);
     }
-    // if (graphElRef.current && graphElRef.current.Graph) {
-    //   // [...Array(10).keys()].forEach(() => {
-    //   //   const link = links[Math.floor(Math.random() * links.length)];
-    //   //   ref.current.Graph.emitParticle(link);
-    //   // });
-    // }
   }, [machine.lastTransition]);
 
   return graphElRef
 }
 
-export function StateForceGraph1({
-  // value,
-  // lastEvent,
-  // prevState,
-  // definition,
-  // dispatch
-}) {
-
-}
-
-function getQuadraticXY(t, sx, sy, cp1x, cp1y, ex, ey) {
+function getQuadraticXY(t: number, sx: number, sy: number, cp1x: number, cp1y: number, ex: number, ey: number) {
   return {
     x: (1 - t) * (1 - t) * sx + 2 * (1 - t) * t * cp1x + t * t * ex,
     y: (1 - t) * (1 - t) * sy + 2 * (1 - t) * t * cp1y + t * t * ey
