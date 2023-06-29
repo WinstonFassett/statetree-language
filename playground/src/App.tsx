@@ -1,18 +1,11 @@
-import './App.css'
-// import MonacoSandpack from './MonacoSandpack'
-import {Playground} from './Playground2'
-import {DockView} from './DockView'
-// import MonacoEditorJsx from './MonacoEditorJsx2'
-// import MonacoEditorJsx from './MonacoEditorJsx'
-import MonacoReactEditor from './editor/MonacoReactEditorWithJsxLibThing'
-import { useEffect, useMemo, useState } from 'react'
-import { ModelContext } from './statetree-machine/ModelContext'
+import { useEffect, useState } from 'react'
 import { Statemachine } from '../../src/language/generated/ast'
+import './App.css'
 import StatetreeSandpackFiddle from './sandpack/StatetreeSandpackFiddle'
+import { ModelContext } from './statetree-machine/ModelContext'
+import { StateMachineInstanceProvider } from './statetree-machine/useStateMachine'
 import * as store from './store'
 import { model as sharedModel } from './store'
-import { useStateMachine, StateMachineInstanceProvider } from './statetree-machine/useStateMachine'
-import { PlainSandpack } from './sandpack/PlainSandpack'
 console.log({ store, sharedModel })
 
 function App() {
@@ -26,18 +19,12 @@ function App() {
     ;(globalThis as any).machine = model
     ;(window as any).windowModel = model
   }, [model])
-  // const instance = useStateMachine(model)
   return (<div className='h-full relative'>
     <ModelContext.Provider value={{model, setModel: innerSetModel}}>
       <StateMachineInstanceProvider model={model}>
         {/* <PlainSandpack /> */}
         {/* <Playground /> */}
         <StatetreeSandpackFiddle />
-        {/* <MonacoSandpack /> */}
-        {/* <MonacoEditorJsx /> */}
-        {/* <MonacoReactEditor /> */}
-        {/* <MonacoEditorReactJsx /> */}
-        {/* <MonacoReactEditor /> */}
       </StateMachineInstanceProvider>
     </ModelContext.Provider>
     </div>)

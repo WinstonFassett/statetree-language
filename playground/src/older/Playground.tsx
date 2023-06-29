@@ -1,7 +1,7 @@
 import { useState, lazy, Suspense } from "react";
-import { State, Statemachine } from "../../src/language/generated/ast";
+import { State, Statemachine } from "../../../src/language/generated/ast";
 import { StateMachine } from "./StateMachine";
-import MonacoSandpack from "./older/MonacoSandpack";
+import MonacoSandpack from "./MonacoSandpack";
 
 const Editor = lazy(
   () => import('./Editor').then(module => ({ default: module.Editor }))
