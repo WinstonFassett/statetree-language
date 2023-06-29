@@ -1,5 +1,5 @@
 import { ObjectRootLabel, ObjectLabel } from 'react-inspector'
-import { isStore } from './lib/nanostore-utils'
+import { isStore } from '../lib/nanostore-utils'
 import { Store } from 'nanostores'
 import { useStore } from '@nanostores/react'
 import { useEffect, useMemo } from 'react'

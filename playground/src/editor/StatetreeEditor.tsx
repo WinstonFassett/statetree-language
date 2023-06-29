@@ -1,18 +1,18 @@
 import styles from './Editor.module.css';
-import monarchSyntaxRaw from "../../syntaxes/statetree.tmLanguage.json?raw";
-import example from '../../example/trafficlight.statetree?raw'
+import monarchSyntaxRaw from "../../../syntaxes/statetree.tmLanguage.json?raw";
+import example from '../../../example/trafficlight.statetree?raw'
 import React, { useMemo, useRef } from 'react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
-import statetreeWorkerUrl from '../libs/statetree-server-worker.js?url'
-import languageConfigurationRaw from '../../language-configuration.json?raw'
+import statetreeWorkerUrl from '../../libs/statetree-server-worker.js?url'
+import languageConfigurationRaw from '../../../language-configuration.json?raw'
 import responseStatetreeTmRaw from '../../out/syntaxes/statetree.monarch.js?raw'
-import './userWorker'
+import '../userWorker'
 import { useDebouncedCallback } from 'use-debounce'
-import { generateStatements } from '../../src/codegen';
-import { DocumentChangeResponse, LangiumAST } from '../../src/langium-utils/langium-ast';
-import { Statemachine } from '../../src/language/generated/ast';
-import { code as codeStore, theme } from './store'
+import { generateStatements } from '../../../src/codegen';
+import { DocumentChangeResponse, LangiumAST } from '../../../src/langium-utils/langium-ast';
+import { Statemachine } from '../../../src/language/generated/ast';
+import { code as codeStore, theme } from '../store'
 import { useStore } from '@nanostores/react';
 
 const extensionFilesOrContents = new Map<string, string | URL>();

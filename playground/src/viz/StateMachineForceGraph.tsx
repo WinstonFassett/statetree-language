@@ -1,11 +1,11 @@
 import ForceGraph from 'force-graph'
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { StateMachineInstance } from './useStateMachine';
-import { State } from '../../src/language/generated/ast';
-import { getInitState } from './getInitState';
+import { StateMachineInstance } from '../statetree-machine/useStateMachine';
+import { State } from '../../../src/language/generated/ast';
+import { getInitState } from '../statetree-machine/getInitState';
 import { useStore } from '@nanostores/react';
-import { theme } from './store';
+import { theme } from '../store';
 
 function findNode(nodes, id) {
   return nodes.find((it) => it.id === id);

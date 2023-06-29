@@ -1,4 +1,4 @@
-import { State, Statemachine, Transition } from "../../src/language/generated/ast";
+import { State, Statemachine, Transition } from "../../../src/language/generated/ast";
 
 export function Visualization({ model }: { model: Statemachine }) {
   console.log('states', model.states)

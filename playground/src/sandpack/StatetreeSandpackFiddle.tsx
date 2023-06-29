@@ -3,11 +3,11 @@ import {
   SandpackProvider,
   SandpackStack,
 } from "@codesandbox/sandpack-react";
-import { DockView } from "./DockView";
+import { DockView } from "../DockView";
 import { STATETREE_TEMPLATE } from "./STATETREE_TEMPLATE";
 import { useStatetreeSandpackFiddle } from "./useSandpackStatetreeFiddle";
 import { useStore } from "@nanostores/react";
-import * as store from "./store";
+import * as store from "../store";
 import "./sandpack.css";
 import { useComponentSize } from "react-use-size";
 

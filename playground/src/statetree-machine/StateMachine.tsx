@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { State, Statemachine, Transition } from "../../src/language/generated/ast";
-import { Button } from "./components/ui/button";
+import { State, Statemachine, Transition } from "../../../src/language/generated/ast";
+import { Button } from "../components/ui/button";
 import useUndo from 'use-undo';
-import { generateStatements, generateXState } from "../../src/codegen";
+import { generateStatements, generateXState } from "../../../src/codegen";
 import { StateMachineInstance } from "./useStateMachine";
 import { getParentState } from "./getParentState";
 
 import { ArrowUturnLeftIcon, ArrowUturnRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
-import { theme } from "./store";
+import { theme } from "../store";
 
 
 export function StateMachine({ model, instance }: { model: Statemachine, instance: StateMachineInstance }) {
@@ -94,15 +94,6 @@ function StateList({state: currentState, states, send, path=[]}:{state: State, s
           </div>
         </div>        
       )
-      return <li key={index} className={`${active ? 'was-bg-base-300 border border-accent' : 'was-bg-base border border-slate-700'} rounded p-2 mb-4`}>
-        
-        <p className="">
-          {name}
-          {/* {active ?'active': 'nope'} */}
-        </p>
-        {!!transitions && <TransitionList transitions={transitions} send={send} />}
-        {substates?.length > 0 && <StateList states={substates} state={currentState} send={send} />}
-      </li>;
     })}
   </ul>;
 }

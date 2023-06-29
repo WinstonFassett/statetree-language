@@ -1,10 +1,10 @@
 import { ObjectInspector, chromeLight, chromeDark } from 'react-inspector'
 import { createNodeRenderer, useNodeRenderer } from './InspectorNodeRenderer'
 import { Store } from 'nanostores'
-import { isStore, peek } from './lib/nanostore-utils'
+import { isStore, peek } from '../lib/nanostore-utils'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useStore } from '@nanostores/react'
-import { theme } from './store'
+import { theme } from '../store'
 
 export const Inspector = (...[{ data }]: Parameters<typeof ObjectInspector>) => {
   const storeMap = useMemo(() => new WeakMap(), [])

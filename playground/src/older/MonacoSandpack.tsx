@@ -9,10 +9,10 @@ import {
   useSandpack
 } from "@codesandbox/sandpack-react";
 import { Suspense, lazy, useState } from "react";
-import { Statemachine } from "../../src/language/generated/ast";
+import { Statemachine } from "../../../src/language/generated/ast";
 import example from '../../example/trafficlight.statetree?raw'
-import MonacoReactEditor from './MonacoReactEditorWithJsxLibThing'
-import { getLanguageOfFile } from "./getLanguageOfFile";
+import MonacoReactEditor from '../editor/MonacoReactEditorWithJsxLibThing'
+import { getLanguageOfFile } from "../editor/getLanguageOfFile";
 // import Editor from "@monaco-editor/react";
 
 const Editor = lazy(

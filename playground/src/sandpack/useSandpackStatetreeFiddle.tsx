@@ -3,12 +3,12 @@ import {
   SandpackState
 } from "@codesandbox/sandpack-react";
 import { useEffect } from "react";
-import { State, Statemachine } from "../../src/language/generated/ast";
-import * as store from './store';
+import { State, Statemachine } from "../../../src/language/generated/ast";
+import * as store from '../store';
 import { useStore } from "@nanostores/react";
-import { generateXState } from "../../src/codegen";
-import { StateMachineInstance, useStateMachineContext } from "./useStateMachine";
-import { getParentState } from "./getParentState";
+import { generateXState } from "../../../src/codegen";
+import { StateMachineInstance, useStateMachineContext } from "../statetree-machine/useStateMachine";
+import { getParentState } from "../statetree-machine/getParentState";
 import { sendToSandpackBundlers } from "./sendToSandpackBundlers";
 
 export function useStatetreeSandpackFiddle() {

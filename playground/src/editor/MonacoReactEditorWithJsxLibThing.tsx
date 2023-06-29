@@ -2,7 +2,7 @@ import Editor, { OnChange, Monaco } from '@monaco-editor/react';
 import { useStore } from '@nanostores/react';
 import type MonacoEditor from 'monaco-editor';
 import type * as monacoApi from 'monaco-editor/esm/vs/editor/editor.api';
-import { theme } from './store';
+import { theme } from '../store';
 type MonacoApi = typeof monacoApi
 
 

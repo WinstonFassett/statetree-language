@@ -1,10 +1,10 @@
 import { Store, atom, map } from 'nanostores'
 import { useStore } from '@nanostores/react'
-import * as store from './store'
-import { isStore, peek } from './lib/nanostore-utils'
-import { Inspector } from './Inspector'
+import * as store from '../store'
+import { isStore, peek } from '../lib/nanostore-utils'
+import { Inspector } from '../nanostore-inspector/Inspector'
 // import { InspectorNodeRenderer } from './InspectorNodeRenderer'
-import { useStateMachineContext } from './useStateMachine'
+import { useStateMachineContext } from '../statetree-machine/useStateMachine'
 
 export function DebugPane({}) {
   const [_, machine] = useStateMachineContext()
@@ -76,12 +76,6 @@ export function DebugValue({ value }: { value: any }) {
     })}
     {/* TODO: debug object {keys.join(', ')} */}
   </ul>
-  return <div>
-    {Object.keys(value).map(key => {
-      const propertyValue = value[key]      
-      return isStore(propertyValue) ? <DebugStore store={propertyValue} /> : <DebugValue value={value} />
-    })}  
-  </div>
   // if (isStore(value)) {
   //   return <DebugStore store={value} />
   // }

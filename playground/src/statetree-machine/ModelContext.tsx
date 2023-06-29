@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { Statemachine } from '../../src/language/generated/ast';
+import { Statemachine } from '../../../src/language/generated/ast';
 
 // import MonacoReactEditor from './MonacoReactEditorWithJsxConfig'
 // import MonacoEditorReactJsx from './MonacoEditorReactJsx'

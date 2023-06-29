@@ -1,7 +1,7 @@
 import constate from 'constate';
 import { useEffect, useMemo } from 'react';
 import useUndo from 'use-undo';
-import { State, Statemachine, Transition } from '../../src/language/generated/ast';
+import { State, Statemachine, Transition } from '../../../src/language/generated/ast';
 import { getInitState } from './getInitState';
 
 export const [StateMachineInstanceProvider, useStateMachineContext] = constate(useStateMachine)

@@ -1,7 +1,7 @@
 import { Sandpack } from '@codesandbox/sandpack-react'
-import { StatetreeEditor } from './StatetreeEditor'
+import { StatetreeEditor } from '../editor/StatetreeEditor'
 import { useContext } from 'react'
-import { ModelContext } from './ModelContext'
+import { ModelContext } from '../statetree-machine/ModelContext'
 
 export function PlainSandpack() {
   const {model, setModel} = useContext(ModelContext)

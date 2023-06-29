@@ -1,4 +1,4 @@
-import { State } from "../../src/language/generated/ast";
+import { State } from "../../../src/language/generated/ast";
 
 export function getParentState(state: State) {
   const { $container } = state;

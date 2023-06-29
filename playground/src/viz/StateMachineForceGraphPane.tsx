@@ -1,6 +1,6 @@
 
 import { StateForceGraph } from './StateMachineForceGraph'
-import { useStateMachineContext } from './useStateMachine'
+import { useStateMachineContext } from '../statetree-machine/useStateMachine'
 export function StateMachineForceGraph ({}) {
   const [state, machine] = useStateMachineContext()
   return <div className='h-full'>

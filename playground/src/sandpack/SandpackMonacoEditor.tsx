@@ -1,8 +1,8 @@
 import {   useSandpack
 } from "@codesandbox/sandpack-react";
-import MonacoReactEditor from './MonacoReactEditorWithJsxLibThing'
+import MonacoReactEditor from '../editor/MonacoReactEditorWithJsxLibThing'
 import { useEffect, useMemo, useRef } from "react";
-import { getLanguageOfFile } from "./getLanguageOfFile";
+import { getLanguageOfFile } from "../editor/getLanguageOfFile";
 
 export function SandpackMonacoEditor ({ filename, ...rest }: { filename: string } & Record<string,any>) {
   const { sandpack } = useSandpack();

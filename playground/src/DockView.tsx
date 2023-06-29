@@ -11,15 +11,15 @@ import {
 } from 'dockview';
 import 'dockview/dist/styles/dockview.css';
 
-import { StatetreeEditor } from './StatetreeEditor'
-import { Visualization } from './AstVisualization';
+import { StatetreeEditor } from './editor/StatetreeEditor'
+import { Visualization } from './viz/AstVisualization';
 import { useContext } from 'react';
-import { ModelContext } from './ModelContext';
+import { ModelContext } from './statetree-machine/ModelContext';
 import { SandpackPreview } from '@codesandbox/sandpack-react';
-import { SandpackMonacoEditor } from './SandpackMonacoEditor';
-import { StateMachinePane } from './StateMachinePane';
-import { DebugPane } from './DebugPane';
-import { StateMachineForceGraph } from './StateMachineForceGraphPane';
+import { SandpackMonacoEditor } from './sandpack/SandpackMonacoEditor';
+import { StateMachinePane } from './statetree-machine/StateMachinePane';
+import { DebugPane } from './older/DebugPane';
+import { StateMachineForceGraph } from './viz/StateMachineForceGraphPane';
 import { useStore } from '@nanostores/react';
 import { theme } from './store';
 
