@@ -1,5 +1,6 @@
 import { REACT_TEMPLATE } from "@codesandbox/sandpack-react";
 import AppJS from './fiddle/App.js?raw';
+import example from '../../../example/trafficlight.statetree?raw'
 
 const externalResources = [
   "https://cdn.tailwindcss.com",
@@ -15,8 +16,8 @@ export const STATETREE_TEMPLATE = {
     '/Wrapper.js': `export default ({ children }) => (<h2>
       Hello {children}!
       </h2>)`,
-    'machine.statetree': '',
-    'machine.json': '{}',
+    '/machine.statetree': example,
+    '/machine.json': '{}',
   },
   customSetup: {
     dependencies: {

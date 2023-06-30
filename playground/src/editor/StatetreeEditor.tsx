@@ -1,6 +1,5 @@
 import styles from './Editor.module.css';
 import monarchSyntaxRaw from "../../../syntaxes/statetree.tmLanguage.json?raw";
-import example from '../../../example/trafficlight.statetree?raw'
 import React, { useMemo, useRef } from 'react';
 import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
@@ -22,8 +21,7 @@ extensionFilesOrContents.set('/statetree-grammar.json', monarchSyntaxRaw);
 // Language Server preparation
 const workerUrl = new URL(statetreeWorkerUrl, window.location.href);
 
-
-export function StatetreeEditor ({ onModelCreated, ...rest }: { onModelCreated: (model:Statemachine) => void } & Record<string,any>) {
+export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { value: string, onChange: (value:string) => void, onAstCreated: (astJson: string) => void } & Record<string,any>) {
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
   const isDark = useStore(theme.dark)
   const userConfig: UserConfig = useMemo(() => ({
@@ -94,7 +92,7 @@ export function StatetreeEditor ({ onModelCreated, ...rest }: { onModelCreated: 
           useDiffEditor: false,
           automaticLayout: true,
           theme: 'vs-dark',
-          code: example,
+          code: value,
           editorOptions: {
               // theme: 'vs-dark',
           }
@@ -114,6 +112,7 @@ export function StatetreeEditor ({ onModelCreated, ...rest }: { onModelCreated: 
       userConfig={userConfig}      
       onTextChanged={text => {
         codeStore.set(text)
+        onChange && onChange(text)
       }}
       onLoad={() => {
         if (!monacoEditor.current) {
@@ -128,12 +127,8 @@ export function StatetreeEditor ({ onModelCreated, ...rest }: { onModelCreated: 
 
         // register to receive DocumentChange notifications
         lc.onNotification("browser/DocumentChange", (resp: DocumentChangeResponse) =>{
-            // console.log('change!', resp)
-            // decode the received Ast
-            const statemachineAst = new LangiumAST().deserializeAST(resp.content) as Statemachine;
-            // this.preview.current?.startPreview(statemachineAst, resp.diagnostics);
-            // console.log({ statemachineAst })
-            onModelCreated(statemachineAst)
+            // onChange && onChange(resp.content)
+            onAstCreated && onAstCreated(resp.content)
         });
 
         /**

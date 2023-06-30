@@ -3,14 +3,13 @@ import {
   IDockviewPanelProps,
   IDockviewPanelHeaderProps
 } from 'dockview';
-import { StatetreeEditor } from '../editor/StatetreeEditor';
-import { useContext } from 'react';
-import { ModelContext } from '../statetree-machine/ModelContext';
+
 import { SandpackPreview } from '@codesandbox/sandpack-react';
 import { SandpackMonacoEditor } from '../sandpack/SandpackMonacoEditor';
 import { StateMachinePane } from '../statetree-machine/StateMachinePane';
 import { DebugPane } from '../older/DebugPane';
 import { StateMachineForceGraph } from '../viz/StateMachineForceGraphPane';
+import { StatetreeEditorPane } from '../sandpack/StateTreeEditorPane';
 
 export const components: PanelCollection<IDockviewPanelProps> = {
   default: (props: IDockviewPanelProps<{ someProps: string; }>) => {
@@ -26,8 +25,7 @@ export const components: PanelCollection<IDockviewPanelProps> = {
     return (<StateMachineForceGraph />);
   },
   statetree: (props: IDockviewPanelProps<{ someProps: string; }>) => {
-    const { model, setModel } = useContext(ModelContext);
-    return <StatetreeEditor onModelCreated={setModel} />;
+    return <StatetreeEditorPane />;
   },
   editor: (props: IDockviewPanelProps<{ someProps: string; language?: string; }>) => {
     return <div>
