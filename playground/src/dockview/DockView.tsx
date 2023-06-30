@@ -16,14 +16,7 @@ import { components, headers } from './components';
 
 export const DockView = () => {
     const onReady = (event: DockviewReadyEvent) => {
-        // event.api.addPanel({
-        //   id: 'machine.json',
-        //   component: 'editor',
-        //   // tabComponent: 'customTab', // optional custom header
-        //   params: {
-        //       someProps: '/machine.json',
-        //   },          
-        // });
+
         event.api.addPanel({
           id: 'machine.statetree',
           component: 'statetree',
@@ -56,6 +49,24 @@ export const DockView = () => {
           },
           position: { referencePanel: 'forceGraph', direction: 'below' },
         });
+        event.api.addPanel({
+          id: 'machine.json',
+          component: 'editor',
+          // tabComponent: 'customTab', // optional custom header
+          params: {
+              someProps: '/machine.json',
+          },          
+        });        
+        // event.api.addPanel({
+        //     id: 'xstate.json',
+        //     component: 'editor',
+        //     // tabComponent: 'customTab', // optional custom header
+        //     params: {
+        //         someProps: '/xstate.json',
+        //         language: 'json'
+        //     },
+        //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
+        // });
         
         // event.api.addPanel({
         //   id: 'state.json',

@@ -1,5 +1,6 @@
 import { REACT_TEMPLATE } from "@codesandbox/sandpack-react";
 import AppJS from './fiddle/App.js?raw';
+import useSharedStateJS from './fiddle/useSharedState?raw'
 import example from '../../../example/trafficlight.statetree?raw'
 
 const externalResources = [
@@ -7,6 +8,8 @@ const externalResources = [
   "https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css"
 ]
 
+export const DERIVED_FILENAMES = ['/machine.json']
+const SUPPORT_FILENAMES = ['useSharedState.js']
 export const STATETREE_TEMPLATE = {
   files: {
     '/App.js': AppJS,
@@ -17,7 +20,9 @@ export const STATETREE_TEMPLATE = {
       Hello {children}!
       </h2>)`,
     '/machine.statetree': example,
+    // '/xstate.json': '{}',
     '/machine.json': '{}',
+    '/useSharedState.js': useSharedStateJS
   },
   customSetup: {
     dependencies: {

@@ -18,7 +18,7 @@ function getStateFQN(state:State) {
 
 export function StateForceGraph ({ machine }: {machine: StateMachineInstance}) {
   const graphElRef = useStateForceDiagram(machine)
-  return <div ref={graphElRef}  />   
+  return <div className='h-full w-full relative' ref={graphElRef}  />   
 }
 
 function escapeId(name: string): string {
@@ -199,8 +199,9 @@ function useStateForceDiagram (machine: StateMachineInstance) {
         // send(name)
         // console.log("clicked", name);
         machine.send(name)
-      });
-    
+      })
+      .cooldownTicks(100);
+    // Graph.onEngineStop(() => Graph.zoomToFit(400));
     // console.log('here now')
     
     let selfLoopLinks = {};
@@ -266,6 +267,8 @@ function useStateForceDiagram (machine: StateMachineInstance) {
         }
       )
       .graphData(diagram);
+    Graph.d3Force('center', null);
+
   }, [diagram, lastRenderInfo.stateFullName, isDark]);
 
   // emit particles on link click

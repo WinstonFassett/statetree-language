@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useSharedState } from './useSharedState'
 export default function App() {
   const { mode, model, isDark } = useSharedState()
   return <div className="h-full flex flex-col" data-theme={isDark ? "dark" :"light"}>
@@ -15,37 +15,3 @@ export default function App() {
   </div>
 }
 
-function useSharedState () {
-  const [model, setModel] = useState()
-  const [mode, setMode] = useState()
-  const [isDark, setIsDark] = useState(true)
-  useEffect(() => {
-    window.addEventListener("message", (event) => {      
-      let { data } = event
-      if (typeof data === 'object') {
-        const { type } = data
-        if (type === 'model') {
-          setModel(data.model)
-        }
-        if (type === 'state') {
-          setMode(data.state)
-        }
-        if (type === 'dark') {
-          setIsDark(data.dark)
-        }
-      }
-    });
-  }, [])
-  return { mode, model, isDark }
-}
-
-
-function useMessageList () {
-  const [messages, setMessages] = useState([])
-  useEffect(() => {
-    window.addEventListener("message", (event) => {      
-      setMessages(all => all.concat(event.data));      
-    });
-  }, [])  
-  return messages
-}

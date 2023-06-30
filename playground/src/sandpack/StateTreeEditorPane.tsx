@@ -20,15 +20,6 @@ export function StatetreeEditorPane ({ filename='/machine.statetree', outfile='/
     const statemachineAst = new LangiumAST().deserializeAST(astJson) as Statemachine;
     // // this.preview.current?.startPreview(statemachineAst, resp.diagnostics);
     setModel(statemachineAst)
-    generateXState2(statemachineAst)
   }
 
-  function generateXState2 (ast: Statemachine) {
-    if (!sandpack.files[outfile]) {
-      sandpack.addFile(outfile)
-    }
-    const xstate = generateXState(ast)
-    const xstateJson = JSON.stringify(xstate)
-    sandpack.updateFile(outfile, xstateJson)
-  }
 }
