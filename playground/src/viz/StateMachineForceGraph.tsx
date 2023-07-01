@@ -1,4 +1,4 @@
-import ForceGraph from 'force-graph'
+import ForceGraph, { ForceGraphInstance, LinkObject } from 'force-graph'
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { StateMachineInstance } from '../statetree-machine/useStateMachine';
 import { State } from '../../../src/language/generated/ast';
@@ -26,7 +26,7 @@ function escapeId(name: string): string {
 }
 
 function useStateForceDiagram (machine: StateMachineInstance) {
-  const graphElRef = useRef(null)
+  const graphElRef = useRef<HTMLDivElement>(null)
   const isDark = useStore(theme.dark)
   const definition = machine.model
   const { send } = machine
@@ -47,7 +47,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
   
   // generate diagram model
   const diagram = useMemo(() => {    
-    const links: { name: string, label: string, source: string, target: string }[] = [];    
+    const links: LinkObject&any[] = [];    
     const nodes:any[] = []
     addStates(machine.model.states);
     return { nodes, links };
@@ -82,8 +82,8 @@ function useStateForceDiagram (machine: StateMachineInstance) {
   // setup diagram
   useEffect(() => {
     // console.log("let's GOOOOO")
-    const Graph = ForceGraph()(graphElRef.current);
-    graphElRef.current.Graph = Graph;
+    const Graph = ForceGraph()(graphElRef.current!);
+    (graphElRef.current! as any).Graph = Graph;
     Graph.height(500)
       // .d3force( )
       // .linkDirectionalParticles(1)
@@ -91,7 +91,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
       .linkDirectionalArrowLength(6)
       .linkDirectionalArrowRelPos(1)
       .nodeCanvasObjectMode(() => "after")
-      .nodeCanvasObject((node: { label: any; name: string | undefined; x: number; y: any; }, ctx: { font: string; textAlign: string; textBaseline: string; fillStyle: string; fillText: (arg0: any, arg1: any, arg2: any) => void; }, globalScale: any) => {
+      .nodeCanvasObject((node:any, ctx:any, globalScale: any) => {
         const label = node.label;
         const fontSize = 8; /// globalScale;
         ctx.font = `${fontSize}px Sans-Serif`;
@@ -107,7 +107,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
       .nodeLabel("name")
       .nodeAutoColorBy("name")
       .linkCanvasObjectMode(() => "after")
-      .linkCanvasObject((link: { source: { name: string | undefined; }; target: any; curvature: string | number; __controlPoints: any[]; label: any; }, ctx: { font: string; measureText: (arg0: string) => { (): any; new(): any; width: number; }; save: () => void; translate: (arg0: any, arg1: any) => void; rotate: (arg0: number) => void; fillStyle: string; fillRect: (arg0: number, arg1: number, arg2: any) => void; textAlign: string; textBaseline: string; fillText: (arg0: any, arg1: number, arg2: number) => void; restore: () => void; }) => {
+      .linkCanvasObject((link: any, ctx: any) => {
         const MAX_FONT_SIZE = 4;
         const LABEL_NODE_MARGIN = Graph.nodeRelSize() * 1.5;
 
@@ -194,7 +194,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
       .linkDirectionalParticleSpeed(0.04)
       .linkDirectionalParticleWidth(8)
       .linkHoverPrecision(10)
-      .onLinkClick(({ name }: { name: string }) => {
+      .onLinkClick(({ name }: any) => {
         // dispatch({ type: name });
         // send(name)
         // console.log("clicked", name);
@@ -204,19 +204,19 @@ function useStateForceDiagram (machine: StateMachineInstance) {
     // Graph.onEngineStop(() => Graph.zoomToFit(400));
     // console.log('here now')
     
-    let selfLoopLinks = {};
-    let sameNodesLinks = {};
+    let selfLoopLinks: any = {};
+    let sameNodesLinks: any = {};
     const curvatureMinMax = 0.5;
 
     // // 1. assign each link a nodePairId that combines their source and target independent of the links direction
     // // 2. group links together that share the same two nodes or are self-loops
-    diagram.links.forEach((link) => {
+    diagram.links.forEach((link:any) => {
       // console.log({ link })
       link.nodePairId =
         link.source <= link.target
           ? link.source + "_" + link.target
           : link.target + "_" + link.source;
-      let map = link.source === link.target ? selfLoopLinks : sameNodesLinks;
+      let map: any = link.source === link.target ? selfLoopLinks : sameNodesLinks;
       if (!map[link.nodePairId]) {
         map[link.nodePairId] = [];
       }
@@ -281,10 +281,10 @@ function useStateForceDiagram (machine: StateMachineInstance) {
     if (prevState) {
       const { event } = lastTransition.transition;
       const link = diagram.links.find(
-        (it) => it.source.name === prevFullName && it.name === event
+        (it) => (it.source as any).name === prevFullName && it.name === event
       );
       setTimeout(() => {
-        graphElRef.current.Graph.emitParticle(link);
+        (graphElRef.current as any).Graph.emitParticle(link);
       }, 10);
     }
   }, [machine.lastTransition]);

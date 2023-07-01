@@ -21,7 +21,7 @@ extensionFilesOrContents.set('/statetree-grammar.json', monarchSyntaxRaw);
 // Language Server preparation
 const workerUrl = new URL(statetreeWorkerUrl, window.location.href);
 
-export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { value: string, onChange: (value:string) => void, onAstCreated: (astJson: string) => void } & Record<string,any>) {
+export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { value: string, onChange?: (value:string) => void, onAstCreated?: (astJson: string) => void } & Record<string,any>) {
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
   const isDark = useStore(theme.dark)
   const userConfig: UserConfig = useMemo(() => ({

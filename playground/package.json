@@ -57,6 +57,7 @@
     "postcss": "^8.4.24",
     "react-error-boundary": "^4.0.10",
     "react-inspector": "^6.0.2",
+    "react-use-size": "^3.0.1",
     "sass": "^1.63.4",
     "tailwind-merge": "^1.13.1",
     "tailwindcss": "^3.3.2",

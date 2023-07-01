@@ -10,7 +10,7 @@ import { ArrowUturnLeftIcon, ArrowUturnRightIcon, ArrowPathIcon } from '@heroico
 import { theme } from "../store";
 
 
-export function StateMachine({ model, instance }: { model: Statemachine, instance: StateMachineInstance }) {
+export function StateMachine({ model, instance }: { model: Statemachine, instance: any }) {
   const isDark = useState(theme.dark)
   const{ states } = model
   const [curState, { send, undo, redo, canUndo, canRedo, reset }] = instance

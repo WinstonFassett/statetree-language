@@ -18,8 +18,10 @@ export default function MonacoReactEditor (props: { code: string, onChange: OnCh
 }
 
 async function loadJSXHighlighter(monaco: MonacoApi, monacoEditor: MonacoEditor.editor.IStandaloneCodeEditor) {
+  //@ts-ignore
   const { default: traverse } = await import('@babel/traverse');
   const { parse } = await import('@babel/parser');
+  //@ts-ignore
   const { default: MonacoJSXHighlighter } = await import('monaco-jsx-highlighter');
   import('./MonacoJsxSyntaxHighlighter.css')
   const monacoJSXHighlighter = new MonacoJSXHighlighter(monaco, parse, traverse, monacoEditor)

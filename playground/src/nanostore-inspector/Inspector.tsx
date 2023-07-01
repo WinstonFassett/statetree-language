@@ -15,7 +15,7 @@ export const Inspector = (...[{ data }]: Parameters<typeof ObjectInspector>) => 
   const isDark = useStore(theme.dark)
   const wrapped = useNanostoreProxy(data)
   return <div className={`pl-2 pt-1 h-full ${isDark ? "bg-[rgb(36,36,36)]" :"bg-white"}`}>
-    <ObjectInspector expandLevel={2} theme={inspectorTheme} data={wrapped} />
+    <ObjectInspector expandLevel={2} theme={inspectorTheme as any} data={wrapped} />
   </div>
 }
 
