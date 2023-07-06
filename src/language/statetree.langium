@@ -1,14 +1,14 @@
 grammar Statetree
 
 entry Statemachine:
-    ('initialState' init=[State:QualifiedName])?
+    ('initialState' init=[State:UCID])?
     states+=State*;
 
 State:
     name=UCID 
     ('{'
     transitions+=Transition*
-    ('initialState' init=[State:QualifiedName])?
+    ('initialState' init=[State:UCID])?
     states+=State*
     '}')?
     (inlineTransition=NextStateTransition)?
@@ -19,11 +19,11 @@ NextStateTransition: (
 Transition:
     event=LCID
     '=>' 
-    to=[State:QualifiedName]
+    to=[State:UCID]
 ;
 
-QualifiedName returns string:
-    AnyId ('.' AnyId)*;
+// QualifiedName returns string:
+//     AnyId ('.' AnyId)*;
 
 AnyId returns string: UCID | LCID;
 
