@@ -5,21 +5,13 @@ import {
 } from 'langium';
 import { StatetreeGeneratedModule, StatetreeGeneratedSharedModule } from './generated/module';
 import { StatetreeValidator, registerValidationChecks } from './statetree-validator';
-import { QualifiedNameProvider } from './statetree-naming';
 import { StatetreeFormatter } from './statetree-formatter';
-import { StatetreeRenameProvider } from './statetree-rename-refactoring';
 import { StatetreeScopeComputation } from './statetree-scope';
-import { parseAndGenerate } from './generator';
-
-
 
 /**
  * Declaration of custom services - add your own service classes here.
  */
 export type StatetreeAddedServices = {
-    references: {
-        QualifiedNameProvider: QualifiedNameProvider
-    },
     validation: {
         StatetreeValidator: StatetreeValidator
     }
