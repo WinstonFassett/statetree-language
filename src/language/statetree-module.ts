@@ -5,7 +5,8 @@ import {
 } from 'langium';
 import { StatetreeGeneratedModule, StatetreeGeneratedSharedModule } from './generated/module';
 import { StatetreeValidator, registerValidationChecks } from './statetree-validator';
-import { parseAndGenerate } from './generator';
+import { StatetreeFormatter } from './statetree-formatter';
+import { StatetreeScopeComputation } from './statetree-scope';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -28,9 +29,17 @@ export type StatetreeServices = LangiumServices & StatetreeAddedServices
  * selected services, while the custom services must be fully specified.
  */
 export const StatetreeModule: Module<StatetreeServices, PartialLangiumServices & StatetreeAddedServices> = {
+    references: {
+        ScopeComputation: (services) => new StatetreeScopeComputation(services),
+        QualifiedNameProvider: () => new QualifiedNameProvider()
+    },
     validation: {
         StatetreeValidator: () => new StatetreeValidator()
-    }
+    },
+    lsp: {
+        Formatter: () => new StatetreeFormatter(),
+        RenameProvider: (services) => new StatetreeRenameProvider(services)
+    }    
 };
 
 /**
