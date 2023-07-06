@@ -22,8 +22,7 @@ QualifiedName returns string:
     ID ('.' ID)*;
 
 hidden terminal WS: /\s+/;
-terminal ID_OR_STRING: ID | STRING;
 terminal ID: /[_a-zA-Z][\w_]*/;
-terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
+
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
