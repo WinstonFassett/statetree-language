@@ -6,7 +6,7 @@
 
 import type { AstNode, AstNodeDescription, LangiumDocument, PrecomputedScopes } from 'langium';
 import type { StatetreeServices } from './statetree-module';
-import type { QualifiedNameProvider } from './statetree-naming';
+// import type { QualifiedNameProvider } from './statetree-naming';
 import type { Statemachine, State } from './generated/ast';
 import { DefaultScopeComputation, interruptAndCheck, MultiMap, streamAllContents } from 'langium';
 import { CancellationToken } from 'vscode-jsonrpc';
@@ -16,11 +16,11 @@ const isType = isState
 
 export class StatetreeScopeComputation extends DefaultScopeComputation {
 
-    qualifiedNameProvider: QualifiedNameProvider;
+    // qualifiedNameProvider: QualifiedNameProvider;
 
     constructor(services: StatetreeServices) {
         super(services);
-        this.qualifiedNameProvider = services.references.QualifiedNameProvider;
+        // this.qualifiedNameProvider = services.references.QualifiedNameProvider;
     }
 
     /**
@@ -34,7 +34,7 @@ export class StatetreeScopeComputation extends DefaultScopeComputation {
                 let name = this.nameProvider.getName(modelNode);
                 if (name) {
                     if (isState(modelNode.$container)) {
-                        name = this.qualifiedNameProvider.getQualifiedName(modelNode.$container as State, name);
+                        // name = this.qualifiedNameProvider.getQualifiedName(modelNode.$container as State, name);
                     }
                     descr.push(this.descriptions.createDescription(modelNode, name, document));
                 }
@@ -61,8 +61,8 @@ export class StatetreeScopeComputation extends DefaultScopeComputation {
                 const nestedDescriptions = await this.processContainer(element, scopes, document, cancelToken);
                 for (const description of nestedDescriptions) {
                     // Add qualified names to the container
-                    const qualified = this.createQualifiedDescription(element, description, document);
-                    localDescriptions.push(qualified);
+                    // const qualified = this.createQualifiedDescription(element, description, document);
+                    localDescriptions.push(description);
                 }
             }
         }
@@ -70,10 +70,10 @@ export class StatetreeScopeComputation extends DefaultScopeComputation {
         return localDescriptions;
     }
 
-    protected createQualifiedDescription(pack: State, description: AstNodeDescription, document: LangiumDocument): AstNodeDescription {
-        const name = this.qualifiedNameProvider.getQualifiedName(pack.name, description.name);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return this.descriptions.createDescription(description.node!, name, document);
-    }
+    // protected createQualifiedDescription(pack: State, description: AstNodeDescription, document: LangiumDocument): AstNodeDescription {
+    //     const name = this.qualifiedNameProvider.getQualifiedName(pack.name, description.name);
+    //     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    //     return this.descriptions.createDescription(description.node!, name, document);
+    // }
 
 }
