@@ -47,7 +47,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
   
   // generate diagram model
   const diagram = useMemo(() => {    
-    const links: LinkObject&any[] = [];    
+    const links: LinkObject[] = [];    
     const nodes:any[] = []
     addStates(machine.model.states);
     return { nodes, links };
@@ -64,14 +64,14 @@ function useStateForceDiagram (machine: StateMachineInstance) {
         state.transitions?.forEach(transition => {
           // console.log({ transition });
           if (transition.to?.ref) {
-            links.push({ name: transition.event, label: transition.event, source: name, target: getStateFQN(transition.to.ref) });
+            links.push({ name: transition.event, label: transition.event, source: name, target: getStateFQN(transition.to.ref) } as any);
           }
         });
         if (state.states?.length > 0) {
           addStates(state.states)
           const initialState = getInitState(state.init, state.states)
           if (initialState) {
-            links.push({ name: 'initial', label: 'initial', source: name, target: getStateFQN(initialState)})
+            links.push({ name: 'initial', label: 'initial', source: name, target: getStateFQN(initialState)} as any)
           }
         }
       });
@@ -281,7 +281,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
     if (prevState) {
       const { event } = lastTransition.transition;
       const link = diagram.links.find(
-        (it) => (it.source as any).name === prevFullName && it.name === event
+        (it: any) => (it.source as any).name === prevFullName && it.name === event
       );
       setTimeout(() => {
         (graphElRef.current as any).Graph.emitParticle(link);

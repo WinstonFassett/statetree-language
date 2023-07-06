@@ -83,13 +83,14 @@ export function useStateMachine ({ model }:{model: Statemachine|undefined }) {
   return [state, { state, send, undo, redo, canUndo, canRedo, reset, model, lastTransition: memo.lastTransition }] as [State, StateMachineInstance]
 }
 
-function recurseStates<T>(states: State[], fn: (state: State) => T) {
+function recurseStates<T>(states: State[], fn: (state: State) => T):T|undefined {
   for (let state of states) {
     const found = fn(state)
     if (found) return found;
     if (state.states) { 
       return recurseStates(state.states, fn)
     }
+    return undefined;
   }
 }
 

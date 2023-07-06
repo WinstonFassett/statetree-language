@@ -16,19 +16,6 @@ export function DebugPane({}) {
   }} />
 }
 
-export function DebugPane1({}) {
-  const info = {
-    soon: true
-  }
-  return <div>
-      <h3>Debug Pane</h3>
-      {/* <pre>
-        <code>{JSON.stringify(info, null, 2)}</code>
-      </pre> */}
-      <DebugValue value={test} />
-  </div>
-}
-
 const test = atom({ test: {nested: { ok: true, store: map({ count: 1 }) }}})
 
 export function DebugStore({ store }: { store: Store}) {
@@ -42,7 +29,7 @@ export function DebugStore({ store }: { store: Store}) {
 export function DebugValue({ value }: { value: any }) {
   console.log('debug', typeof value,  value)
   if (['function'].includes(typeof value)) {
-    return ''
+    return <div />
   }
   if (typeof value !== 'object') {
     return <span>{value}</span>
