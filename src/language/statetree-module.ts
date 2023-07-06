@@ -5,6 +5,7 @@ import {
 } from 'langium';
 import { StatetreeGeneratedModule, StatetreeGeneratedSharedModule } from './generated/module';
 import { StatetreeValidator, registerValidationChecks } from './statetree-validator';
+import { parseAndGenerate } from './generator';
 
 /**
  * Declaration of custom services - add your own service classes here.

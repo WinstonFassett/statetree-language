@@ -1,12 +1,12 @@
 initialState PoweredOn
 PoweredOn {
   switch => Broken
-  Red { tick => PoweredOn.Green }
-  Green { tick => PoweredOn.Yellow }
-  Yellow { tick => PoweredOn.Red }
+  Red { tick => Green }
+  Green { tick => Yellow }
+  Yellow { tick => Red }
 } 
 Broken {
   switch => PoweredOn
-  RedOn {flash => Broken.RedOff} 
-  RedOff {flash => Broken.RedOn} 
+  RedOn {flash => RedOff} 
+  RedOff {flash => RedOn} 
 }

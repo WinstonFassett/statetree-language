@@ -1,22 +1,38 @@
-Shopping {
-  startCheckout => CheckingOut
-}
-CheckingOut {
-  CompletingRequirements {
-    Buyer
-      CheckingOutAsGuest {
-        AwaitingEmail
-        CheckingEmail
-        AwaitingOtp
-        SubmittingOtp
-        OtpValid
-      }
-      CheckingOutAsSaved
-    ContactInfo
-    Billing
-    Payment
+initialState CheckingOutAsGuest
+
+CheckingOutAsGuest {
+  // switch => CheckingOutAsSaved
+  continueAsGuest => ContinuingAsGuest
+  Initializing {
+    validUser => CheckingOutAsSaved
+    noUser => AwaitingEmail
+  }
+  AwaitingEmail {
+    gotEmail => CheckingEmail
+  }
+  CheckingEmail {
+    sentOtp => AwaitingOtp
+  }
+  AwaitingOtp {
+    submit => SubmittingOtp
+  }
+  SubmittingOtp {
+    valid => CheckingOutAsSaved
+    invalid => OtpInvalid
+  }
+  OtpInvalid {
+    resent => RequestingNewOtp
+  }
+  RequestingNewOtp {
+    sentOtp => AwaitingOtp
+  }
+  ContinuingAsGuest {
+
   }
 }
-CheckedOut {
-  continue => Shopping
+CheckingOutAsSaved {
+  StartedAsSaved {
+    continueAsGuest => CheckingOutAsGuest
+  }
+  Authenticated {}
 }
