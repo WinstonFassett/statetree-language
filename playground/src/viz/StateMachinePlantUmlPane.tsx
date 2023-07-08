@@ -1,61 +1,36 @@
 import visualize from "xstate-plantuml";
 import encoder from "plantuml-encoder";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSandpack } from "@codesandbox/sandpack-react";
+import debounce from 'lodash.debounce'
 
-const config = {
-  key: "light",
-  initial: "green",
-  states: {
-    green: {
-      on: {
-        TIMER: "red",
-      },
-    },
-    red: {
-      on: {
-        TIMER: "green",
-      },
-    },
-  },
-};
-
-// const puml = visualize(config);
-// console.log({ res: puml });
-
-// const url = "http://www.plantuml.com/plantuml/svg/" + encoder.encode(puml);
-// console.log("url", url);
-
-// export function StateMachinePlantUml({ config }: { config: any }) {
-//   const puml = useMemo(() => visualize(config), [config])
-//   const url = puml && `http://www.plantuml.com/plantuml/svg/${encoder.encode(puml)}`;
-//   console.log("url", url);
-//   return <div>
-//     <div className="text-xl">State Machine Plant UML</div>
-//     {url && <img src={url} />}
-//   </div>
-// }
+type PlantUmlConfig = Record<string, any>;
 
 export function StateMachinePlantUmlPane() {
   const { sandpack } = useSandpack();
   const xstateJson = sandpack.files["/machine.json"].code;
-  const config = useMemo(() => {
-    console.log("xstate:");
-    console.log(xstateJson);
-    return xstateJson && xstateJson.length > 0 && JSON.parse(xstateJson);
-  }, [xstateJson]);
-  console.log({ config });
-  const puml = useMemo(() => config && visualize(config), [config]);
+  const [xstateConfig, setXStateConfig] = useState<PlantUmlConfig>()
+  const debouncedChangeHandler = useMemo(() => debounce((xstateJson: string) => {
+    if (xstateJson && xstateJson.length > 0) {
+      const parsed = JSON.parse(xstateJson) as PlantUmlConfig
+      setXStateConfig(parsed)
+    }
+  }, 200), [])
+  useEffect(() => {
+    debouncedChangeHandler(xstateJson)
+  }, [xstateJson])
+  return xstateConfig && <XStatePlantUml config={xstateConfig} />;
+}
 
+function XStatePlantUml({ config }: { config: PlantUmlConfig }) {
+  const puml = useMemo(() => config && visualize(config), [config]);
+  return <PlantUml puml={puml} />;
+}
+
+function PlantUml({ puml }: { puml: string }) {
   const encodedPuml = useMemo(() => {
-    return encoder.encode(puml)
+    return encoder.encode(puml);
   }, [puml]);
-  const url =
-    puml && `http://www.plantuml.com/plantuml/svg/${encodedPuml}`;
-  return (
-    <div>
-      <div className="text-xl">State Machine Plant UML</div>
-      {url && <img src={url} />}
-    </div>
-  );
+  const url = puml && `http://www.plantuml.com/plantuml/svg/${encodedPuml}`;
+  return <div>{url && <img src={url} />}</div>;
 }
