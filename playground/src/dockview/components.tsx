@@ -22,12 +22,12 @@ export const components: PanelCollection<IDockviewPanelProps> = {
   viz: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return (<StateMachinePane />);
   },
-  mermaid: (props: IDockviewPanelProps<{}>) => {
-    return (<StateMachineMermaidPane />)
-  },
-  forceGraph: (props: IDockviewPanelProps<{ someProps: string; }>) => {
-    return (<StateMachineForceGraph />);
-  },
+  // mermaid: (props: IDockviewPanelProps<{}>) => {
+  //   return (<StateMachineMermaidPane />)
+  // },
+  // forceGraph: (props: IDockviewPanelProps<{ someProps: string; }>) => {
+  //   return (<StateMachineForceGraph />);
+  // },
   statetree: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return <StatetreeEditorPane />;
   },

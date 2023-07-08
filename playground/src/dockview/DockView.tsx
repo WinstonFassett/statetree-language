@@ -33,26 +33,26 @@ export const DockView = () => {
             },
             position: { referencePanel: 'machine.statetree', direction: 'right' },
         });
-        event.api.addPanel({
-          id: 'forceGraph',
-          component: 'forceGraph',
-          params: {
-              someProps: 'World',
-          },
-          position: { referencePanel: 'viz', direction: 'right' },
-        });
-        event.api.addPanel({
-            id: 'mermaid',
-            component: 'mermaid',
-            params: {},            
-          });
+        // event.api.addPanel({
+        //   id: 'forceGraph',
+        //   component: 'forceGraph',
+        //   params: {
+        //       someProps: 'World',
+        //   },
+        //   position: { referencePanel: 'viz', direction: 'right' },
+        // });
+        // event.api.addPanel({
+        //     id: 'mermaid',
+        //     component: 'mermaid',
+        //     params: {},            
+        //   });
         event.api.addPanel({
           id: 'debug',
           component: 'debug',
           params: {
               someProps: 'World',
           },
-          position: { referencePanel: 'forceGraph', direction: 'below' },
+        //   position: { referencePanel: 'forceGraph', direction: 'below' },
         });
         event.api.addPanel({
           id: 'machine.json',
