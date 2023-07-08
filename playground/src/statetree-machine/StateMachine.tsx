@@ -83,7 +83,7 @@ function StateList({state: currentState, states, send, path=[]}:{state: State, s
       return (
         <div key={state.name} className={`border card was-bg-base-100 shadow-xl ${active ? 'was-bg-slate-800 border border-accent' : 'was-bg-base-200 border-slate-700'} `} >
           <div className={`card-body rounded py-2 px-2`}>
-            <h2 className="card-title text-md"> {name}</h2>
+            <h2 className="card-title text-base"> {name}</h2>
             {!!transitions && <TransitionList transitions={transitions} send={send} />}
         {substates?.length > 0 && <StateList states={substates} state={currentState} send={send} />}
 
