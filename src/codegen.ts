@@ -1,5 +1,5 @@
 import { State, Statemachine, Transition } from './language/generated/ast';
-import { expandToNode as toNode, joinToNode as join, Generated, toString } from 'langium';
+import { expandToNode as toNode, joinToNode as join, Generated, toString, Reference } from 'langium';
 
 export function generateStatements(model: Statemachine) {
     return model.states.map(state => (`console.log('State: ${state.name}!');`));
@@ -9,9 +9,14 @@ export function generateAstCode(model: Statemachine) {
     return JSON.stringify(model, null, 2);
 }
 
-export function generateXState(model: Statemachine) {
-    const initial = (model.init?.ref ?? model.states[0])?.name
-    const states = mapStates(model.states)
+type Options = {
+    generateInitialIfMissing?: boolean
+}
+
+export function generateXState(model: Statemachine, options: Options = {}) {
+    console.log('generateXState', { model, options })
+    const initial = getInitialState(model, options)
+    const states = mapStates(model.states, options)
     const machine = {
         initial,
         states
@@ -19,14 +24,25 @@ export function generateXState(model: Statemachine) {
     return machine
 }
 
-function mapStates(states: State[]) {
+function getInitialState(model: Statemachine|State, { generateInitialIfMissing }: Options) {
+    const { init } = model
+    if (init) {
+        return init.ref?.name ?? init.$refText
+    }
+    if (generateInitialIfMissing) {
+        return model.states[0]?.name
+    }
+    return undefined
+}
+
+function mapStates(states: State[], options: Options) {
     return states.reduce((acc, state) => {
         const { name } = state;
-        acc[name] = mapState(state);
+        acc[name] = mapState(state, options);
         return acc;
     }, {} as Record<string, any>);
 }   
-function mapState (state: State) {
+function mapState (state: State, options: Options) {
     const stateOut = {} as any
     if (state.transitions?.length > 0) {
         stateOut.on = state.transitions.reduce((acc, tn) => {
@@ -38,8 +54,8 @@ function mapState (state: State) {
         }, {} as any)
     }
     if (state.states && state.states.length > 0) {            
-        stateOut.initial = (state.init?.ref ?? state.states[0])?.name
-        stateOut.states = mapStates(state.states)
+        stateOut.initial = getInitialState(state, options)
+        stateOut.states = mapStates(state.states, options)
     }
     return stateOut
 }
@@ -57,10 +73,14 @@ export function generateStatetreeStatements(model: Statemachine, { source }: { s
         console.log('convert', {container})
         switch (container.$type) {
             case 'State':
-                return convertState(container)                        
+                return toNode`                
+                ${convertState(container)}
+                `                        
             case 'Statemachine':
                 const init = container.init
+                const initialStateNode = convertInitialState(init)
                 return toNode`
+                ${convertInitialState(container.init)}
                 ${convertStates(container.states)}
                 `
                 default:
@@ -69,6 +89,12 @@ export function generateStatetreeStatements(model: Statemachine, { source }: { s
         return toNode``            
     }
 
+    
+
+    function convertInitialState(init: Reference<State> | undefined) {
+        const initStateName = init?.$refText ?? init?.ref!.name
+        return initStateName && toNode`initialState ${initStateName}`;
+    }
 
     function convertStates(states: State[] = []): Generated {
         const statesNode = toNode`${join(states, state => toNode`
@@ -95,6 +121,7 @@ export function generateStatetreeStatements(model: Statemachine, { source }: { s
         let generated = toNode`
         ${state.name} ${ childBlocks.length>0 ? toNode`
         {
+            ${convertInitialState(state.init)}
             ${join(childBlocks, block => block, { appendNewLineIfNotEmpty: true })}
         }
         ` : '' }

@@ -13,8 +13,23 @@ export function convertFromXState(xstate: any): Statemachine {
     init: undefined,
     states: [],
   };
+  importInitialState($container, xstate)
   importStates(xstate.states, $container);
   return $container;
+
+  // function importContainer($container: Statemachine | State, xstate: any) {
+  //   return $container
+  // }
+
+  function importInitialState($container: Statemachine | State, xstate: any) {
+    const { initial } = xstate
+    if (initial) {
+      console.log('INITIAL', { initial })
+      $container.init = {
+        $refText: initial
+      }
+    }
+  }
 
   function importStates(states: Record<string, XStateState>, $container: Statemachine | State) {
     const stateKeys = Object.keys(states);
@@ -49,6 +64,7 @@ export function convertFromXState(xstate: any): Statemachine {
       if (substates) {
         const substateKeys = Object.keys(substates);
         if (substateKeys.length > 0) {
+          importInitialState(state, stateIn)
           importStates(substates, state);
         }
       }
