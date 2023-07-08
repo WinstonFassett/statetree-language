@@ -6,21 +6,25 @@ import { ModelContext } from './statetree-machine/ModelContext'
 import { StateMachineInstanceProvider } from './statetree-machine/useStateMachine'
 import * as store from './store'
 import { model as sharedModel } from './store'
+import { useStore } from '@nanostores/react'
 console.log({ store, sharedModel })
 
 function App() {
-  const [model, innerSetModel] = useState<Statemachine>() 
+  
+  const model = useStore(store.latestValidModel)
   function setModel (model: Statemachine|undefined) {
-    innerSetModel(model)
-    sharedModel.set(model)
+    store.model.set(model)
   }
   useEffect(() => {
-    sharedModel.set(model)
-    ;(globalThis as any).machine = model
-    ;(window as any).windowModel = model
+    // sharedModel.set(model)
+    ;(globalThis as any).machine = store.model
+    ;(window as any).windowModel = store.model
+  }, [store.model])
+  useEffect(() => {
+    console.log({ validModel: model })
   }, [model])
   return (<div className='h-full relative'>
-    <ModelContext.Provider value={{model, setModel: innerSetModel}}>
+    <ModelContext.Provider value={{model, setModel}}>
       <StateMachineInstanceProvider model={model}>
         {/* <PlainSandpack /> */}
         {/* <Playground /> */}
