@@ -13,7 +13,7 @@ import { sendToSandpackBundlers } from "./sendToSandpackBundlers";
 
 export function useStatetreeSandpackFiddle() {
   const { sandpack } = useSandpack();
-  const model = useStore(store.model);
+  const model = useStore(store.latestValidModel);
   const [state, machine] = useStateMachineContext();
   const isDark = useStore(store.theme.dark)
   useEffect(() => { sendStateMachineToSandpack(model, sandpack); }, [model]);
