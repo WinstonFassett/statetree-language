@@ -10,6 +10,7 @@ import { StateMachinePane } from '../statetree-machine/StateMachinePane';
 import { DebugPane } from '../older/DebugPane';
 import { StateMachineForceGraph } from '../viz/StateMachineForceGraphPane';
 import { StatetreeEditorPane } from '../sandpack/StateTreeEditorPane';
+import { StateMachineMermaidPane } from '../viz/StateMachineMermaidPane';
 
 export const components: PanelCollection<IDockviewPanelProps> = {
   default: (props: IDockviewPanelProps<{ someProps: string; }>) => {
@@ -20,6 +21,9 @@ export const components: PanelCollection<IDockviewPanelProps> = {
   },
   viz: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return (<StateMachinePane />);
+  },
+  mermaid: (props: IDockviewPanelProps<{}>) => {
+    return (<StateMachineMermaidPane />)
   },
   forceGraph: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return (<StateMachineForceGraph />);

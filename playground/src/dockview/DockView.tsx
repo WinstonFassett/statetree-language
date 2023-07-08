@@ -42,6 +42,11 @@ export const DockView = () => {
           position: { referencePanel: 'viz', direction: 'right' },
         });
         event.api.addPanel({
+            id: 'mermaid',
+            component: 'mermaid',
+            params: {},            
+          });
+        event.api.addPanel({
           id: 'debug',
           component: 'debug',
           params: {
