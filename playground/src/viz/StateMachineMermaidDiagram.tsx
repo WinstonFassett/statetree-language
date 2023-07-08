@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import mermaid from "mermaid";
 import * as uuid from 'uuid';
 import { State, Statemachine } from "../../../src/language/generated/ast";
@@ -8,14 +8,15 @@ mermaid.initialize({
   // startOnLoad: true
 });
 
-const Mermaid = ({ chart }: any) => {
-  let node;
 
+const Mermaid = ({ chart }: any) => {
+  let node: HTMLDivElement|null;
   useEffect(() => {
     // console.log('rendering', chart)
     mermaid.contentLoaded();
     node.removeAttribute("data-processed");
     // console.log('rendered')
+    node?.removeAttribute("data-processed");
   }, [chart]);
   if (!chart) return null;
   return (
@@ -29,7 +30,7 @@ function toStateDiagram(definition: Statemachine, machine: StateMachineInstance,
   const rows = [] as any[];
   let indents = 0
   addStates(definition.states)
-  const output = `
+  const example = `
 stateDiagram-v2
     direction LR
     PoweredOn --> Broken: switch
@@ -44,9 +45,13 @@ stateDiagram-v2
         RedOff --> RedOn: flash
     }
 `;
+const diagram = `
+stateDiagram-v2
+${rows.join('\n')}
+`
 // classDef active fill:aquamarine;
-  console.log(output)
-  return output;
+  // console.log(diagram)
+  return example;
   function indent() {
     return Array(indents*4).fill(' ').join('')
   }
@@ -63,11 +68,13 @@ stateDiagram-v2
       if (state.transitions) {
         indents+=1
         state.transitions.forEach((transition) => {
-          // console.log("event", event);
-          const target = transition.to.ref?.name;
-          const event = transition.event
-          // rows.push(`    ${key}-->|${event}| ${target}[${target}]`);
-          rows.push(`${indent()}${key} --> ${target}: ${event}`);
+          // console.log("transition", transition);
+          const target = transition.to?.ref?.name;
+          if (target) {
+            const event = transition.event
+            // rows.push(`    ${key}-->|${event}| ${target}[${target}]`);
+            rows.push(`${indent()}${key} --> ${target}: ${event}`);
+          }
         });
         indents-=1
       }
@@ -95,7 +102,7 @@ graph LR
 ${rows.join("\n")}
     classDef active fill:aquamarine;
 `;
-  console.log({ output })
+  // console.log({ output })
   return output;
 
   function addStates (states: State[]) {
