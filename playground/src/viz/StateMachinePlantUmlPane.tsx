@@ -3,6 +3,8 @@ import encoder from "plantuml-encoder";
 import { useEffect, useMemo, useState } from "react";
 import { useSandpack } from "@codesandbox/sandpack-react";
 import debounce from 'lodash.debounce'
+import { useStore } from "@nanostores/react";
+import { theme } from "../store";
 
 type PlantUmlConfig = Record<string, any>;
 
@@ -24,18 +26,22 @@ export function StateMachinePlantUmlPane() {
 
 function XStatePlantUml({ config }: { config: PlantUmlConfig }) {
   const [error, setError] = useState<Error>()
+  const dark = useStore(theme.dark)
   const puml = useMemo(() => {
     try {
       const res = config && visualize(config)
       if (error) {
         setError(undefined)
       }
-      return res
+      // return res
+      return res.replace('@startuml', `@startuml
+!theme ${dark ? 'cyborg' : 'cerulean'}`)
     } catch (err) {
       console.log({ error: err })
       setError(err as Error|undefined)
     }
-  }, [config]);
+  }, [config, dark]);
+  console.log({ puml })
   return puml ? <PlantUml puml={puml} /> : <div className="h-full">
     {error ? <div className="h-full p-4 bg-error text-error-content">
       {/* <h3 className="text-xl">Error: {error.message}</h3> */}
