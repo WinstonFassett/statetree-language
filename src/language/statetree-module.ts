@@ -7,7 +7,7 @@ import { StatetreeGeneratedModule, StatetreeGeneratedSharedModule } from './gene
 import { StatetreeValidator, registerValidationChecks } from './statetree-validator';
 import { StatetreeFormatter } from './statetree-formatter';
 import { StatetreeScopeComputation } from './statetree-scope';
-import { parseAndGenerate } from './generator';
+import { generateFromImported, parseAndGenerate } from './generator';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -83,6 +83,10 @@ class StatetreeCommandHandler extends AbstractExecuteCommandHandler {
         acceptor('parseAndGenerate', args => {
             // invoke generator on this data, and return the response
             return parseAndGenerate(args[0]);
+        });
+        acceptor('import', args => {
+            // invoke generator on this data, and return the response
+            return generateFromImported(args[0]);
         });
     }
 }

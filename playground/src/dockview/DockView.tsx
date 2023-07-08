@@ -12,9 +12,12 @@ import { Visualization } from '../viz/AstVisualization';
 import { useStore } from '@nanostores/react';
 import { theme } from '../store';
 import { components, headers } from './components';
-
+import debounce from 'lodash.debounce'
+import { useSandpack } from '@codesandbox/sandpack-react';
+import { importXState } from '../sandpack/codegen';
 
 export const DockView = () => {
+    const { sandpack } = useSandpack()
     const onReady = (event: DockviewReadyEvent) => {
 
         event.api.addPanel({
@@ -59,7 +62,21 @@ export const DockView = () => {
           component: 'editor',
           // tabComponent: 'customTab', // optional custom header
           params: {
-              someProps: '/machine.json',
+              filename: '/machine.json',
+              afterEdit:  debounce((code: string, filename: string) => {
+                // try import and update statetree
+                console.log('user changed machine.json')
+                console.log('todo: import xstate', code)
+                let data
+                try {
+                    importXState(sandpack, code)
+                    data = JSON.parse(code)
+                    console.log({ data })
+                    
+                } catch (err) {
+                    console.log('failed to import xstate', err)
+                }
+              }, 500)
           },          
         });
         event.api.addPanel({
@@ -75,7 +92,7 @@ export const DockView = () => {
         //     component: 'editor',
         //     // tabComponent: 'customTab', // optional custom header
         //     params: {
-        //         someProps: '/xstate.json',
+        //         filename: '/xstate.json',
         //         language: 'json'
         //     },
         //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
@@ -86,7 +103,7 @@ export const DockView = () => {
         //   component: 'editor',
         //   // tabComponent: 'customTab', // optional custom header
         //   params: {
-        //       someProps: '/state.json',
+        //       filename: '/state.json',
         //   },
         // })
         event.api.addPanel({
@@ -94,7 +111,7 @@ export const DockView = () => {
             component: 'editor',
             // tabComponent: 'customTab', // optional custom header
             params: {
-                someProps: '/App.js',
+                filename: '/App.js',
             },
             position: { referencePanel: 'machine.statetree', direction: 'below' },
         });
@@ -103,7 +120,7 @@ export const DockView = () => {
       //     component: 'editor',
       //     // tabComponent: 'customTab', // optional custom header
       //     params: {
-      //         someProps: '/state.json',
+      //         filename: '/state.json',
       //         language: 'json'
       //     },
       //     // position: { referencePanel: 'machine.statetree', direction: 'below' },

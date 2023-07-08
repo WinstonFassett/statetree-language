@@ -35,10 +35,11 @@ export const components: PanelCollection<IDockviewPanelProps> = {
   statetree: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return <StatetreeEditorPane />;
   },
-  editor: (props: IDockviewPanelProps<{ someProps: string; language?: string; }>) => {
+  editor: (props: IDockviewPanelProps<{ filename: string; afterEdit: (code: string)=> void; language?: string; }>) => {
+    // afterEdit: (code: string)=> void;
     return <div>
-      {/* editor for:{props.params.someProps} or {props.params.someProps} */}
-      <SandpackMonacoEditor filename={props.params.someProps} language={props.params.language} />
+      {/* editor for:{props.params.filename} or {props.params.filename} */}
+      <SandpackMonacoEditor afterEdit={props.params.afterEdit} filename={props.params.filename} language={props.params.language} />
     </div>;
   },
   preview: (props: IDockviewPanelProps<{ someProps: string; }>) => {

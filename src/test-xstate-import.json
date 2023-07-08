@@ -1,0 +1,46 @@
+{
+  "initial": "PoweredOn",
+  "states": {
+    "PoweredOn": {
+      "on": {
+        "switch": "Broken"
+      },
+      "initial": "Red",
+      "states": {
+        "Red": {
+          "on": {
+            "tick": "Green"
+          }
+        },
+        "Green": {
+          "on": {
+            "tick": "Yellow"
+          }
+        },
+        "Yellow": {
+          "on": {
+            "tick": "Red"
+          }
+        }
+      }
+    },
+    "Broken": {
+      "on": {
+        "switch": "PoweredOn"
+      },
+      "initial": "RedOn",
+      "states": {
+        "RedOn": {
+          "on": {
+            "flash": "RedOff"
+          }
+        },
+        "RedOff": {
+          "on": {
+            "flash": "RedOn"
+          }
+        }
+      }
+    }
+  }
+}
