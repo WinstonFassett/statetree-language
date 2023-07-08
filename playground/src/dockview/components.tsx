@@ -11,6 +11,7 @@ import { DebugPane } from '../older/DebugPane';
 import { StateMachineForceGraph } from '../viz/StateMachineForceGraphPane';
 import { StatetreeEditorPane } from '../sandpack/StateTreeEditorPane';
 import { StateMachineMermaidPane } from '../viz/StateMachineMermaidPane';
+import { StateMachinePlantUmlPane } from '../viz/StateMachinePlantUmlPane';
 
 export const components: PanelCollection<IDockviewPanelProps> = {
   default: (props: IDockviewPanelProps<{ someProps: string; }>) => {
@@ -28,6 +29,9 @@ export const components: PanelCollection<IDockviewPanelProps> = {
   // forceGraph: (props: IDockviewPanelProps<{ someProps: string; }>) => {
   //   return (<StateMachineForceGraph />);
   // },
+  plantuml: (props: IDockviewPanelProps<{ someProps: string; }>) => {
+    return <StateMachinePlantUmlPane />;
+  },
   statetree: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return <StatetreeEditorPane />;
   },

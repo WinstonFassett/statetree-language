@@ -61,7 +61,15 @@ export const DockView = () => {
           params: {
               someProps: '/machine.json',
           },          
-        });        
+        });
+        event.api.addPanel({
+            id: 'plantuml',
+            component: 'plantuml',
+            params: {
+                someProps: 'World',
+            },
+            // position: { referencePanel: 'machine.statetree', direction: 'right' },
+        });
         // event.api.addPanel({
         //     id: 'xstate.json',
         //     component: 'editor',

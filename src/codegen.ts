@@ -29,9 +29,10 @@ function mapState (state: State) {
     const stateOut = {} as any
     if (state.transitions?.length > 0) {
         stateOut.on = state.transitions.reduce((acc, tn) => {
-            acc[tn.event] = {
-              target: tn.to?.ref?.name
-            }
+            acc[tn.event] = tn.to?.ref?.name
+            // {
+            //   target: tn.to?.ref?.name
+            // }
             return acc
         }, {} as any)
     }

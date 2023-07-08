@@ -21,7 +21,7 @@ export const STATETREE_TEMPLATE = {
       </h2>)`,
     '/machine.statetree': example,
     // '/xstate.json': '{}',
-    '/machine.json': '{}',
+    '/machine.json': '',
     '/useSharedState.js': useSharedStateJS
   },
   customSetup: {
