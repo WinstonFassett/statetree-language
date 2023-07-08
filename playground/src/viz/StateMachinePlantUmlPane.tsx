@@ -23,8 +23,27 @@ export function StateMachinePlantUmlPane() {
 }
 
 function XStatePlantUml({ config }: { config: PlantUmlConfig }) {
-  const puml = useMemo(() => config && visualize(config), [config]);
-  return <PlantUml puml={puml} />;
+  const [error, setError] = useState<Error>()
+  const puml = useMemo(() => {
+    try {
+      const res = config && visualize(config)
+      if (error) {
+        setError(undefined)
+      }
+      return res
+    } catch (err) {
+      console.log({ error: err })
+      setError(err as Error|undefined)
+    }
+  }, [config]);
+  return puml ? <PlantUml puml={puml} /> : <div className="h-full">
+    {error ? <div className="h-full p-4 bg-error text-error-content">
+      {/* <h3 className="text-xl">Error: {error.message}</h3> */}
+      <pre><code>
+        {error.stack}
+      </code></pre>
+    </div> : `Nothing to render`}
+  </div>;
 }
 
 function PlantUml({ puml }: { puml: string }) {
