@@ -73,18 +73,30 @@ export function generateStatetreeStatements(model: Statemachine, { source }: { s
         console.log('convert', {container})
         switch (container.$type) {
             case 'State':
-                return toNode`                
-                ${convertState(container)}
-                `                        
+                return convertState(container)
             case 'Statemachine':
-                const init = container.init
-                const initialStateNode = convertInitialState(init)
-                return toNode`
-                ${convertInitialState(container.init)}
-                ${convertStates(container.states)}
-                `
-                default:
-                    break;            
+                    const init = container.init
+                    const initialStateNode = convertInitialState(init)
+                    return toNode`
+                        // state machine
+                        // initial
+                        // states
+                        ${convertStates(container.states)}
+                        // transitions
+                    `
+                    default:
+                        break;                            
+            // case 'StatemachineV1':
+            //     const init = container.init
+            //     const initialStateNode = convertInitialState(init)
+            //     return toNode`
+            //     // state machine
+            //     // initial
+            //     ${convertInitialState(container.init)}
+            //     // states 
+            //     ${convertStates(container.states)}`
+            //     default:
+            //         break;            
         }
         return toNode``            
     }
@@ -97,14 +109,17 @@ export function generateStatetreeStatements(model: Statemachine, { source }: { s
     }
 
     function convertStates(states: State[] = []): Generated {
-        const statesNode = toNode`${join(states, state => toNode`
-        ${convertState(state)}
-        `)}`
-        // ${states.length} states (${states.map(({name}) => name).join(', ')})
-        return toNode`
-            ${statesNode}
-        `
-        // .appendNewLine().appendNewLine()
+        const hasBlock = states?.length
+        return join(states, state => {
+            return toNode`
+                ${state.name} 
+            `.appendIf(states?.length>0, toNode`
+                { 
+                    ${convertStates(state.states)} 
+                }
+            `)
+        }, { appendNewLineIfNotEmpty: true })
+        // return join(states, state => toNode`${convertState(state)}`, { appendNewLineIfNotEmpty: true })     
     }
 
     function convertState(state: State): Generated {
@@ -112,20 +127,26 @@ export function generateStatetreeStatements(model: Statemachine, { source }: { s
             (state.states && state.states.length > 0) ||
             (state.transitions && state.transitions.length > 0)
         const childBlocks: Generated[] = []        
-        if (state.transitions && state.transitions.length>0) {
-            childBlocks.push(convertTransitions(state.transitions))
-        }
-        if (state.states && state.states.length>0) {
-            childBlocks.push(convertStates(state.states))
-        }
+        // if (state.transitions && state.transitions.length>0) {
+        //     childBlocks.push(convertTransitions(state.transitions))
+        // }
+        // if (state.states && state.states.length>0) {
+        //     childBlocks.push(convertStates(state.states))
+        // }
         let generated = toNode`
-        ${state.name} ${ childBlocks.length>0 ? toNode`
-        {
-            ${convertInitialState(state.init)}
-            ${join(childBlocks, block => block, { appendNewLineIfNotEmpty: true })}
-        }
-        ` : '' }
-        `
+            ${state.name} 
+        `.appendIf(true, `        
+            {
+                // initial maybe
+                ${true ? '' : convertInitialState(state.init)}
+                // transition
+                ${true ? '' : toNode`${convertTransitions(state.transitions)}`}
+                // states
+                ${toNode`${convertStates(state.states)}`}            
+            }
+        `)            
+            
+        console.log({ generated }, toString(generated))
         // const { states } = state
         // if (states && states.length > 0) {
         //     generated = join([generated, toNode`
@@ -136,9 +157,10 @@ export function generateStatetreeStatements(model: Statemachine, { source }: { s
             // .appendNewLine().appendNewLine()
     }
     function convertTransitions(transitions: Transition[]) {
-        return toNode`${join(transitions, transition => toNode`
-            ${transition.event} => ${transition.to?.$refText}
-        `, { separator: '\n'})}`
+        return join(transitions, transition => 
+            toNode`
+                ${transition.event} => ${transition.to?.$refText}`, 
+            { separator: '\n'})
         // .appendNewLine().appendNewLine()
     }
 }
