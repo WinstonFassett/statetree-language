@@ -11,7 +11,9 @@ export function convertFromXState(xstate: any): Statemachine {
   const $container: Statemachine = {
     $type: "Statemachine",
     init: undefined,
+    transitions: [],
     states: [],
+    loop: false
   };
   importInitialState($container, xstate)
   importStates(xstate.states, $container);
@@ -40,7 +42,8 @@ export function convertFromXState(xstate: any): Statemachine {
         $type: 'State',
         name: key,
         states: [],
-        transitions: []
+        transitions: [],
+        loop: false
       };
       $container.states.push(state);
       const { on } = stateIn;

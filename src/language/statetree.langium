@@ -1,39 +1,46 @@
 grammar Statetree
 
 entry Statemachine:
-    ('initialState' init=[State:UCID])?
-    states+=State*;
+    ('statemachine' name=ID)?
+    // state parts:
+    ('initialState' init=[State])?
+    transitions+=Transition*
+    (StateSet | Sequence)? 
+;
+
+StateBlock: StateSet | Sequence;
+
+fragment StateSet:
+    'states' 
+        states+=State*
+    'end';
+
+fragment Sequence:
+    ('sequence')
+    ('('event=ID')')?
+        states+=State*     
+    ('end'|(loop?='loop')?);
 
 State:
-    name=UCID 
-    ('{'
-    transitions+=Transition*
-    ('initialState' init=[State:UCID])?
-    states+=State*
+    ('state')?
+    name=ID
+    ('{' 
+        /* Stateparts */
+        ('initialState' init=[State])?
+        transitions+=Transition*
+        (StateSet | Sequence)? 
     '}')?
-    (inlineTransition=NextStateTransition)?
-;
-NextStateTransition: (
-   (event=LCID ('=>')?)?|'=>'
-);
-Transition:
-    event=LCID
-    '=>' 
-    to=[State:UCID]
-;
+    ;
 
-// QualifiedName returns string:
-//     AnyId ('.' AnyId)*;
-
-AnyId returns string: UCID | LCID;
-
-IdOrString returns string: AnyId|STRING;
+Transition: 
+// midfix
+(event=ID ('=>' | 'to' | ':' | 'go') to=[State])
+|
+// prefix
+('on' event=ID ('=>'|'go'|':')? to=[State]);
 
 hidden terminal WS: /\s+/;
-terminal UCID: /[A-Z][\w_]*/;
-terminal LCID: /[_a-z][\w_]*/;
-// terminal ID: /[_a-zA-Z][\w_]*/;
-terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
+terminal ID: /[_a-zA-Z][\w_]*/;
 hidden terminal HASH_COMMENT: /\#[^\n\r]*/;
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
