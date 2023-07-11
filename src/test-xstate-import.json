@@ -38,6 +38,13 @@
         "RedOff": {
           "on": {
             "flash": "RedOn"
+          }, 
+          "states": {
+            "Nested": {
+              "states": {
+                "Deep": {}
+              }
+            }
           }
         }
       }

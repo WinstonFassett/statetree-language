@@ -72,8 +72,8 @@ export function generateStatetreeStatements(model: Statemachine, { source }: { s
     function convertContainer (container: Statemachine | State): Generated {
         console.log('convert', {container})
         switch (container.$type) {
-            case 'State':
-                return convertState(container)
+            // case 'State':
+            //     return convertState(container)
             case 'Statemachine':
                     const init = container.init
                     const initialStateNode = convertInitialState(init)
@@ -105,62 +105,61 @@ export function generateStatetreeStatements(model: Statemachine, { source }: { s
 
     function convertInitialState(init: Reference<State> | undefined) {
         const initStateName = init?.$refText ?? init?.ref!.name
-        return initStateName && toNode`initialState ${initStateName}`;
+        return toNode``.appendIf(!!initStateName, `initialState ${initStateName}`);
     }
 
     function convertStates(states: State[] = []): Generated {
         const hasBlock = states?.length
         return join(states, state => {
-            return toNode`
-                ${state.name} 
-            `.appendIf(states?.length>0, toNode`
-                { 
-                    ${convertStates(state.states)} 
-                }
-            `)
+            return convertState2(state)
         }, { appendNewLineIfNotEmpty: true })
         // return join(states, state => toNode`${convertState(state)}`, { appendNewLineIfNotEmpty: true })     
     }
 
-    function convertState(state: State): Generated {
-        const hasChildBlocks = 
-            (state.states && state.states.length > 0) ||
-            (state.transitions && state.transitions.length > 0)
-        const childBlocks: Generated[] = []        
-        // if (state.transitions && state.transitions.length>0) {
-        //     childBlocks.push(convertTransitions(state.transitions))
-        // }
-        // if (state.states && state.states.length>0) {
-        //     childBlocks.push(convertStates(state.states))
-        // }
-        let generated = toNode`
-            ${state.name} 
-        `.appendIf(true, `        
-            {
-                // initial maybe
-                ${true ? '' : convertInitialState(state.init)}
-                // transition
-                ${true ? '' : toNode`${convertTransitions(state.transitions)}`}
-                // states
-                ${toNode`${convertStates(state.states)}`}            
+    function convertState2(state: State): Generated {
+        const hasBlock = state.states?.length > 0 
+            || state.transitions?.length > 0
+        return toNode`
+                ${state.name}
+            `
+            .appendIf(hasBlock, (node) => {
+                node.append(toNode`
+                {
+                `
+                ).indent(indentingNode =>
+                    indentingNode
+                    // .append(
+                    //    toNode`'Thing 1'`
+                    // ).appendNewLine()
+                    // .appendIf(`description` !== undefined,
+                    //     'description:', `description`
+                    // ).appendNewLineIfNotEmpty()
+                    .append(convertTransitions(state.transitions))
+                    .append(convertStates(state.states))
+                ).append(
+                    '}'
+                );
             }
-        `)            
-            
-        console.log({ generated }, toString(generated))
-        // const { states } = state
-        // if (states && states.length > 0) {
-        //     generated = join([generated, toNode`
-        //     // SOON:${states.length}  substates
-        //     `])!
-        // }
-        return generated
-            // .appendNewLine().appendNewLine()
+                // toNode` 
+                //  { 
+                // ${convertInitialState(state.init)}
+                // ${false ? '':convertTransitions(state.transitions)}
+                // ${false ? '' :convertStates(state.states)}  
+                // }`
+                // .indent(indentingNode => {
+                //     indentingNode.append(toNode`
+                //     { 
+                //         ${convertInitialState(state.init)}
+                //         ${true ? '':convertTransitions(state.transitions)}
+                //         ${false ? '' :convertStates(state.states)}  
+                //     }            
+                //     `)
+                // })
+            );
     }
+
     function convertTransitions(transitions: Transition[]) {
-        return join(transitions, transition => 
-            toNode`
-                ${transition.event} => ${transition.to?.$refText}`, 
-            { separator: '\n'})
-        // .appendNewLine().appendNewLine()
+        return join(transitions, transition => toNode`${transition.event} => ${transition.to?.$refText}`, 
+            { appendNewLineIfNotEmpty: true })        
     }
 }
