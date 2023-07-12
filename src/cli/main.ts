@@ -5,14 +5,14 @@ import { Statemachine } from '../language/generated/ast';
 import { StatetreeLanguageMetaData } from '../language/generated/module';
 import { createStatetreeServices } from '../language/statetree-module';
 import { extractAstNode } from './cli-util';
-import { generateJavaScript, generateStatetree } from './generator';
+import { generateJavaScriptFile, generateStatetreeFile } from './generator';
 import { NodeFileSystem } from 'langium/node';
 import { convertFromXState } from '../language/convertFromXState';
 
 export const generateAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createStatetreeServices(NodeFileSystem).Statetree;
     const model = await extractAstNode<Statemachine>(fileName, services);
-    const generatedFilePath = generateJavaScript(model, fileName, opts.destination);
+    const generatedFilePath = generateJavaScriptFile(model, fileName, opts.destination);
     console.log(chalk.green(`JavaScript code generated successfully: ${generatedFilePath}`));
 };
 
@@ -24,7 +24,7 @@ export const importXStateAction = async (sourceFile: string, outFile: string, op
     console.log({ model })
     // const services = createStatetreeServices(NodeFileSystem).Statetree;
     // // const model = await extractAstNode<Statemachine>(fileName, services);
-    const generatedFilePath = generateStatetree(model, outFile, opts.destination);
+    const generatedFilePath = generateStatetreeFile(model, outFile, opts.destination);
     console.log(chalk.green(`Statetree code generated successfully: ${generatedFilePath}`));
 }
 

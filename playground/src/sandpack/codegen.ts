@@ -5,7 +5,7 @@ import { StatetreeFormatter } from "../../../src/language/statetree-formatter";
 import { URI } from 'vscode-uri';
 import { Range, Position } from "vscode-languageserver-textdocument";
 import { convertFromXState } from "../../../src/language/convertFromXState";
-import { generateStatetreeStatements } from "../../../src/codegen";
+import { generateStatetree } from "../../../src/language/codegen";
 export function importXState(sandpack: SandpackState, code: string) {
 
   let data: any
@@ -21,7 +21,7 @@ export function importXState(sandpack: SandpackState, code: string) {
 
     const convertedAst = convertFromXState(data)
     console.log({ convertedAst })
-    const code = generateStatetreeStatements(convertedAst)
+    const code = generateStatetree(convertedAst)
     console.log('new code!', code)
     // const $document: LangiumDocument<AstNode> = {
     //   uri: URI.parse("memory://statetree-import/machine.statetree"),

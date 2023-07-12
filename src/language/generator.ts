@@ -4,7 +4,8 @@ import { Statemachine } from "./generated/ast";
 // import { generateCommands } from '../generator/generator';
 import { extractAstNodeFromString } from "../langium-utils/langium-ast";
 import { createStatetreeServices } from "./statetree-module"
-import { generateStatements, generateStatetreeStatements } from '../codegen'
+import { generateStatetree } from './codegen/generateStatetree';
+import { generateJavaScript } from './codegen/generateJavaScript';
 /**
  * Parses a Statetree program & generates output as a list of Objects
  * @param statetreeProgram Statetree program to parse
@@ -14,7 +15,7 @@ export async function parseAndGenerate (statetreeProgram: string): Promise<Objec
     const services = createStatetreeServices(EmptyFileSystem).Statetree;
     const model = await extractAstNodeFromString<Statemachine>(statetreeProgram, services);
     // generate mini logo drawing commands from the model
-    const cmds = generateStatements(model);
+    const cmds = generateJavaScript(model);
     return Promise.resolve(cmds);
 }
 
@@ -22,6 +23,6 @@ export async function generateFromImported (model: Statemachine, { source } :{ s
     // const services = createStatetreeServices(EmptyFileSystem).Statetree;
     // const model = await extractAstNodeFromString<Statemachine>(statetreeProgram, services);
     // generate mini logo drawing commands from the model
-    const cmds = generateStatetreeStatements(model, { source });
+    const cmds = generateStatetree(model, { source });
     return Promise.resolve(cmds);
 }

@@ -8,7 +8,7 @@ import languageConfigurationRaw from '../../../language-configuration.json?raw'
 import responseStatetreeTmRaw from '../../out/syntaxes/statetree.monarch.js?raw'
 import '../userWorker'
 import { useDebouncedCallback } from 'use-debounce'
-import { generateStatements } from '../../../src/codegen';
+import { generateJavaScript } from '../../../src/language/codegen';
 import { DocumentChangeResponse, LangiumAST } from '../../../src/langium-utils/langium-ast';
 import { Statemachine } from '../../../src/language/generated/ast';
 import { code as codeStore, theme } from '../store'

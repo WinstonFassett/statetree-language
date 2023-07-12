@@ -4,7 +4,7 @@ import { ModelContext } from '../statetree-machine/ModelContext';
 import { StatetreeEditor } from '../editor/StatetreeEditor';
 import { LangiumAST } from '../../../src/langium-utils/langium-ast';
 import { Statemachine } from '../../../src/language/generated/ast';
-import { generateXState } from '../../../src/codegen';
+import { generateXState } from '../../../src/language/codegen';
 
 export function StatetreeEditorPane ({ filename='/machine.statetree', outfile='/machine.xstate'}) {
   const { model, setModel } = useContext(ModelContext);

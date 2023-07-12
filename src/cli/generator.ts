@@ -3,16 +3,17 @@ import { CompositeGeneratorNode, NL } from 'langium';
 import path from 'path';
 import { Statemachine } from '../language/generated/ast';
 import { extractDestinationAndName } from './cli-util';
-import { generateStatements, generateStatetreeStatements } from '../codegen';
+import { generateStatetree } from '../language/codegen/generateStatetree';
+import { generateJavaScript } from '../language/codegen/generateJavaScript';
 
-export function generateJavaScript(model: Statemachine, filePath: string, destination: string | undefined): string {
+export function generateJavaScriptFile(model: Statemachine, filePath: string, destination: string | undefined): string {
     const data = extractDestinationAndName(filePath, destination);
     const generatedFilePath = `${path.join(data.destination, data.name)}.js`;
 
     const fileNode = new CompositeGeneratorNode();
     fileNode.append('"use strict";', NL, NL);
     
-    const statements = generateStatements(model)
+    const statements = generateJavaScript(model)
 
     if (!fs.existsSync(data.destination)) {
         fs.mkdirSync(data.destination, { recursive: true });
@@ -21,7 +22,7 @@ export function generateJavaScript(model: Statemachine, filePath: string, destin
     return generatedFilePath;
 }
 
-export function generateStatetree(model: Statemachine, filePath: string, destination: string | undefined, { source }: { source?: string} = {}): string {
+export function generateStatetreeFile(model: Statemachine, filePath: string, destination: string | undefined, { source }: { source?: string} = {}): string {
     console.log({ source, filePath })
     const data = extractDestinationAndName(filePath, destination);
     console.log({ data })
@@ -30,7 +31,7 @@ export function generateStatetree(model: Statemachine, filePath: string, destina
     // const fileNode = new CompositeGeneratorNode();
     // fileNode.append('"use strict";', NL, NL);
     
-    const statements = generateStatetreeStatements(model, { source })
+    const statements = generateStatetree(model, { source })
 
     if (!fs.existsSync(data.destination)) {
         fs.mkdirSync(data.destination, { recursive: true });

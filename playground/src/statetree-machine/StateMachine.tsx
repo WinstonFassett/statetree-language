@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { State, Statemachine, Transition } from "../../../src/language/generated/ast";
 import { Button } from "../components/ui/button";
 import useUndo from 'use-undo';
-import { generateStatements, generateXState } from "../../../src/codegen";
+import { generateJavaScript, generateXState } from "../../../src/language/codegen";
 import { StateMachineInstance } from "./useStateMachine";
 import { getParentState } from "./getParentState";
 
@@ -57,7 +57,7 @@ export function StateMachine({ model, instance }: { model: Statemachine, instanc
   </div>
 
   function exportJS () {
-    const lines = generateStatements(model)
+    const lines = generateJavaScript(model)
     // console.log('lines', lines)
   }
   function exportXState () {
