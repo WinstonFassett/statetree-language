@@ -56,10 +56,37 @@ function generateNextState (model: Statemachine) {
         let stack = [...stateIn].reverse();
         let state = stack.pop();
         console.log({ state, stack, stateIn });
-        ${generateStatesSwitch(model)}
+        ${generateStateConditionalReturns(model)}
     }
     `
 } 
+
+function generateStatesConditionalReturnsContainer(model: State | Statemachine, statePath: State[] = []): Generated {
+    const { init, states } = model
+    if (!states || states.length === 0) return ``
+    const initial = init ?? { ref: states[0] }
+    return toNode`
+       ${generateStateConditionalReturns(model, statePath)}
+    `
+}
+
+function generateStateConditionalReturns(model: State | Statemachine, statePath: State[] = []): Generated {
+    const { init, states } = model
+    if (!states || states.length === 0) return ``
+    const initial = init ?? { ref: states[0] }
+    return join(states, state => {
+        return toNode`        
+        if (v==='${state.name}') {
+            ${toNode`
+                ${state.states?.length > 0 ? toNode`state = stack.pop()` : toNode``}
+                ${generateTransitionsConditionalReturns(state)}
+                ${generateStatesConditionalReturnsContainer(state, statePath.concat(state))}
+                ${generateTransitionHelpCase(state)}
+            `}
+        }
+    `}, { appendNewLineIfNotEmpty: true })
+}
+
 function generateStatesSwitch(model: State | Statemachine, statePath: State[] = []): Generated {
     const { init, states } = model
     if (!states || states.length === 0) return ``
@@ -71,7 +98,15 @@ function generateStatesSwitch(model: State | Statemachine, statePath: State[] = 
             break;
     }`
 }
-
+function generateTransitionHelpConditionalReturn (model: State|Statemachine) {
+    return toNode`
+    if (event ==='?') {
+        return ${JSON.stringify(model.transitions.map(transition => {
+            return transition.event
+        }))}
+    }
+    `
+}
 function generateTransitionHelpCase (model: State|Statemachine) {
     return toNode`
     if (event ==='?') {
@@ -97,6 +132,17 @@ function generateStateCases(model: State | Statemachine, statePath: State[] = []
                 break;
             `}
     `}, { appendNewLineIfNotEmpty: true })
+}
+function generateTransitionsConditionalReturns (model: State | Statemachine) {
+    const { init, transitions, event } = model
+    if (!transitions || transitions.length === 0) return ``    
+    return join(transitions, transition => { 
+        const stateFullPath = getStatePathJS(transition.to?.ref)
+        const name = transition.event ?? event ?? '*'
+        return toNode`
+            if (event==='${name}') return ${stateFullPath}
+        `
+    }, { appendNewLineIfNotEmpty: true })
 }
 
 function generateTransitionsSwitch(model: State | Statemachine) {
