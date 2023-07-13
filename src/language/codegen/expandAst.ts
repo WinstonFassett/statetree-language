@@ -2,7 +2,7 @@ import { AstNode, CstNode, DocumentState, Reference, getDocument, isAstNode, isA
 import { State, Statemachine } from "../generated/ast";
 
 export function expandAst<T extends(State|Statemachine)>(model: T): T {
-  console.log('EXPAND AST', model)
+  // console.log('EXPAND AST', model)
   if (model.sequence || model.loop) {    
     if (!model.init) {
       const firstState = model.states?.[0]

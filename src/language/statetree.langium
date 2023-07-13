@@ -8,7 +8,7 @@ entry Statemachine:
     (StateSet | Sequence)? 
 ;
 
-StateBlock: StateSet | Sequence;
+// StateBlock: StateSet | Sequence;
 
 fragment StateSet:
     'states' 

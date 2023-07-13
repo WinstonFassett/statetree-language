@@ -2,44 +2,101 @@ import {
     expandToNode as toNode,
     joinToNode as join,
     toString,
-    Generated
+    Generated,
+    AstNode
  } from 'langium';
-import { State, Statemachine } from '../generated/ast';
+import { State, Statemachine, Transition } from '../generated/ast';
+import { expandAst } from './expandAst';
 
 
 export function generateJavaScript(model: Statemachine) {
+    const expanded = expandAst(model)
     const generated = toNode`
         // statetree machine
-        ${generateNextState(model)}
+        ${generateNextState(expanded)}
     `
     return toString(generated)
 }
 
+function getAncestors (state: State | Statemachine| AstNode) {
+    const ns = [] as typeof state.$container[]
+    while (state.$container) {
+        ns.push(state.$container)      
+        state = state.$container  
+    }
+    return ns
+}
+function getStatePath (state: State|undefined) {
+    if (!state) return []
+    return getAncestors(state).reverse().concat(state)
+}
+function getFQN(state: State) {
+    return getAncestors(state).map((state) => (state as  { name?: string }).name).filter(x => x).join('.')
+}
+
+function getInitialState (state: State|Statemachine) {
+    return state.init?.ref ?? state.states?.[0]
+}
+
+function resolveTargetState (state: State|undefined) {
+    while (state && state.states && state.states.length>0) {        
+        state = resolveTargetState(getInitialState(state))
+    }
+    return state
+}
+
+// function getFullStatePath(state: State) {
+//     return getAncestors(state).map((state) => (state as  { name?: string }).name).filter(x => x).join('.')
+// }
+
+
 function generateNextState (model: Statemachine) {
     return toNode`
-    function nextState(state, event) {
+    function getNextState(stateIn = ${getStatePathJS(getInitialState(model))}, event = '*') {
+        let stack = [...stateIn].reverse();
+        let state = stack.pop();
+        console.log({ state, stack, stateIn });
         ${generateStatesSwitch(model)}
     }
     `
 } 
-function generateStatesSwitch(model: State | Statemachine): Generated {
+function generateStatesSwitch(model: State | Statemachine, statePath: State[] = []): Generated {
     const { init, states } = model
     if (!states || states.length === 0) return ``
     const initial = init ?? { ref: states[0] }
     return toNode`
-    switch (state${initial && ` = '${initial.ref?.name}'` || ''}) {
-        ${join(states, state => toNode`
-        case '${state.name}':
-            ${toNode`
-                ${generateTransitionsSwitch(state)}
-                ${generateStatesSwitch(state)}
-            `}
-            break;
-        `, { appendNewLineIfNotEmpty: true })}
+    switch (state) {
+       ${generateStateCases(model, statePath)}
         default: 
             break;
+    }`
+}
+
+function generateTransitionHelpCase (model: State|Statemachine) {
+    return toNode`
+    if (event ==='?') {
+        return ${JSON.stringify(model.transitions.map(transition => {
+            return transition.event
+        }))}
     }
     `
+}
+
+function generateStateCases(model: State | Statemachine, statePath: State[] = []): Generated {
+    const { init, states } = model
+    if (!states || states.length === 0) return ``
+    const initial = init ?? { ref: states[0] }
+    return join(states, state => {
+        return toNode`
+        case '${state.name}':
+            ${state.states?.length > 0 ? toNode`state = stack.pop()` : toNode``}
+            ${toNode`
+                ${generateTransitionsSwitch(state)}
+                ${generateStatesSwitch(state, statePath.concat(state))}
+                ${generateTransitionHelpCase(state)}
+                break;
+            `}
+    `}, { appendNewLineIfNotEmpty: true })
 }
 
 function generateTransitionsSwitch(model: State | Statemachine) {
@@ -47,14 +104,19 @@ function generateTransitionsSwitch(model: State | Statemachine) {
     if (!transitions || transitions.length === 0) return ``    
     return toNode`
     switch (event${(event && ` = '${event}'`) ?? ''}) {
-        ${join(transitions, transition => toNode`
+        ${join(transitions, transition => { 
+            const stateFullPath = getStatePathJS(transition.to?.ref)
+            return toNode`
         case '${transition.event ?? event}':
-            return '${transition.to?.ref?.name}'
-        `, { appendNewLineIfNotEmpty: true })}
+            return ${stateFullPath}
+        `}, { appendNewLineIfNotEmpty: true })}        
         default: 
             break;
-    }
-    `
+    }`
+}
+
+function getStatePathJS(state: State|undefined) {
+    return JSON.stringify(getStatePath(resolveTargetState(state)).map(it => (it as any).name).filter(x => x));
 }
 
 function generateStates (states: (State | Statemachine)[], model?: Statemachine) {
