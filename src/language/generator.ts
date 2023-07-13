@@ -11,7 +11,7 @@ import { generateJavaScript } from './codegen/generateJavaScript';
  * @param statetreeProgram Statetree program to parse
  * @returns Generated output from this Statetree program
  */
-export async function parseAndGenerate (statetreeProgram: string): Promise<Object[]> {
+export async function parseAndGenerate (statetreeProgram: string): Promise<string> {
     const services = createStatetreeServices(EmptyFileSystem).Statetree;
     const model = await extractAstNodeFromString<Statemachine>(statetreeProgram, services);
     // generate mini logo drawing commands from the model

@@ -18,7 +18,7 @@ export function generateJavaScriptFile(model: Statemachine, filePath: string, de
     if (!fs.existsSync(data.destination)) {
         fs.mkdirSync(data.destination, { recursive: true });
     }
-    fs.writeFileSync(generatedFilePath, statements.join('\n'));
+    fs.writeFileSync(generatedFilePath, statements);
     return generatedFilePath;
 }
 

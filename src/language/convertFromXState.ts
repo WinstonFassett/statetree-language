@@ -13,6 +13,7 @@ export function convertFromXState(xstate: any): Statemachine {
     init: undefined,
     transitions: [],
     states: [],
+    sequence: false,
     loop: false
   };
   importInitialState($container, xstate)
@@ -43,6 +44,7 @@ export function convertFromXState(xstate: any): Statemachine {
         name: key,
         states: [],
         transitions: [],
+        sequence: false,
         loop: false
       };
       $container.states.push(state);

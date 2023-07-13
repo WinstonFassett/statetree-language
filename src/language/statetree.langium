@@ -16,7 +16,7 @@ fragment StateSet:
     'end';
 
 fragment Sequence:
-    ('sequence')
+    (sequence?='sequence')
     ('('event=ID')')?
         states+=State*     
     ('end'|(loop?='loop')?);

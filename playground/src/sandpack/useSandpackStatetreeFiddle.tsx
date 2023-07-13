@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { State, Statemachine } from "../../../src/language/generated/ast";
 import * as store from '../store';
 import { useStore } from "@nanostores/react";
-import { generateXState } from "../../../src/language/codegen";
+import { expandAst, generateXState } from "../../../src/language/codegen";
 import { StateMachineInstance, useStateMachineContext } from "../statetree-machine/useStateMachine";
 import { getParentState } from "../statetree-machine/getParentState";
 import { sendToSandpackBundlers } from "./sendToSandpackBundlers";
@@ -23,6 +23,7 @@ export function useStatetreeSandpackFiddle() {
 }
 function sendMachineToSandpacks(machine: StateMachineInstance, sandpack: SandpackState) {
   if (machine) {
+    console.log('sendMachineToSandpacks')
     // sandpack.updateFile('/state.json', JSON.stringify(machine.state?.name, null, 2));
     sendToSandpackBundlers(sandpack, {
       type: 'state',
@@ -32,7 +33,10 @@ function sendMachineToSandpacks(machine: StateMachineInstance, sandpack: Sandpac
 }
 function sendStateMachineToSandpack(model: Statemachine | undefined, sandpack: SandpackState) {
   if (model) {
-    const xstate = generateXState(model);
+    console.log('sendStateMachineToSandpack')
+    const expanded = expandAst(model)
+    console.log({ model, expanded})
+    const xstate = generateXState(expanded);
     sandpack.updateFile('/machine.json', JSON.stringify(xstate, null, 2));
     sendToSandpackBundlers(sandpack, {
       type: 'model',
