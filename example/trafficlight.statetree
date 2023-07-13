@@ -1,18 +1,8 @@
-initialState PoweredOn
-states
-  PoweredOn {
-    switch => Broken
-    sequence 
-      Red
-      Green
-      Yellow 
-    loop
-  } 
-  Broken {
-    switch => PoweredOn
-    states
-      RedOn {flash => RedOff} 
-      RedOff {flash => RedOn} 
-    end
-  }
-end
+PoweredOn {
+  switch => Broken
+  sequence Red Green Yellow loop
+} 
+Broken {
+  switch => PoweredOn
+  sequence (flash) RedOn RedOff loop
+}

@@ -5,18 +5,11 @@ entry Statemachine:
     // state parts:
     ('initialState' init=[State])?
     transitions+=Transition*
-    (StateSet | Sequence)? 
+    (StateSet)? 
 ;
 
-// StateBlock: StateSet | Sequence;
-
 fragment StateSet:
-    'states' 
-        states+=State*
-    'end';
-
-fragment Sequence:
-    (sequence?='sequence')
+    (('states')? | (sequence?='sequence'))
     ('('event=ID')')?
         states+=State*     
     ('end'|(loop?='loop')?);
@@ -28,7 +21,7 @@ State:
         /* Stateparts */
         ('initialState' init=[State])?
         transitions+=Transition*
-        (StateSet | Sequence)? 
+        (StateSet)? 
     '}')?
     ;
 
