@@ -35,7 +35,7 @@ export const components: PanelCollection<IDockviewPanelProps> = {
   statetree: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return <StatetreeEditorPane />;
   },
-  editor: (props: IDockviewPanelProps<{ filename: string; afterEdit: (code: string)=> void; language?: string; }>) => {
+  editor: (props: IDockviewPanelProps<{ filename: string; afterEdit: (code: string|undefined)=> void; language?: string; }>) => {
     // afterEdit: (code: string)=> void;
     return <div>
       {/* editor for:{props.params.filename} or {props.params.filename} */}

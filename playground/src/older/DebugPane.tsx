@@ -7,7 +7,7 @@ import { Inspector } from '../nanostore-inspector/Inspector'
 import { useStateMachineContext } from '../statetree-machine/useStateMachine'
 
 export function DebugPane({}) {
-  const [_, machine] = useStateMachineContext()
+  const machine = useStateMachineContext()
   const { state, model } = machine
   return <Inspector data={{
     state, 

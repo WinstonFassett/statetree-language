@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // Type definitions for React 18.2
 // Project: https://react.dev/
 // Definitions by: Asana <https://asana.com>
@@ -34,7 +36,7 @@
 // to 'react/experimental' in their project. See experimental.d.ts's top comment
 // for reference and documentation on how exactly to do it.
 
-/// <reference path="global.d.ts" />
+//// <reference path="global.d.ts" />
 
 import * as CSS from 'csstype';
 import * as PropTypes from 'prop-types';

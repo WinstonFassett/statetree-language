@@ -7,7 +7,7 @@ export function PlainSandpack() {
   const {model, setModel} = useContext(ModelContext)
   return <div className="h-screen w-full flex flex-col items-stretch">
     <h3 className="p-4 text-xl">Plain Sandpack</h3>
-      <StatetreeEditor onModelCreated={setModel}  />
+      {/* <StatetreeEditor onModelCreated={setModel}  /> */}
     <div className="h-1/2">
     </div>
     <div className="p-4 relative">

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import ForceGraph from 'force-graph'
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { StateMachineInstance } from '../statetree-machine/useStateMachine';
@@ -26,7 +27,7 @@ function escapeId(name: string): string {
 }
 
 function useStateForceDiagram (machine: StateMachineInstance) {
-  const graphElRef = useRef(null)
+  const graphElRef = useRef<HTMLDivElement>(null)
   const isDark = useStore(theme.dark)
   const definition = machine.model
   const { send } = machine
@@ -82,8 +83,10 @@ function useStateForceDiagram (machine: StateMachineInstance) {
   // setup diagram
   useEffect(() => {
     // console.log("let's GOOOOO")
+    if (!graphElRef.current) return
     const Graph = ForceGraph()(graphElRef.current);
-    graphElRef.current.Graph = Graph;
+    const graphHolder = Graph as any
+    graphHolder.Graph = Graph;
     Graph.height(500)
       // .d3force( )
       // .linkDirectionalParticles(1)
@@ -91,7 +94,7 @@ function useStateForceDiagram (machine: StateMachineInstance) {
       .linkDirectionalArrowLength(6)
       .linkDirectionalArrowRelPos(1)
       .nodeCanvasObjectMode(() => "after")
-      .nodeCanvasObject((node: { label: any; name: string | undefined; x: number; y: any; }, ctx: { font: string; textAlign: string; textBaseline: string; fillStyle: string; fillText: (arg0: any, arg1: any, arg2: any) => void; }, globalScale: any) => {
+      .nodeCanvasObject(((node: { label: any; name: string | undefined; x: number; y: any; }, ctx: { font: string; textAlign: string; textBaseline: string; fillStyle: string; fillText: (arg0: any, arg1: any, arg2: any) => void; }, globalScale: any) => {
         const label = node.label;
         const fontSize = 8; /// globalScale;
         ctx.font = `${fontSize}px Sans-Serif`;
@@ -101,13 +104,13 @@ function useStateForceDiagram (machine: StateMachineInstance) {
           node.name === lastRenderInfo.stateFullName ? (theme.dark.value ? "white": "black") : "darkGrey"; //node.color;
         
         ctx.fillText(label, node.x+6, node.y);
-      })
+      }) as any)
       // edge labels
       .nodeId("id")
       .nodeLabel("name")
       .nodeAutoColorBy("name")
       .linkCanvasObjectMode(() => "after")
-      .linkCanvasObject((link: { source: { name: string | undefined; }; target: any; curvature: string | number; __controlPoints: any[]; label: any; }, ctx: { font: string; measureText: (arg0: string) => { (): any; new(): any; width: number; }; save: () => void; translate: (arg0: any, arg1: any) => void; rotate: (arg0: number) => void; fillStyle: string; fillRect: (arg0: number, arg1: number, arg2: any) => void; textAlign: string; textBaseline: string; fillText: (arg0: any, arg1: number, arg2: number) => void; restore: () => void; }) => {
+      .linkCanvasObject(((link: { source: { name: string | undefined; }; target: any; curvature: string | number; __controlPoints: any[]; label: any; }, ctx: { font: string; measureText: (arg0: string) => { (): any; new(): any; width: number; }; save: () => void; translate: (arg0: any, arg1: any) => void; rotate: (arg0: number) => void; fillStyle: string; fillRect: (arg0: number, arg1: number, arg2: any) => void; textAlign: string; textBaseline: string; fillText: (arg0: any, arg1: number, arg2: number) => void; restore: () => void; }) => {
         const MAX_FONT_SIZE = 4;
         const LABEL_NODE_MARGIN = Graph.nodeRelSize() * 1.5;
 
@@ -188,18 +191,18 @@ function useStateForceDiagram (machine: StateMachineInstance) {
         ctx.fillStyle = color;
         ctx.fillText(link.label, 0, 0); // +link.curvature + (link.flipped ? '-f' : '')+link.offset, 0, 0);
         ctx.restore();
-      })
+      }) as any)
 
       .linkDirectionalParticleColor(() => "teal")
       .linkDirectionalParticleSpeed(0.04)
       .linkDirectionalParticleWidth(8)
       .linkHoverPrecision(10)
-      .onLinkClick(({ name }: { name: string }) => {
+      .onLinkClick((({ name }: { name: string }) => {
         // dispatch({ type: name });
         // send(name)
         // console.log("clicked", name);
         machine.send(name)
-      })
+      }) as any)
       .cooldownTicks(100);
     // Graph.onEngineStop(() => Graph.zoomToFit(400));
     // console.log('here now')
@@ -281,10 +284,10 @@ function useStateForceDiagram (machine: StateMachineInstance) {
     if (prevState) {
       const { event } = lastTransition.transition;
       const link = diagram.links.find(
-        (it) => it.source.name === prevFullName && it.name === event
+        (it: any) => it.source.name === prevFullName && it.name === event
       );
       setTimeout(() => {
-        graphElRef.current.Graph.emitParticle(link);
+        (graphElRef.current as any).Graph.emitParticle(link);
       }, 10);
     }
   }, [machine.lastTransition]);

@@ -80,7 +80,7 @@ export function useStateMachine ({ model }:{model: Statemachine|undefined }) {
   }
   function getActiveStates() {}
 
-  return [state, { state, send, undo, redo, canUndo, canRedo, reset, model, lastTransition: memo.lastTransition }] as [State, StateMachineInstance]
+  return { state, send, undo, redo, canUndo, canRedo, reset, model, lastTransition: memo.lastTransition } as StateMachineInstance
 }
 
 function recurseStates<T>(states: State[], fn: (state: State) => T) {

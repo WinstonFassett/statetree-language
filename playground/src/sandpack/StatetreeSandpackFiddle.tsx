@@ -9,7 +9,6 @@ import { useStatetreeSandpackFiddle } from "./useSandpackStatetreeFiddle";
 import { useStore } from "@nanostores/react";
 import * as store from "../store";
 import "./sandpack.css";
-import { useComponentSize } from "react-use-size";
 import { ShareButton } from "./ShareButton";
 
 export default function StatetreeSandpackFiddle() {

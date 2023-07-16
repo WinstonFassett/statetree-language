@@ -50,7 +50,7 @@ async function loadJSXHighlighter(monaco: MonacoApi, monacoEditor: MonacoEditor.
     parse,
     traverse,
     monacoEditor
-  );
+  ) as any;
 
   monacoJSXHighlighter.highlightOnDidChangeModelContent();
   monacoJSXHighlighter.addJSXCommentCommand();

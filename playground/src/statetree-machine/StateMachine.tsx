@@ -13,25 +13,25 @@ import { theme } from "../store";
 export function StateMachine({ model, instance }: { model: Statemachine, instance: StateMachineInstance }) {
   const isDark = useState(theme.dark)
   const{ states } = model
-  const [curState, { send, undo, redo, canUndo, canRedo, reset }] = instance
+  const { send, undo, redo, canUndo, canRedo, reset } = instance
 
   // refactoring
   const activeStates = useMemo(() => {
     const items: State[] = []
-    let state: State | undefined = curState
+    let state: State | undefined = instance.state
     while (state) {
       items.push(state)
       state = getParentState(state)
     }
     return items.reverse()
-  }, [states, curState])
+  }, [states, instance.state])
   // console.log({ activeStates })
-  const getState = (name: string) => curState
+  const getState = (name: string) => instance.state
   return <div className="h-full flex flex-col was-bg-base-100">
     <div>
       <div className="flex gap-2 was-bg-base-200">
         <div className="flex-1 p-2">
-          <p>State: {curState?.name}</p>
+          <p>State: {instance.state?.name}</p>
           <p>Active States: {activeStates.map(state => state.name).join(', ')}</p>
         </div>
         <div className="menu menu-horizontal">
@@ -52,7 +52,7 @@ export function StateMachine({ model, instance }: { model: Statemachine, instanc
 
     </div>
     <div className="flex-1 overflow-auto">
-      <StateList states={states} state={curState} send={send} />
+      <StateList states={states} state={instance.state} send={send} />
     </div>
   </div>
 
@@ -75,7 +75,7 @@ const copyToClipboard = (str: string) => {
 
 type Send = (event: string) => void
 
-function StateList({state: currentState, states, send, path=[]}:{state: State, states: State[], send: Send, path?: State[]}) {
+function StateList({state: currentState, states, send, path=[]}:{state: State|undefined, states: State[], send: Send, path?: State[]}) {
   return <ul className="pl-2 mt-2 flex flex-wrap gap-2">
     {states.map((state, index) => {
       const { name, states: substates, transitions } = state
