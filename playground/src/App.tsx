@@ -25,9 +25,9 @@ function App() {
   }, [model])
   return (<div className='h-full relative'>
     <ModelContext.Provider value={{model, setModel}}>
+      {/* <PlainSandpack /> */}
+      {/* <Playground /> */}
       <StateMachineInstanceProvider model={model}>
-        {/* <PlainSandpack /> */}
-        {/* <Playground /> */}
         <StatetreeSandpackFiddle />
       </StateMachineInstanceProvider>
     </ModelContext.Provider>
