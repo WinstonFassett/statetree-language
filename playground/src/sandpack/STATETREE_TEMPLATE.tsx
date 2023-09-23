@@ -20,6 +20,7 @@ export const STATETREE_TEMPLATE = {
       Hello {children}!
       </h2>)`,
     '/machine.statetree': example,
+    '/machine2.statetree': example,
     // '/xstate.json': '{}',
     '/machine.json': '',
     '/useSharedState.js': useSharedStateJS
