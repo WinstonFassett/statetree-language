@@ -1,6 +1,6 @@
 import {   useSandpack
 } from "@codesandbox/sandpack-react";
-import MonacoReactEditor from '../editor/MonacoReactEditorWithJsxLibThing'
+import { ReactTs as MonacoReactEditor } from '../editor/ReactTs'
 import { useEffect, useMemo, useRef } from "react";
 import { getLanguageOfFile } from "../editor/getLanguageOfFile";
 
@@ -15,7 +15,7 @@ export function SandpackMonacoEditor ({ filename, afterEdit, ...rest }: { filena
     }
   },[code])
   return <div>
-    <MonacoReactEditor {...rest} language={language} code={code} onChange={code => {
+    <MonacoReactEditor {...rest} language={language} code={code} filename={filename} onChange={code => {
       console.log('onchange', {code})
       latestCode.current = code
       // before update
