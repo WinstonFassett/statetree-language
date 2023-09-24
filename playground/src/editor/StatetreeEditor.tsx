@@ -1,7 +1,7 @@
 import styles from './Editor.module.css';
 import monarchSyntaxRaw from "../../../syntaxes/statetree.tmLanguage.json?raw";
 import React, { useMemo, useRef } from 'react';
-import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
+import { MonacoEditorReactComp } from './monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
 import statetreeWorkerUrl from '../../libs/statetree-server-worker.js?url'
 import languageConfigurationRaw from '../../../language-configuration.json?raw'
