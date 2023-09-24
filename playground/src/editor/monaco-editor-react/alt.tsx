@@ -1,4 +1,4 @@
-import { MonacoEditorLanguageClientWrapper, UserConfig, WorkerConfigOptions } from '../monaco-editor-wrapper';
+import { MonacoEditorLanguageClientWrapper, UserConfig, WorkerConfigOptions } from 'monaco-editor-wrapper';
 import { IDisposable } from 'monaco-editor/esm/vs/editor/editor.api.js';
 import * as vscode from 'vscode';
 import React, { CSSProperties } from 'react';
