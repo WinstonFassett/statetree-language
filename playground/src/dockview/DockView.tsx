@@ -134,14 +134,14 @@ export const DockView = () => {
       //     },
       //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
       // });
-        event.api.addPanel({
-            id: 'preview',
-            component: 'preview',
-            params: {
-                someProps: 'World',
-            },
-            position: { referencePanel: 'viz', direction: 'below' },
-        });
+        // event.api.addPanel({
+        //     id: 'preview',
+        //     component: 'preview',
+        //     params: {
+        //         someProps: 'World',
+        //     },
+        //     position: { referencePanel: 'viz', direction: 'below' },
+        // });
     };
 
     return (
