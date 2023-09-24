@@ -28,23 +28,23 @@ export const DockView = () => {
               someProps: 'machine.statetree',
           },
         });
-        event.api.addPanel({
-            id: 'machine2.statetree',
-            component: 'statetree',
-            tabComponent: 'customTab', // optional custom header
-            params: {
-                someProps: 'machine2.statetree',
-            },
-            position: { referencePanel: 'machine.statetree', direction: 'below' }
-          });
-        event.api.addPanel({
-            id: 'viz',
-            component: 'viz',
-            params: {
-                someProps: 'World',
-            },
-            position: { referencePanel: 'machine.statetree', direction: 'right' },
-        });
+        // event.api.addPanel({
+        //     id: 'machine2.statetree',
+        //     component: 'statetree',
+        //     tabComponent: 'customTab', // optional custom header
+        //     params: {
+        //         someProps: 'machine2.statetree',
+        //     },
+        //     position: { referencePanel: 'machine.statetree', direction: 'below' }
+        //   });
+        // event.api.addPanel({
+        //     id: 'viz',
+        //     component: 'viz',
+        //     params: {
+        //         someProps: 'World',
+        //     },
+        //     position: { referencePanel: 'machine.statetree', direction: 'right' },
+        // });
         // event.api.addPanel({
         //   id: 'forceGraph',
         //   component: 'forceGraph',
@@ -58,14 +58,14 @@ export const DockView = () => {
         //     component: 'mermaid',
         //     params: {},            
         //   });
-        event.api.addPanel({
-          id: 'debug',
-          component: 'debug',
-          params: {
-              someProps: 'World',
-          },
-        //   position: { referencePanel: 'forceGraph', direction: 'below' },
-        });
+        // event.api.addPanel({
+        //   id: 'debug',
+        //   component: 'debug',
+        //   params: {
+        //       someProps: 'World',
+        //   },
+        // //   position: { referencePanel: 'forceGraph', direction: 'below' },
+        // });
         // event.api.addPanel({
         //   id: 'machine.json',
         //   component: 'editor',
@@ -88,14 +88,14 @@ export const DockView = () => {
         //       }, 500)
         //   },          
         // });
-        event.api.addPanel({
-            id: 'plantuml',
-            component: 'plantuml',
-            params: {
-                someProps: 'World',
-            },
-            // position: { referencePanel: 'machine.statetree', direction: 'right' },
-        });
+        // event.api.addPanel({
+        //     id: 'plantuml',
+        //     component: 'plantuml',
+        //     params: {
+        //         someProps: 'World',
+        //     },
+        //     // position: { referencePanel: 'machine.statetree', direction: 'right' },
+        // });
         // event.api.addPanel({
         //     id: 'xstate.json',
         //     component: 'editor',
