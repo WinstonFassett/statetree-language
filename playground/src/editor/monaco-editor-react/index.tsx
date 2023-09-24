@@ -169,9 +169,23 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
             this.isStarting = this.wrapper.start(userConfig);
             await this.isStarting;
             console.log('started')
+
+            // const languageId = userConfig.editorConfig.languageId;
+            // const prevLanguageId = prevProps.userConfig.editorConfig.languageId;
+            const code = userConfig.editorConfig.code;
+            // const prevCode = prevProps.userConfig.editorConfig.code;
+            console.log('!!!code', code)
+            // this.wrapper.updateModel({
+            //     languageId: 'statetree',
+            //     code
+            // });
+
             onLoading && onLoading(editor, monaco);
             onLoad && onLoad(editor, monaco)
+            
 
+
+            
         //     if (onTextChanged) {
         //         const model = this.wrapper.getModel();
         //         if (model) {
@@ -209,8 +223,9 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
     }
 
     override render() {
+        const code = this.props.userConfig.editorConfig.code
         return (
-            <Editor onMount={(editor, monaco) => {
+            <Editor defaultLanguage='statetree' defaultValue={code} onMount={(editor, monaco) => {
                 console.log('mount', { editor, monaco})
                 this.handleReinit(editor, monaco)
             }}  />
