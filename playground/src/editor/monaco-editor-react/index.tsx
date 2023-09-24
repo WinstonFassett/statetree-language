@@ -224,10 +224,10 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
 
     override render() {
         const code = this.props.userConfig.editorConfig.code
-        return (
-            <Editor defaultLanguage='statetree' defaultValue={code} onMount={(editor, monaco) => {
+        return (            
+            <Editor theme={true ? "vs-dark" : "vs-light" } defaultLanguage='statetree' defaultValue={code} onMount={async (editor, monaco) => {
                 console.log('mount', { editor, monaco})
-                this.handleReinit(editor, monaco)
+                await this.handleReinit(editor, monaco)
             }}  />
             // <div
             //     ref={this.assignRef}
