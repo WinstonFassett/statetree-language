@@ -138,22 +138,53 @@ export class MonacoEditorLanguageClientWrapper {
         };
     }
 
+    
     async start(userConfig: UserConfig) {
+        // map config into properties
         this.init(userConfig);
 
         // Always dispose old instances before start
+        this.disposeEditor();
+
+        // Register extension files
+        this.createImpl(userConfig);
+        // Init services or extensions
+        await this.initServices();
+
+        // create for HTML element
+        await this.initEditor();
+        // why last??
+        await this.startLanguageClient();
+    }
+
+
+    private disposeEditor() {
         this.editor?.disposeEditor();
         this.editor?.disposeDiffEditor();
+    }
 
+    private createImpl(userConfig: UserConfig) {
         if (this.useVscodeConfig) {
             this.editor = new EditorVscodeApi(this.id, userConfig);
         } else {
             this.editor = new EditorClassic(this.id, userConfig);
         }
-        await (wasVscodeApiInitialized() ? Promise.resolve('No service init on restart') : initServices(this.serviceConfig));
-        await this.editor?.init();
-        await this.editor.createEditors(this.htmlElement);
+    }
 
+    async initServices() {
+        await (wasVscodeApiInitialized() ? Promise.resolve('No service init on restart') : initServices(this.serviceConfig));
+    }
+
+    private async initEditor() {
+        await this.editor!.init();
+        if (this.htmlElement) {
+            console.log('CREATE EDITORS FROM WRAPPER')
+            await this.editor!.createEditors(this.htmlElement);
+        }
+    }
+    
+
+    private async startLanguageClient() {
         const lcc = this.languageClientConfig;
         if (lcc.enabled) {
             console.log('Starting monaco-languageclient');

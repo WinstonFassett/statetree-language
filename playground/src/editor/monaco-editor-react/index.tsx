@@ -153,37 +153,24 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
         }
     }
 
-    private async initMonaco(editor, monaco) {
+    private async initMonaco(monaco) {
         const {
-            className,
             userConfig,
-            onTextChanged,
-            onLoading,
-            onLoad,
         } = this.props;
-        console.log('init monaco', { editor, monaco })
+            console.log('init monaco', { monaco })
         // if (this.containerElement) {
         //     this.containerElement.className = className ?? '';
-            userConfig.htmlElement = editor.getDomNode()
+            // userConfig.htmlElement = editor.getDomNode()
             // userConfig.htmlElement = this.containerElement!;
-            this.isStarting = this.wrapper.start(userConfig);
-            await this.isStarting;
+            try {
+                await this.wrapper.dispose();
+            } catch {
+                // This is fine
+                // Sometimes the language client throws an error during disposal
+                // This should not prevent us from continue working
+            }
+            await this.wrapper.start(userConfig);            
             console.log('started')
-
-            // const languageId = userConfig.editorConfig.languageId;
-            // const prevLanguageId = prevProps.userConfig.editorConfig.languageId;
-            const code = userConfig.editorConfig.code;
-            // const prevCode = prevProps.userConfig.editorConfig.code;
-            console.log('!!!code', code)
-            // this.wrapper.updateModel({
-            //     languageId: 'statetree',
-            //     code
-            // });
-
-            onLoading && onLoading(editor, monaco);
-            onLoad && onLoad(editor, monaco)
-            
-
 
             
         //     if (onTextChanged) {
@@ -224,10 +211,35 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
 
     override render() {
         const code = this.props.userConfig.editorConfig.code
+        console.log('render')
         return (            
-            <Editor theme={true ? "vs-dark" : "vs-light" } defaultLanguage='statetree' defaultValue={code} onMount={async (editor, monaco) => {
+            <Editor theme={true ? "vs-dark" : "vs-light" } defaultLanguage='statetree' defaultValue={code} beforeMount={(monaco) => {
+                console.log('mounting', monaco)
+            }} onMount={async (editor, monaco) => {                
                 console.log('mount', { editor, monaco})
-                await this.handleReinit(editor, monaco)
+                const {
+                    className,
+                    userConfig,
+                    onTextChanged,
+                    onLoading,
+                    onLoad,
+                } = this.props;
+                console.log({ userConfig })
+                // userConfig.htmlElement = editor.getContainerDomNode()!
+                await this.initMonaco(monaco)
+                // await this.handleReinit(editor, monaco)
+                // const languageId = userConfig.editorConfig.languageId;
+                // const prevLanguageId = prevProps.userConfig.editorConfig.languageId;
+                const code = userConfig.editorConfig.code;
+                // const prevCode = prevProps.userConfig.editorConfig.code;
+                console.log('!!!code', code)
+                // this.wrapper.updateModel({
+                //     languageId: 'statetree',
+                //     code
+                // });
+
+                onLoading && onLoading(editor, monaco);
+                onLoad && onLoad(editor, monaco)
             }}  />
             // <div
             //     ref={this.assignRef}
