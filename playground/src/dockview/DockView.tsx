@@ -28,15 +28,15 @@ export const DockView = () => {
               someProps: 'machine.statetree',
           },
         });
-        // event.api.addPanel({
-        //     id: 'machine2.statetree',
-        //     component: 'statetree',
-        //     tabComponent: 'customTab', // optional custom header
-        //     params: {
-        //         someProps: 'machine2.statetree',
-        //     },
-        //     position: { referencePanel: 'machine.statetree', direction: 'below' }
-        //   });
+        event.api.addPanel({
+            id: 'machine2.statetree',
+            component: 'statetree',
+            tabComponent: 'customTab', // optional custom header
+            params: {
+                someProps: 'machine2.statetree',
+            },
+            position: { referencePanel: 'machine.statetree', direction: 'below' }
+          });
         // event.api.addPanel({
         //     id: 'viz',
         //     component: 'viz',

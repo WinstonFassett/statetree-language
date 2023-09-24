@@ -25,7 +25,7 @@ export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { v
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
   const isDark = useStore(theme.dark)
   const userConfig: UserConfig = useMemo(() => ({
-      htmlElement: document.getElementById('monaco-editor-root') as HTMLElement,
+      htmlElement: undefined as any,
       wrapperConfig: {
           useVscodeConfig: true,
           serviceConfig: {
