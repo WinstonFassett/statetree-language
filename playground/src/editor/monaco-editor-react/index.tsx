@@ -47,6 +47,16 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
     //     delete this.isReiniting
     // }
 
+    async handleReinit(editor, monaco) {
+        if (this.isReiniting) return this.isReiniting
+        this.isReiniting = enqueueMonacoInitializer(async () => {
+            await this.destroyMonaco();
+            await this.initMonaco(editor, monaco);
+        })
+        await this.isReiniting
+        delete this.isReiniting
+    }
+
     override async componentDidUpdate(prevProps: MonacoEditorProps) {
         // const { className, userConfig } = this.props;
         // const { wrapper } = this;
@@ -119,7 +129,7 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
     }
 
     override componentWillUnmount() {
-        // this.destroyMonaco();
+        this.destroyMonaco();
     }
 
     private assignRef = (component: HTMLDivElement) => {
@@ -127,22 +137,23 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
     };
 
     private async destroyMonaco(): Promise<void> {
-        // if (this.wrapper) {
-        //     await this.isStarting;
-        //     try {
-        //         await this.wrapper.dispose();
-        //     } catch {
-        //         // This is fine
-        //         // Sometimes the language client throws an error during disposal
-        //         // This should not prevent us from continue working
-        //     }
-        // }
-        // if (this._subscription) {
-        //     this._subscription.dispose();
-        // }
+        if (this.wrapper) {
+            // console.log('waiting to destroy', this)
+            // await this.isStarting;
+            // try {
+            //     await this.wrapper.dispose();
+            // } catch {
+            //     // This is fine
+            //     // Sometimes the language client throws an error during disposal
+            //     // This should not prevent us from continue working
+            // }
+        }
+        if (this._subscription) {
+            this._subscription.dispose();
+        }
     }
 
-    private async initMonaco() {
+    private async initMonaco(editor, monaco) {
         const {
             className,
             userConfig,
@@ -150,16 +161,16 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
             onLoading,
             onLoad,
         } = this.props;
-
+        console.log('init monaco', { editor, monaco })
         // if (this.containerElement) {
         //     this.containerElement.className = className ?? '';
-
-        //     userConfig.htmlElement = this.containerElement;
-        //     this.isStarting = this.wrapper.start(userConfig);
-        //     await this.isStarting;
-
-        //     onLoading && onLoading();
-        //     onLoad && this.isStarting?.then(() => onLoad());
+            userConfig.htmlElement = editor.getDomNode()
+            // userConfig.htmlElement = this.containerElement!;
+            this.isStarting = this.wrapper.start(userConfig);
+            await this.isStarting;
+            console.log('started')
+            onLoading && onLoading(editor, monaco);
+            onLoad && onLoad(editor, monaco)
 
         //     if (onTextChanged) {
         //         const model = this.wrapper.getModel();
@@ -199,7 +210,10 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
 
     override render() {
         return (
-            <Editor />
+            <Editor onMount={(editor, monaco) => {
+                console.log('mount', { editor, monaco})
+                this.handleReinit(editor, monaco)
+            }}  />
             // <div
             //     ref={this.assignRef}
             //     style={this.props.style}
