@@ -32,16 +32,16 @@ export const components: PanelCollection<IDockviewPanelProps> = {
   plantuml: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return <StateMachinePlantUmlPane />;
   },
-  statetree: (props: IDockviewPanelProps<{ someProps: string; }>) => {
-    return <StatetreeEditorPane />;
-  },
-  // editor: (props: IDockviewPanelProps<{ filename: string; afterEdit: (code: string|undefined)=> void; language?: string; }>) => {
-  //   // afterEdit: (code: string)=> void;
-  //   return <div>
-  //     {/* editor for:{props.params.filename} or {props.params.filename} */}
-  //     <SandpackMonacoEditor afterEdit={props.params.afterEdit} filename={props.params.filename} language={props.params.language} />
-  //   </div>;
+  // statetree: (props: IDockviewPanelProps<{ someProps: string; }>) => {
+  //   return <StatetreeEditorPane />;
   // },
+  editor: (props: IDockviewPanelProps<{ filename: string; afterEdit: (code: string|undefined)=> void; language?: string; }>) => {
+    // afterEdit: (code: string)=> void;
+    return <div>
+      {/* editor for:{props.params.filename} or {props.params.filename} */}
+      <SandpackMonacoEditor afterEdit={props.params.afterEdit} filename={props.params.filename} language={props.params.language} />
+    </div>;
+  },
   preview: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return <SandpackPreview style={{ height: "100vh" }} />;
   },
