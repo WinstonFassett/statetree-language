@@ -124,6 +124,15 @@ export const DockView = () => {
             },
             // position: { referencePanel: 'machine.statetree', direction: 'below' },
         });
+        event.api.addPanel({
+            id: 'useSharedState.js',
+            component: 'editor',
+            // tabComponent: 'customTab', // optional custom header
+            params: {
+                filename: '/useSharedState.js',
+            },
+            // position: { referencePanel: 'machine.statetree', direction: 'below' },
+        });
       //   event.api.addPanel({
       //     id: 'state.json',
       //     component: 'editor',

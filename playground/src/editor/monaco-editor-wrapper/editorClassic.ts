@@ -58,4 +58,11 @@ export class EditorClassic extends MonacoEditorBase implements MonacoEditorWrapp
     async updateConfig(options: editor.IEditorOptions & editor.IGlobalEditorOptions) {
         this.editor?.updateOptions(options);
     }
+    
+    disposeApp(): void {
+        console.log('TODO: dispose classic')
+        // this.disposeEditor();
+        // this.disposeDiffEditor();
+        // this.extensionRegisterResult?.dispose();
+    }
 }

@@ -32,7 +32,7 @@ export function ReactTs({
         enabled: false
     },
     editorConfig: {
-        uri: 'thing.tsx',
+        uri: filename, // 'thing.tsx',
         languageId: language,
         useDiffEditor: false,
         theme: 'vs-dark',

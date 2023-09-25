@@ -75,6 +75,7 @@ export type ModelUpdate = {
 export interface MonacoEditorWrapper {
     init(): Promise<void>;
     updateConfig(options: editor.IEditorOptions & editor.IGlobalEditorOptions | VscodeUserConfiguration): void;
+    disposeApp?: () => void
 }
 
 export class MonacoEditorLanguageClientWrapper {
@@ -159,6 +160,7 @@ export class MonacoEditorLanguageClientWrapper {
 
 
     private disposeEditor() {
+        this.editor?.disposeApp()
         this.editor?.disposeEditor();
         this.editor?.disposeDiffEditor();
     }
