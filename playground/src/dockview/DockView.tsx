@@ -20,14 +20,14 @@ export const DockView = () => {
     const { sandpack } = useSandpack()
     const onReady = (event: DockviewReadyEvent) => {
 
-        // event.api.addPanel({
-        //   id: 'machine.statetree',
-        //   component: 'statetree',
-        //   tabComponent: 'customTab', // optional custom header
-        //   params: {
-        //       someProps: 'machine.statetree',
-        //   },
-        // });
+        event.api.addPanel({
+          id: 'machine.statetree',
+          component: 'statetree',
+          tabComponent: 'customTab', // optional custom header
+          params: {
+              someProps: 'machine.statetree',
+          },
+        });
         // event.api.addPanel({
         //     id: 'machine2.statetree',
         //     component: 'statetree',
@@ -124,15 +124,15 @@ export const DockView = () => {
             },
             // position: { referencePanel: 'machine.statetree', direction: 'below' },
         });
-        event.api.addPanel({
-            id: 'useSharedState.js',
-            component: 'editor',
-            // tabComponent: 'customTab', // optional custom header
-            params: {
-                filename: '/useSharedState.js',
-            },
-            // position: { referencePanel: 'machine.statetree', direction: 'below' },
-        });
+        // event.api.addPanel({
+        //     id: 'useSharedState.js',
+        //     component: 'editor',
+        //     // tabComponent: 'customTab', // optional custom header
+        //     params: {
+        //         filename: '/useSharedState.js',
+        //     },
+        //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
+        // });
       //   event.api.addPanel({
       //     id: 'state.json',
       //     component: 'editor',
@@ -143,14 +143,14 @@ export const DockView = () => {
       //     },
       //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
       // });
-        // event.api.addPanel({
-        //     id: 'preview',
-        //     component: 'preview',
-        //     params: {
-        //         someProps: 'World',
-        //     },
-        //     position: { referencePanel: 'viz', direction: 'below' },
-        // });
+        event.api.addPanel({
+            id: 'preview',
+            component: 'preview',
+            params: {
+                someProps: 'World',
+            },
+            position: { referencePanel: 'App.js', direction: 'below' },
+        });
     };
 
     return (
