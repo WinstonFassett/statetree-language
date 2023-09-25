@@ -67,7 +67,10 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
         } = this.props;
         if (this.containerElement) {
             userConfig.htmlElement = this.containerElement!;        
-            await this.wrapper.start(userConfig);                        
+            const { onLoading, onLoad } = this.props
+            if (onLoading) onLoading()
+            await this.wrapper.start(userConfig);      
+            if (onLoad) onLoad()
             if (onTextChanged) {
                 const model = this.wrapper.getModel();
                 if (model) {
@@ -105,7 +108,6 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
     }
 
     override render() {
-        const code = this.props.userConfig.editorConfig.code
         return (
             <div
                 ref={this.assignRef}

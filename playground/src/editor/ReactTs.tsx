@@ -1,13 +1,14 @@
 import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import * as monaco from 'monaco-editor';
-import { MonacoEditorReactComp } from '@typefox/monaco-editor-react';
-import { UserConfig } from 'monaco-editor-wrapper';
+import { MonacoEditorReactComp } from './monaco-editor-react';
+import { UserConfig } from './monaco-editor-wrapper';
 
 import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
 import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
 import { MonacoJsxSyntaxHighlight, getWorker } from 'monaco-jsx-syntax-highlight';
 import './jsx.scss';
+import '../userWorker'
 
 export function ReactTs({
   code,
@@ -21,23 +22,23 @@ export function ReactTs({
   onChange?: (code: string, isDirty: boolean) => void;
 }) {
   const ref = useRef<MonacoEditorReactComp>(null);
-  console.log({ filename });
+  console.log({ filename, language });
   const userConfig: UserConfig = {
     htmlElement: undefined as any,
     wrapperConfig: {
-      serviceConfig: {
-        enableKeybindingsService: true,
-        debugLogging: true,
-      },
-      editorAppConfig: {
-        $type: 'classic',
+      useVscodeConfig: false
+    },
+    languageClientConfig: {
+        enabled: false
+    },
+    editorConfig: {
+        uri: 'thing.tsx',
         languageId: language,
         useDiffEditor: false,
         theme: 'vs-dark',
-        codeUri: filename ? `${filename}` : 'index.tsx',
-        code,
-      },
-    },
+        automaticLayout: true,        
+        code
+    }
   };
 
   const onTextChanged = (text: string, isDirty: boolean) => {
@@ -55,7 +56,7 @@ export function ReactTs({
       }}
       onLoad={() => {
         const reactEditor = ref.current;
-        const { editor } = (reactEditor as any).wrapper.editorApp;
+        const { editor } = (reactEditor as any).wrapper.editor;
         console.log({ editor });
         monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
           jsx: monaco.languages.typescript.JsxEmit.Preserve,

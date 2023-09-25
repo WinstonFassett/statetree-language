@@ -32,9 +32,9 @@ export const components: PanelCollection<IDockviewPanelProps> = {
   plantuml: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return <StateMachinePlantUmlPane />;
   },
-  // statetree: (props: IDockviewPanelProps<{ someProps: string; }>) => {
-  //   return <StatetreeEditorPane />;
-  // },
+  statetree: (props: IDockviewPanelProps<{ someProps: string; }>) => {
+    return <StatetreeEditorPane />;
+  },
   editor: (props: IDockviewPanelProps<{ filename: string; afterEdit: (code: string|undefined)=> void; language?: string; }>) => {
     // afterEdit: (code: string)=> void;
     return <div>
