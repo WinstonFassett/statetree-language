@@ -33,7 +33,7 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
     }
 
     override async componentDidMount() {
-        this.initMonaco()
+        await enqueueMonacoInitializer(() => this.initMonaco())        
     }
 
     override componentWillUnmount() {
