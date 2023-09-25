@@ -32,7 +32,7 @@ export function ReactTs({
         enabled: false
     },
     editorConfig: {
-        uri: filename, // 'thing.tsx',
+        uri: filename.endsWith('x') ? filename : (filename + 'x'),
         languageId: language,
         useDiffEditor: false,
         theme: 'vs-dark',
