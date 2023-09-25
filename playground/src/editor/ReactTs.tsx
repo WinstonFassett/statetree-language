@@ -42,7 +42,7 @@ export function ReactTs({
   };
 
   const onTextChanged = (text: string, isDirty: boolean) => {
-    console.log(`Dirty? ${isDirty} Content: ${text}`);
+    if (onChange) { onChange(text, isDirty) }
   };
 
   return (
