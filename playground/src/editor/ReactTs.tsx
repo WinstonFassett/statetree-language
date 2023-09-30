@@ -56,13 +56,15 @@ export function ReactTs({
       }}
       onLoad={() => {
         const reactEditor = ref.current;
-        const { editor } = (reactEditor as any).wrapper.editor;
-        console.log({ editor });
-        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-          jsx: monaco.languages.typescript.JsxEmit.Preserve,
-          target: monaco.languages.typescript.ScriptTarget.ES2020,
-          esModuleInterop: true,
-        });
+        const wrapper = (reactEditor!).getEditorWrapper();
+        const editor = wrapper.getEditor()!
+        const model = editor.getModel()
+        console.log({ model, editor, wrapper });
+        // monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+        //   jsx: monaco.languages.typescript.JsxEmit.Preserve,
+        //   target: monaco.languages.typescript.ScriptTarget.ES2020,
+        //   esModuleInterop: true,
+        // });
 
         const monacoJsxSyntaxHighlight = new MonacoJsxSyntaxHighlight(getWorker(), monaco);
         // editor is the result of monaco.editor.create
