@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client';
-import * as monaco from 'monaco-editor';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { MonacoEditorReactComp } from './monaco-editor-react';
 import { UserConfig } from './monaco-editor-wrapper';
 
