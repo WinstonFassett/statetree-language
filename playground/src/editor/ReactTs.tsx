@@ -32,8 +32,8 @@ export function ReactTs({
         enabled: false
     },
     editorConfig: {
-        languageId: language,
         uri: filename, //.endsWith('x') ? filename : (filename + 'x'),
+        languageId: 'typescript',
         useDiffEditor: false,
         theme: 'vs-dark',
         automaticLayout: true,        
