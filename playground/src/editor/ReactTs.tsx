@@ -32,8 +32,8 @@ export function ReactTs({
         enabled: false
     },
     editorConfig: {
-        uri: filename.endsWith('x') ? filename : (filename + 'x'),
         languageId: language,
+        uri: filename, //.endsWith('x') ? filename : (filename + 'x'),
         useDiffEditor: false,
         theme: 'vs-dark',
         automaticLayout: true,        
