@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 import * as fs from 'fs'
 import url from 'url'
 
@@ -6,18 +7,23 @@ const cdnDomain = 'http://127.0.0.2:5173'
 
 export default defineConfig({
   build: {
-    target: 'esnext'
+    // target: 'esnext'
+    minify: false,
+    commonjsOptions: {
+      strictRequires: true
+    }
   },
   plugins: [
+    react(),
     {
       // For the *-language-features extensions which use SharedArrayBuffer
       name: 'configure-response-headers',
       apply: 'serve',
       configureServer: server => {
         server.middlewares.use((_req, res, next) => {
-          res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
-          res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
-          res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
+          // res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
+          // res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
+          // res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
           next()
         })
       }
@@ -36,7 +42,7 @@ export default defineConfig({
           const body = fs.readFileSync(source).toString('utf-8')
           // throw new Error('wtf: '+ source + ': ' + body)
           console.log('STRINGIFIYING')
-          return `eval(${JSON.stringify(fs.readFileSync(source).toString('utf-8'))})`
+          // return `eval(${JSON.stringify(fs.readFileSync(source).toString('utf-8'))})`
         }
       }
     }
@@ -45,27 +51,27 @@ export default defineConfig({
     // This is require because vscode is a local dependency
     // and vite doesn't want to optimize it and the number of modules makes chrome hang
     include: [
-      'vscode', 'vscode/extensions', 'vscode/services', 'vscode/monaco', 'vscode/service-override/model', 'vscode/service-override/editor',
-      'vscode/service-override/extensions', 'vscode/service-override/notifications', 'vscode/service-override/bulkEdit', 'vscode/service-override/dialogs', 'vscode/service-override/configuration',
-      'vscode/service-override/keybindings', 'vscode/service-override/textmate', 'vscode/service-override/theme', 'vscode/service-override/languages',
-      'vscode/service-override/audioCue', 'vscode/service-override/views', 'vscode/service-override/quickaccess', 'vscode/service-override/debug',
-      'vscode/service-override/preferences', 'vscode/service-override/snippets', 'vscode/service-override/files', 'vscode/service-override/output',
-      'vscode/service-override/terminal', 'vscode/service-override/search', 'vscode/service-override/markers', 'vscode/service-override/accessibility', 'vscode/service-override/storage',
-      'vscode/service-override/languageDetectionWorker', 'vscode/default-extensions/clojure', 'vscode/default-extensions/coffeescript', 'vscode/default-extensions/cpp',
-      'vscode/default-extensions/csharp', 'vscode/default-extensions/css', 'vscode/default-extensions/diff', 'vscode/default-extensions/fsharp', 'vscode/default-extensions/go',
-      'vscode/default-extensions/groovy', 'vscode/default-extensions/html', 'vscode/default-extensions/java', 'vscode/default-extensions/javascript',
-      'vscode/default-extensions/json', 'vscode/default-extensions/julia', 'vscode/default-extensions/lua', 'vscode/default-extensions/markdown-basics',
-      'vscode/default-extensions/objective-c', 'vscode/default-extensions/perl', 'vscode/default-extensions/php', 'vscode/default-extensions/powershell',
-      'vscode/default-extensions/python', 'vscode/default-extensions/r', 'vscode/default-extensions/ruby', 'vscode/default-extensions/rust',
-      'vscode/default-extensions/scss', 'vscode/default-extensions/shellscript', 'vscode/default-extensions/sql', 'vscode/default-extensions/swift',
-      'vscode/default-extensions/typescript-basics', 'vscode/default-extensions/vb', 'vscode/default-extensions/xml', 'vscode/default-extensions/yaml',
-      'vscode/default-extensions/theme-defaults', 'vscode/default-extensions/theme-seti',
-      'vscode/default-extensions/references-view', 'vscode/default-extensions/typescript-basics', 'vscode/default-extensions/search-result',
-      'vscode/default-extensions/typescript-language-features', 'vscode/default-extensions/markdown-language-features',
-      'vscode/default-extensions/json-language-features', 'vscode/default-extensions/css-language-features',
-      'vscode/default-extensions/npm', 'vscode/default-extensions/css', 'vscode/default-extensions/markdown-basics', 'vscode/default-extensions/html',
-      'vscode/default-extensions/html-language-features', 'vscode/default-extensions/configuration-editing', 'vscode/default-extensions/media-preview', 'vscode/default-extensions/markdown-math',
-      'vscode/workers/extensionHost.worker', 'vscode/workers/languageDetection.worker'
+      // 'vscode', 'vscode/extensions', 'vscode/services', 'vscode/monaco', 'vscode/service-override/model', 'vscode/service-override/editor',
+      // 'vscode/service-override/extensions', 'vscode/service-override/notifications', 'vscode/service-override/bulkEdit', 'vscode/service-override/dialogs', 'vscode/service-override/configuration',
+      // 'vscode/service-override/keybindings', 'vscode/service-override/textmate', 'vscode/service-override/theme', 'vscode/service-override/languages',
+      // 'vscode/service-override/audioCue', 'vscode/service-override/views', 'vscode/service-override/quickaccess', 'vscode/service-override/debug',
+      // 'vscode/service-override/preferences', 'vscode/service-override/snippets', 'vscode/service-override/files', 'vscode/service-override/output',
+      // 'vscode/service-override/terminal', 'vscode/service-override/search', 'vscode/service-override/markers', 'vscode/service-override/accessibility', 'vscode/service-override/storage',
+      // 'vscode/service-override/languageDetectionWorker', 'vscode/default-extensions/clojure', 'vscode/default-extensions/coffeescript', 'vscode/default-extensions/cpp',
+      // 'vscode/default-extensions/csharp', 'vscode/default-extensions/css', 'vscode/default-extensions/diff', 'vscode/default-extensions/fsharp', 'vscode/default-extensions/go',
+      // 'vscode/default-extensions/groovy', 'vscode/default-extensions/html', 'vscode/default-extensions/java', 'vscode/default-extensions/javascript',
+      // 'vscode/default-extensions/json', 'vscode/default-extensions/julia', 'vscode/default-extensions/lua', 'vscode/default-extensions/markdown-basics',
+      // 'vscode/default-extensions/objective-c', 'vscode/default-extensions/perl', 'vscode/default-extensions/php', 'vscode/default-extensions/powershell',
+      // 'vscode/default-extensions/python', 'vscode/default-extensions/r', 'vscode/default-extensions/ruby', 'vscode/default-extensions/rust',
+      // 'vscode/default-extensions/scss', 'vscode/default-extensions/shellscript', 'vscode/default-extensions/sql', 'vscode/default-extensions/swift',
+      // 'vscode/default-extensions/typescript-basics', 'vscode/default-extensions/vb', 'vscode/default-extensions/xml', 'vscode/default-extensions/yaml',
+      // 'vscode/default-extensions/theme-defaults', 'vscode/default-extensions/theme-seti',
+      // 'vscode/default-extensions/references-view', 'vscode/default-extensions/typescript-basics', 'vscode/default-extensions/search-result',
+      // 'vscode/default-extensions/typescript-language-features', 'vscode/default-extensions/markdown-language-features',
+      // 'vscode/default-extensions/json-language-features', 'vscode/default-extensions/css-language-features',
+      // 'vscode/default-extensions/npm', 'vscode/default-extensions/css', 'vscode/default-extensions/markdown-basics', 'vscode/default-extensions/html',
+      // 'vscode/default-extensions/html-language-features', 'vscode/default-extensions/configuration-editing', 'vscode/default-extensions/media-preview', 'vscode/default-extensions/markdown-math',
+      // 'vscode/workers/extensionHost.worker', 'vscode/workers/languageDetection.worker'
     ],
     exclude: [
       'vscode-uri'
