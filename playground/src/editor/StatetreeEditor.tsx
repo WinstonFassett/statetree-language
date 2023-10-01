@@ -4,9 +4,10 @@ import React, { useMemo, useRef } from 'react';
 import { MonacoEditorReactComp } from './monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
 import statetreeWorkerUrl from '../../libs/statetree-server-worker.js?url'
+
 import languageConfigurationRaw from '../../../language-configuration.json?raw'
 import responseStatetreeTmRaw from '../../out/syntaxes/statetree.monarch.js?raw'
-import '../userWorker'
+import { getWorker } from '../userWorker'
 import { useDebouncedCallback } from 'use-debounce'
 import { generateJavaScript } from '../../../src/language/codegen';
 import { DocumentChangeResponse, LangiumAST } from '../../../src/langium-utils/langium-ast';
@@ -24,89 +25,76 @@ const workerUrl = new URL(statetreeWorkerUrl, window.location.href);
 export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { value: string, onChange: (value:string) => void, onAstCreated: (astJson: string) => void } & Record<string,any>) {
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
   const isDark = useStore(theme.dark)
-  const userConfig: UserConfig = useMemo(() => ({
-      htmlElement: undefined as any,
+  const userConfig: UserConfig = useMemo(
+    () => ({
+      htmlElement: undefined as unknown as any,
       wrapperConfig: {
-          useVscodeConfig: true,
-          serviceConfig: {
-              enableThemeService: true,
-              enableTextmateService: true,
-              enableModelService: true,
-              configureEditorOrViewsServiceConfig: {
-                  enableViewsService: false,
-                  useDefaultOpenEditorFunction: true
-              },
-              configureConfigurationServiceConfig: {
-                  defaultWorkspaceUri: '/tmp/'
-              },
-              enableKeybindingsService: true,
-              enableLanguagesService: true,
-              debugLogging: true
+        serviceConfig: {
+          enableThemeService: true,
+          enableTextmateService: true,
+          enableModelService: true,
+          configureEditorOrViewsService: {},
+          configureConfigurationService: {
+            defaultWorkspaceUri: "/tmp/",
           },
-          monacoVscodeApiConfig: {
-              extension: {
-                  name: 'statetree',
-                  publisher: 'winston-fassett',
-                  version: '1.0.0',
-                  engines: { vscode: '*' },
-                  contributes: {
-                      languages: [{
-                          id: 'statetree', 
-                          extensions: ['.statetree'],
-                          aliases: ['statetree', 'Statetree'],
-                          configuration: './statetree-configuration.json'
-                      }],
-                      grammars: [{
-                          language: 'statetree',
-                          scopeName: 'source.statetree', 
-                          path: './statetree-grammar.json'
-                      }],
-                      keybindings: [{
-                          key: 'ctrl+p',
-                          command: 'editor.action.quickCommand',
-                          when: 'editorTextFocus'
-                      }, {
-                          key: 'ctrl+shift+c',
-                          command: 'editor.action.commentLine',
-                          when: 'editorTextFocus'
-                      }]
-                  },
-                  
-              },
-              extensionFilesOrContents: extensionFilesOrContents,
-              userConfiguration: {
-                  json: `{
-                      "editor.minimap.enabled": true,
-                      "workbench.colorTheme": "Default ${isDark ? "Dark" : "Light"} Modern",
-                      "editor.fontSize": 12,
-                      "editor.lightbulb.enabled": true,
-                      // "editor.lineHeight": 20,
-                      "editor.guides.bracketPairsHorizontal": "active",
-                      "editor.lightbulb.enabled": true
-                  }`
-              }      
-          },
-      },
-      editorConfig: {
-          languageId: 'statetree',
-          useDiffEditor: false,
-          automaticLayout: true,
-          theme: 'vs-dark',
+          enableLanguagesService: true,
+          enableKeybindingsService: true,
+          debugLogging: true,
+        },
+        editorAppConfig: {
+          $type: "vscodeApi",
+          languageId: "statetree",
           code: value,
-          editorOptions: {
-              // theme: 'vs-dark',
-          }
+          useDiffEditor: false,
+          extension: {
+            name: 'statetree',
+            publisher: 'winston-fassett',
+            version: '1.0.0',
+            engines: { vscode: '*' },
+            contributes: {
+              languages: [{
+                  id: 'statetree', 
+                  extensions: ['.statetree'],
+                  aliases: ['statetree', 'Statetree'],
+                  configuration: './statetree-configuration.json'
+              }],
+              grammars: [{
+                  language: 'statetree',
+                  scopeName: 'source.statetree', 
+                  path: './statetree-grammar.json'
+              }],
+              keybindings: [{
+                  key: 'ctrl+p',
+                  command: 'editor.action.quickCommand',
+                  when: 'editorTextFocus'
+              }, {
+                  key: 'ctrl+shift+c',
+                  command: 'editor.action.commentLine',
+                  when: 'editorTextFocus'
+              }]
+            },
+          },
+          extensionFilesOrContents: extensionFilesOrContents,
+          userConfiguration: {
+            json: `{
+              "workbench.colorTheme": "Default Dark+",
+              "workbench.iconTheme": "vs-seti",
+"not.workbench.colorTheme": "Default Dark Modern",
+"editor.guides.bracketPairsHorizontal": "active",
+"editor.lightbulb.enabled": true
+}`,
+          },
+        },
       },
       languageClientConfig: {
-          enabled: true,
-          useWebSocket: false,
-          workerConfigOptions: {
-              url: workerUrl,
-              type: 'module', 
-              name: 'Statetree LS'
-          }
-      }
-  }), [isDark]);
+        options: {
+          $type: "WorkerDirect",
+          worker: getWorker(null, 'statetree'),
+        },
+      },
+    }),
+    [isDark]
+  );
   return <MonacoEditorReactComp
       ref={monacoEditor}
       userConfig={userConfig}      
@@ -114,8 +102,8 @@ export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { v
         codeStore.set(text)
         onChange && onChange(text)
       }}
-      onLoad={(editor, monaco) => {
-        console.log('LOAD STATETREE EDITOR', {editor, monaco})
+      onLoad={() => {
+        // console.log('LOAD STATETREE EDITOR', {editor, monaco})
         if (!monacoEditor.current) {
             throw new Error("Unable to get a reference to the Monaco Editor");
         }
