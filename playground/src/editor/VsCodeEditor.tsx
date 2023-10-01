@@ -3,15 +3,30 @@ import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from './monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
 
+// import getExtensionServiceOverride from 'vscode/service-override/extensions'
+// import ExtensionHostWorker from 'vscode/workers/extensionHost.worker?worker'
 import 'vscode/default-extensions/theme-defaults'
 import 'vscode/default-extensions/javascript'
 import 'vscode/default-extensions/typescript-basics'
+// import 'vscode/default-extensions/typescript-language-features'
 import 'vscode/default-extensions/json'
 import 'vscode/default-extensions/theme-seti'
 import 'vscode/default-extensions/references-view'
 import * as vscode from 'vscode'
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
+// import getLanguagesServiceOverride from 'vscode/service-override/languages'
+
+// import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
+import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
 
 import '../userWorker'
+// import { toWorkerConfig } from './vscode/tools/workers';
+
+        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+          jsx: monaco.languages.typescript.JsxEmit.Preserve,
+          target: monaco.languages.typescript.ScriptTarget.ES2020,
+          esModuleInterop: true,
+        });
 
 export function ReactTs({
   code,
@@ -30,6 +45,9 @@ export function ReactTs({
     htmlElement: undefined as any,
     wrapperConfig: {
       serviceConfig: {
+        // userServices: {
+        //   ...getExtensionServiceOverride(toWorkerConfig(ExtensionHostWorker)),
+        // },
         enableThemeService: true,
         enableTextmateService: true,
         enableModelService: true,
@@ -47,7 +65,7 @@ export function ReactTs({
           useDiffEditor: false,
           // theme: 'vs-dark',
           code,
-          codeUri: filename,
+          codeUri: 'thing.tsx',
           userConfiguration: {
             json: `{
 "workbench.colorTheme": "Default Dark Modern",
@@ -78,6 +96,7 @@ export function ReactTs({
         const editor = wrapper.getEditor()!
         const model = editor.getModel()
         console.log({ model, editor, wrapper });
+
       }}
       onTextChanged={onTextChanged}
     />

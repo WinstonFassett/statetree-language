@@ -73,7 +73,7 @@
     "typescript": "^5.0.2",
     "use-debounce": "^9.0.4",
     "use-undo": "^1.1.1",
-    "vite": "^4.3.9",
+    "vite": "^4.4.9",
     "xstate": "^3.3.3",
     "xstate-plantuml": "^0.5.0"
   }
