@@ -1,0 +1,12 @@
+diff --git a/node_modules/monaco-editor-wrapper/dist/editorAppBase.js b/node_modules/monaco-editor-wrapper/dist/editorAppBase.js
+index 11677a2..99d64f3 100644
+--- a/node_modules/monaco-editor-wrapper/dist/editorAppBase.js
++++ b/node_modules/monaco-editor-wrapper/dist/editorAppBase.js
+@@ -27,6 +27,7 @@ export class EditorAppBase {
+             codeOriginalUri: userAppConfig.codeOriginalUri ?? undefined,
+             readOnly: userAppConfig.readOnly ?? false,
+             domReadOnly: userAppConfig.domReadOnly ?? false,
++            automaticLayout: userAppConfig.automaticLayout ?? true,
+         };
+     }
+     haveEditor() {
