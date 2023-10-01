@@ -15,37 +15,37 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    {
-      // For the *-language-features extensions which use SharedArrayBuffer
-      name: 'configure-response-headers',
-      apply: 'serve',
-      configureServer: server => {
-        server.middlewares.use((_req, res, next) => {
-          // res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
-          // res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
-          // res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
-          next()
-        })
-      }
-    },
-    {
-      // prevent vite from trying to inject code into an extension file du to an `import()` in that file
-      name: 'hack-prevent-transform-javascript',
-      apply: 'serve',
-      load (source) {        
-        console.log('SOURCE', source )
-        if (source.includes('tsserver.web.js')) {
-          source = source.split("?")[0];
-          console.log('HEEERE', source)
-          const exists = fs.existsSync(source)
-          console.log('EXISTS', exists)
-          const body = fs.readFileSync(source).toString('utf-8')
-          // throw new Error('wtf: '+ source + ': ' + body)
-          console.log('STRINGIFIYING')
-          // return `eval(${JSON.stringify(fs.readFileSync(source).toString('utf-8'))})`
-        }
-      }
-    }
+    // {
+    //   // For the *-language-features extensions which use SharedArrayBuffer
+    //   name: 'configure-response-headers',
+    //   apply: 'serve',
+    //   configureServer: server => {
+    //     server.middlewares.use((_req, res, next) => {
+    //       // res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp')
+    //       // res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
+    //       // res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
+    //       next()
+    //     })
+    //   }
+    // },
+    // {
+    //   // prevent vite from trying to inject code into an extension file du to an `import()` in that file
+    //   name: 'hack-prevent-transform-javascript',
+    //   apply: 'serve',
+    //   load (source) {        
+    //     console.log('SOURCE', source )
+    //     if (source.includes('tsserver.web.js')) {
+    //       source = source.split("?")[0];
+    //       console.log('HEEERE', source)
+    //       const exists = fs.existsSync(source)
+    //       console.log('EXISTS', exists)
+    //       const body = fs.readFileSync(source).toString('utf-8')
+    //       // throw new Error('wtf: '+ source + ': ' + body)
+    //       console.log('STRINGIFIYING')
+    //       // return `eval(${JSON.stringify(fs.readFileSync(source).toString('utf-8'))})`
+    //     }
+    //   }
+    // }
   ],
   optimizeDeps: {
     // This is require because vscode is a local dependency

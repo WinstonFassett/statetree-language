@@ -41,7 +41,7 @@ function XStatePlantUml({ config }: { config: PlantUmlConfig }) {
       setError(err as Error|undefined)
     }
   }, [config, dark]);
-  console.log({ puml })
+  // console.log({ puml })
   return puml ? <PlantUml puml={puml} /> : <div className="h-full">
     {error ? <div className="h-full p-4 bg-error text-error-content">
       {/* <h3 className="text-xl">Error: {error.message}</h3> */}

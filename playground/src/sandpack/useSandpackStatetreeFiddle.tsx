@@ -24,7 +24,6 @@ export function useStatetreeSandpackFiddle() {
 }
 function sendMachineToSandpacks(machine: StateMachineInstance, sandpack: SandpackState) {
   if (machine) {
-    console.log('sendMachineToSandpacks')
     // sandpack.updateFile('/state.json', JSON.stringify(machine.state?.name, null, 2));
     sendToSandpackBundlers(sandpack, {
       type: 'state',
@@ -34,9 +33,9 @@ function sendMachineToSandpacks(machine: StateMachineInstance, sandpack: Sandpac
 }
 function sendStateMachineToSandpack(model: Statemachine | undefined, sandpack: SandpackState) {
   if (model) {
-    console.log('sendStateMachineToSandpack')
+    // console.log('sendStateMachineToSandpack')
     const expanded = expandAst(model)
-    console.log({ model, expanded})
+    // console.log({ model, expanded})
     const xstate = generateXState(expanded);
     sandpack.updateFile('/machine.json', JSON.stringify(xstate, null, 2));
     sendToSandpackBundlers(sandpack, {

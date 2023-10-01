@@ -5,7 +5,7 @@ type Options = {
 };
 
 export function generateXState(model: Statemachine, options: Options = {}) {
-    console.log('generateXState', { model, options });
+    // console.log('generateXState', { model, options });
     const initial = getInitialState(model, options);
     const states = mapStates(model.states, options);
     const machine = {

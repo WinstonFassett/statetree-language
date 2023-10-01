@@ -113,7 +113,7 @@ export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { v
         if (!lc) {
             throw new Error("Could not get handle to Language Client on mount");
         }
-        console.log('LC!', lc)
+        // console.log('LC!', lc)
         // register to receive DocumentChange notifications
         lc.onNotification("browser/DocumentChange", (resp: DocumentChangeResponse) =>{
             // onChange && onChange(resp.content)
@@ -128,7 +128,7 @@ export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { v
         function onDocumentChange(resp: DocumentChangeResponse) {
 
         }
-        console.log('OK 👍')
+        // console.log('OK 👍')
       }}
     //   onTextChanged={(text, isDirty) => { handleTextChanged(text) }}
       style={{
