@@ -1,6 +1,6 @@
 import {   useSandpack
 } from "@codesandbox/sandpack-react";
-import { ReactTs as MonacoReactEditor } from '../editor/ReactTs'
+import { ReactTs as MonacoReactEditor } from '../editor/VsCodeEditor'
 import { useEffect, useMemo, useRef } from "react";
 import { getLanguageOfFile } from "../editor/getLanguageOfFile";
 
