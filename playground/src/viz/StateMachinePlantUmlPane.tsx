@@ -57,5 +57,5 @@ function PlantUml({ puml }: { puml: string }) {
     return encoder.encode(puml);
   }, [puml]);
   const url = puml && `http://www.plantuml.com/plantuml/svg/${encodedPuml}`;
-  return <div>{url && <img src={url} />}</div>;
+  return <div>{url && <img crossOrigin="anonymous" src={url} />}</div>;
 }
