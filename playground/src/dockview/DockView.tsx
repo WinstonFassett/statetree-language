@@ -20,14 +20,14 @@ export const DockView = () => {
     const { sandpack } = useSandpack()
     const onReady = (event: DockviewReadyEvent) => {
 
-        // event.api.addPanel({
-        //   id: 'machine.statetree',
-        //   component: 'statetree',
-        //   tabComponent: 'customTab', // optional custom header
-        //   params: {
-        //       someProps: 'machine.statetree',
-        //   },
-        // });
+        event.api.addPanel({
+          id: 'machine.statetree',
+          component: 'statetree',
+          tabComponent: 'customTab', // optional custom header
+          params: {
+              someProps: 'machine.statetree',
+          },
+        });
         // event.api.addPanel({
         //     id: 'machine2.statetree',
         //     component: 'statetree',
@@ -37,14 +37,14 @@ export const DockView = () => {
         //     },
         //     position: { referencePanel: 'machine.statetree', direction: 'below' }
         //   });
-        // event.api.addPanel({
-        //     id: 'viz',
-        //     component: 'viz',
-        //     params: {
-        //         someProps: 'World',
-        //     },
-        //     position: { referencePanel: 'machine.statetree', direction: 'right' },
-        // });
+        event.api.addPanel({
+            id: 'viz',
+            component: 'viz',
+            params: {
+                someProps: 'World',
+            },
+            position: { referencePanel: 'machine.statetree', direction: 'right' },
+        });
         // event.api.addPanel({
         //   id: 'forceGraph',
         //   component: 'forceGraph',
@@ -64,7 +64,7 @@ export const DockView = () => {
         //   params: {
         //       someProps: 'World',
         //   },
-        // //   position: { referencePanel: 'forceGraph', direction: 'below' },
+        //   position: { referencePanel: 'machine.statetree', direction: 'right' },
         // });
         // event.api.addPanel({
         //   id: 'machine.json',
@@ -88,14 +88,14 @@ export const DockView = () => {
         //       }, 500)
         //   },          
         // });
-        // event.api.addPanel({
-        //     id: 'plantuml',
-        //     component: 'plantuml',
-        //     params: {
-        //         someProps: 'World',
-        //     },
-        //     // position: { referencePanel: 'machine.statetree', direction: 'right' },
-        // });
+        event.api.addPanel({
+            id: 'plantuml',
+            component: 'plantuml',
+            params: {
+                someProps: 'World',
+            },
+            // position: { referencePanel: 'machine.statetree', direction: 'right' },
+        });
         // event.api.addPanel({
         //     id: 'xstate.json',
         //     component: 'editor',
@@ -122,17 +122,8 @@ export const DockView = () => {
             params: {
                 filename: '/App.js',
             },
-            // position: { referencePanel: 'machine.statetree', direction: 'below' },
+            position: { referencePanel: 'machine.statetree', direction: 'below' },
         });
-        // event.api.addPanel({
-        //     id: 'useSharedState.js',
-        //     component: 'editor',
-        //     // tabComponent: 'customTab', // optional custom header
-        //     params: {
-        //         filename: '/useSharedState.js',
-        //     },
-        //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
-        // });
       //   event.api.addPanel({
       //     id: 'state.json',
       //     component: 'editor',
@@ -143,14 +134,14 @@ export const DockView = () => {
       //     },
       //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
       // });
-        // event.api.addPanel({
-        //     id: 'preview',
-        //     component: 'preview',
-        //     params: {
-        //         someProps: 'World',
-        //     },
-        //     position: { referencePanel: 'App.js', direction: 'below' },
-        // });
+        event.api.addPanel({
+            id: 'preview',
+            component: 'preview',
+            params: {
+                someProps: 'World',
+            },
+            position: { referencePanel: 'viz', direction: 'below' },
+        });
     };
 
     return (
