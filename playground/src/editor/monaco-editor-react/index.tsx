@@ -1,5 +1,5 @@
-import { MonacoEditorLanguageClientWrapper, UserConfig, WorkerConfigOptions } from 'monaco-editor-wrapper';
-import { IDisposable } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { EditorAppConfigClassic, MonacoEditorLanguageClientWrapper, UserConfig, WorkerConfigDirect, WorkerConfigOptions } from 'monaco-editor-wrapper';
+import { IDisposable } from 'monaco-editor';
 import * as vscode from 'vscode';
 import React, { CSSProperties } from 'react';
 
@@ -8,7 +8,6 @@ export type MonacoEditorProps = {
     className?: string;
     userConfig: UserConfig,
     onTextChanged?: (text: string, isDirty: boolean) => void;
-    onLoading?: () => void;
     onLoad?: () => void;
 }
 
@@ -46,7 +45,7 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
 
     private async destroyMonaco(): Promise<void> {
         if (this.wrapper) {
-            // await this.isStarting;
+            await this.isStarting;
             try {
                 await this.wrapper.dispose();
             } catch {
@@ -62,21 +61,28 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
 
     private async initMonaco() {
         const {
+            className,
             userConfig,
-            onTextChanged
+            onTextChanged,
+            onLoad,
         } = this.props;
+
         if (this.containerElement) {
-            userConfig.htmlElement = this.containerElement!;        
-            const { onLoading, onLoad } = this.props
-            if (onLoading) onLoading()
-            await this.wrapper.start(userConfig);      
-            if (onLoad) onLoad()
+            this.containerElement.className = className ?? '';
+
+            userConfig.htmlElement = this.containerElement;
+            this.isStarting = this.wrapper.start(userConfig);
+            await this.isStarting;
+
+            // once awaiting isStarting is done onLoad is called if available
+            onLoad && onLoad();
+
             if (onTextChanged) {
                 const model = this.wrapper.getModel();
                 if (model) {
                     const verifyModelContent = () => {
                         const modelText = model.getValue();
-                        onTextChanged(modelText, modelText !== userConfig.editorConfig.code);
+                        onTextChanged(modelText, modelText !== userConfig.wrapperConfig.editorAppConfig.code);
                     };
 
                     this._subscription = model.onDidChangeContent(() => {
@@ -90,7 +96,7 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
     }
 
     updateLayout(): void {
-        // this.wrapper.updateLayout();
+        this.wrapper.updateLayout();
     }
 
     getEditorWrapper() {
@@ -114,6 +120,6 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
                 style={this.props.style}
                 className={this.props.className}
             />
-        )
+        );
     }
 }
