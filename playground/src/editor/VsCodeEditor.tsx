@@ -29,21 +29,33 @@ export function ReactTs({
   const userConfig: UserConfig = {
     htmlElement: undefined as any,
     wrapperConfig: {
-      useVscodeConfig: true,
-      monacoVscodeApiConfig: {
-
+      serviceConfig: {
+        enableThemeService: true,
+        enableTextmateService: true,
+        enableModelService: true,
+        configureEditorOrViewsService: {},
+        configureConfigurationService: {
+          defaultWorkspaceUri: "/tmp/",
+        },
+        enableLanguagesService: true,
+        enableKeybindingsService: true,
+        debugLogging: true,
+      },
+      editorAppConfig: {
+          $type: 'vscodeApi',
+          languageId: 'typescript',
+          useDiffEditor: false,
+          // theme: 'vs-dark',
+          code,
+          codeUri: filename,
+          userConfiguration: {
+            json: `{
+"workbench.colorTheme": "Default Dark Modern",
+"editor.guides.bracketPairsHorizontal": "active",
+"editor.lightbulb.enabled": true
+}`
+        }
       }
-    },
-    languageClientConfig: {
-        enabled: false
-    },  
-    editorConfig: {
-        uri: filename, //.endsWith('x') ? filename : (filename + 'x'),
-        languageId: 'typescript',
-        useDiffEditor: false,
-        theme: 'vs-dark',
-        automaticLayout: true,        
-        code
     }
   };
 
