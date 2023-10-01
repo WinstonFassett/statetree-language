@@ -7,6 +7,7 @@ const cdnDomain = 'http://127.0.0.2:5173'
 
 export default defineConfig({
   build: {
+    sourcemap: false,
     // target: 'esnext'
     minify: false,
     commonjsOptions: {

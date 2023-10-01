@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "postinstall": "patch-package",    
-    "dev": "NODE_OPTIONS=--experimental-import-meta-resolve vite --config vite.config.ts",
-    "build": "tsc && vite build",
+    "dev": "NODE_OPTIONS=--experimental-import-meta-resolve vite --config vite.config.ts",    
+    "build": "NODE_OPTIONS=--max-old-space-size=8192 vite build",
     "prebuild": "npm run copy:worker && npm run copy:monarch-syntax",
     "copy:worker": "shx cp -fr ../out/language/statetree-server-worker.js ./libs/statetree-server-worker.js",
     "copy:monarch-syntax": "shx cp -fr ../out/syntaxes/ ./libs/syntaxes",

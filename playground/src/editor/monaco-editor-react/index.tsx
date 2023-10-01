@@ -24,7 +24,7 @@ export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
     private wrapper: MonacoEditorLanguageClientWrapper = new MonacoEditorLanguageClientWrapper();
     private containerElement?: HTMLDivElement;
     private _subscription: IDisposable | null = null;
-    // private isStarting?: Promise<void>;
+    private isStarting?: Promise<void>;
     private isReiniting?: Promise<void>;
     constructor(props: MonacoEditorProps) {
         super(props);
