@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from './monaco-editor-react';
-import { UserConfig } from './monaco-editor-wrapper';
+import { UserConfig } from 'monaco-editor-wrapper';
 
 import 'vscode/default-extensions/theme-defaults'
 import 'vscode/default-extensions/javascript'

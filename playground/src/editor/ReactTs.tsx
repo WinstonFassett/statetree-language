@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { MonacoEditorReactComp } from './monaco-editor-react';
-import { UserConfig } from './monaco-editor-wrapper';
+import { UserConfig } from 'monaco-editor-wrapper';
 
 // import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.js'; 
 // import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
