@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "postinstall": "patch-package",
-    "dev": "vite",
+    "postinstall": "patch-package",    
+    "dev": "NODE_OPTIONS=--experimental-import-meta-resolve vite --config vite.config.ts",
     "build": "tsc && vite build",
     "prebuild": "npm run copy:worker && npm run copy:monarch-syntax",
     "copy:worker": "shx cp -fr ../out/language/statetree-server-worker.js ./libs/statetree-server-worker.js",
