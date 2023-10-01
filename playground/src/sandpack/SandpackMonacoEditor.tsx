@@ -16,7 +16,7 @@ export function SandpackMonacoEditor ({ filename, afterEdit, ...rest }: { filena
   },[code])
   return <div>
     <MonacoReactEditor {...rest} language={language} code={code} filename={filename} onChange={code => {
-      console.log('onchange', {code})
+      // console.log('onchange', {code})
       latestCode.current = code
       // before update
       sandpack.updateFile(filename, code)

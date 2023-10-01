@@ -7,7 +7,7 @@ import { UserConfig } from 'monaco-editor-wrapper';
 // import ExtensionHostWorker from 'vscode/workers/extensionHost.worker?worker'
 import 'vscode/default-extensions/theme-defaults'
 import 'vscode/default-extensions/javascript'
-import 'vscode/default-extensions/typescript-basics'
+// import 'vscode/default-extensions/typescript-basics'
 // import 'vscode/default-extensions/typescript-language-features'
 import 'vscode/default-extensions/json'
 import 'vscode/default-extensions/theme-seti'
@@ -17,21 +17,23 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
 // import getLanguagesServiceOverride from 'vscode/service-override/languages'
 
 // import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js';
+// import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.js'; 
 import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
+// import 'monaco-editor/esm/vs/language/'
 
 import '../userWorker'
 // import { toWorkerConfig } from './vscode/tools/workers';
 
-        monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-          jsx: monaco.languages.typescript.JsxEmit.Preserve,
-          target: monaco.languages.typescript.ScriptTarget.ES2020,
-          esModuleInterop: true,
-        });
+monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+jsx: monaco.languages.typescript.JsxEmit.Preserve,
+target: monaco.languages.typescript.ScriptTarget.ES2020,
+esModuleInterop: true,
+});
 
 export function ReactTs({
   code,
   filename,
-  language = 'typescript',
+  language = 'javascript',
   onChange,
 }: {
   code: string;
@@ -40,7 +42,7 @@ export function ReactTs({
   onChange?: (code: string, isDirty: boolean) => void;
 }) {
   const ref = useRef<MonacoEditorReactComp>(null);
-  console.log({ filename, language });
+  // console.log({ filename, language });
   const userConfig: UserConfig = {
     htmlElement: undefined as any,
     wrapperConfig: {
@@ -61,11 +63,11 @@ export function ReactTs({
       },
       editorAppConfig: {
           $type: 'vscodeApi',
-          languageId: 'typescript',
+          languageId: 'javascript',
           useDiffEditor: false,
           // theme: 'vs-dark',
           code,
-          codeUri: 'thing.tsx',
+          codeUri: 'thing.jsx',
           userConfiguration: {
             json: `{
 "workbench.colorTheme": "Default Dark Modern",
@@ -95,7 +97,7 @@ export function ReactTs({
         const wrapper = (reactEditor!).getEditorWrapper();
         const editor = wrapper.getEditor()!
         const model = editor.getModel()
-        console.log({ model, editor, wrapper });
+        // console.log({ model, editor, wrapper });
 
       }}
       onTextChanged={onTextChanged}
