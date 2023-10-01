@@ -66,28 +66,29 @@ export const DockView = () => {
         //   },
         //   position: { referencePanel: 'machine.statetree', direction: 'right' },
         // });
-        // event.api.addPanel({
-        //   id: 'machine.json',
-        //   component: 'editor',
-        //   // tabComponent: 'customTab', // optional custom header
-        //   params: {
-        //       filename: '/machine.json',
-        //       afterEdit:  debounce((code: string, filename: string) => {
-        //         // try import and update statetree
-        //         console.log('user changed machine.json')
-        //         console.log('todo: import xstate', code)
-        //         let data
-        //         try {
-        //             importXState(sandpack, code)
-        //             data = JSON.parse(code)
-        //             console.log({ data })
+        event.api.addPanel({
+          id: 'machine.json',
+          component: 'editor',
+          // tabComponent: 'customTab', // optional custom header
+          params: {
+              filename: '/machine.json',
+              language: 'json',
+              afterEdit:  debounce((code: string, filename: string) => {
+                // try import and update statetree
+                console.log('user changed machine.json')
+                console.log('todo: import xstate', code)
+                // let data
+                // try {
+                //     importXState(sandpack, code)
+                //     data = JSON.parse(code)
+                //     console.log({ data })
                     
-        //         } catch (err) {
-        //             console.log('failed to import xstate', err)
-        //         }
-        //       }, 500)
-        //   },          
-        // });
+                // } catch (err) {
+                //     console.log('failed to import xstate', err)
+                // }
+              }, 500)
+          },          
+        });
         event.api.addPanel({
             id: 'plantuml',
             component: 'plantuml',
@@ -121,6 +122,7 @@ export const DockView = () => {
             // tabComponent: 'customTab', // optional custom header
             params: {
                 filename: '/App.js',
+                language: 'json',
             },
             position: { referencePanel: 'machine.statetree', direction: 'below' },
         });

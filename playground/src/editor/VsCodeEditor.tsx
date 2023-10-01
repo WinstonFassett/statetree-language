@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { MonacoEditorReactComp } from './monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
@@ -42,8 +42,9 @@ export function ReactTs({
   onChange?: (code: string, isDirty: boolean) => void;
 }) {
   const ref = useRef<MonacoEditorReactComp>(null);
+  const latestCode = useRef<string|undefined>(code)
   // console.log({ filename, language });
-  const userConfig: UserConfig = {
+  const userConfig: UserConfig = useMemo(() =>({
     htmlElement: undefined as any,
     wrapperConfig: {
       serviceConfig: {
@@ -63,11 +64,11 @@ export function ReactTs({
       },
       editorAppConfig: {
           $type: 'vscodeApi',
-          languageId: 'javascript',
+          languageId: language,
           useDiffEditor: false,
           // theme: 'vs-dark',
           code,
-          codeUri: 'thing.jsx',
+          codeUri: filename,
           userConfiguration: {
             json: `{
 "workbench.colorTheme": "Default Dark Modern",
@@ -77,9 +78,21 @@ export function ReactTs({
         }
       }
     }
-  };
-
+  }), [code, filename]);
+  // useEffect(() => {
+  //   console.log('code changed',{ code, ref })
+  // }, [code])
+  
+  useEffect(() => {
+    if (latestCode.current !== code) {
+      console.log('file was changed outside of editor', filename)
+      ref.current?.getEditorWrapper().updateModel({
+        code
+      })
+    }
+  },[code, filename])
   const onTextChanged = (text: string, isDirty: boolean) => {
+    latestCode.current = text
     if (onChange) { onChange(text, isDirty) }
   };
 
