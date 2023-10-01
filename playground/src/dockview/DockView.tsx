@@ -115,15 +115,15 @@ export const DockView = () => {
         //       filename: '/state.json',
         //   },
         // })
-        event.api.addPanel({
-            id: 'App.js',
-            component: 'editor',
-            // tabComponent: 'customTab', // optional custom header
-            params: {
-                filename: '/App.js',
-            },
-            // position: { referencePanel: 'machine.statetree', direction: 'below' },
-        });
+        // event.api.addPanel({
+        //     id: 'App.js',
+        //     component: 'editor',
+        //     // tabComponent: 'customTab', // optional custom header
+        //     params: {
+        //         filename: '/App.js',
+        //     },
+        //     position: { referencePanel: 'machine.statetree', direction: 'below' },
+        // });
         // event.api.addPanel({
         //     id: 'useSharedState.js',
         //     component: 'editor',
@@ -143,14 +143,14 @@ export const DockView = () => {
       //     },
       //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
       // });
-        event.api.addPanel({
-            id: 'preview',
-            component: 'preview',
-            params: {
-                someProps: 'World',
-            },
-            position: { referencePanel: 'App.js', direction: 'below' },
-        });
+        // event.api.addPanel({
+        //     id: 'preview',
+        //     component: 'preview',
+        //     params: {
+        //         someProps: 'World',
+        //     },
+        //     position: { referencePanel: 'App.js', direction: 'below' },
+        // });
     };
 
     return (
