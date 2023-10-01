@@ -20,14 +20,14 @@ export const DockView = () => {
     const { sandpack } = useSandpack()
     const onReady = (event: DockviewReadyEvent) => {
 
-        event.api.addPanel({
-          id: 'machine.statetree',
-          component: 'statetree',
-          tabComponent: 'customTab', // optional custom header
-          params: {
-              someProps: 'machine.statetree',
-          },
-        });
+        // event.api.addPanel({
+        //   id: 'machine.statetree',
+        //   component: 'statetree',
+        //   tabComponent: 'customTab', // optional custom header
+        //   params: {
+        //       someProps: 'machine.statetree',
+        //   },
+        // });
         // event.api.addPanel({
         //     id: 'machine2.statetree',
         //     component: 'statetree',
@@ -115,15 +115,15 @@ export const DockView = () => {
         //       filename: '/state.json',
         //   },
         // })
-        // event.api.addPanel({
-        //     id: 'App.js',
-        //     component: 'editor',
-        //     // tabComponent: 'customTab', // optional custom header
-        //     params: {
-        //         filename: '/App.js',
-        //     },
-        //     position: { referencePanel: 'machine.statetree', direction: 'below' },
-        // });
+        event.api.addPanel({
+            id: 'App.js',
+            component: 'editor',
+            // tabComponent: 'customTab', // optional custom header
+            params: {
+                filename: '/App.js',
+            },
+            // position: { referencePanel: 'machine.statetree', direction: 'below' },
+        });
         // event.api.addPanel({
         //     id: 'useSharedState.js',
         //     component: 'editor',
