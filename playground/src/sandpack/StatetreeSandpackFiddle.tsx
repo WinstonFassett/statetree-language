@@ -1,4 +1,5 @@
 import {
+  SandpackFileExplorer,
   SandpackLayout,
   SandpackProvider,
   SandpackStack,
@@ -43,9 +44,13 @@ function TheStack() {
           <button className="btn btn-ghost" onClick={store.theme.toggleDark}>{isDark ? 'Dark' : 'Light'}</button>
           <ShareButton />
         </div>
-        <div className="relative flex-1">
-          <DockView />
-        </div>
+        <SandpackLayout className="relative flex-1">
+          <SandpackFileExplorer className="h-full border-solid border-red-600" style={{ height: '100%' }} />
+          <div className="flex-1">
+            <DockView />
+          </div>
+        </SandpackLayout>
+        
       </SandpackStack>
     </div>
   );
