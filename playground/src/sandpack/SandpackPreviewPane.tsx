@@ -43,7 +43,7 @@ const { sandpack } = useSandpack()
     status: { status }
     <button onClick={()=> {setCount(count+1)}}>{count}</button>
     { <div className='flex-1' key={count}>
-      {<SandpackPreview showOpenInCodeSandbox={false} showSandpackErrorOverlay={true} ref={sandpackRef} style={{ height: '90vh', width: '100vw' }} />}
+      {<SandpackPreview showOpenInCodeSandbox={false} showSandpackErrorOverlay={true} ref={sandpackRef} />}
     </div>}
   </div>
 
