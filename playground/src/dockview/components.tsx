@@ -45,28 +45,7 @@ export const components: PanelCollection<IDockviewPanelProps> = {
     )
   },
   preview: HoistedDockviewPanel((props: IDockviewPanelProps<{ someProps: string; }>) => {
-    const dimensions = useRef({ height: 0, width: 0 })    
-    useEffect(() => {
-      console.log('first time')
-      const{dispose} = props.api.onDidDimensionsChange((event) => {
-        console.log('dimensions', { height: event.height, width: event.width });        
-        const { height, width } = event
-        dimensions.current = ({ height, width })
-      });      
-      // props.api.onDidDimensionsChange
-      // const disposable = props.api.onDidFocusChange(() => {
-      //     // write some code
-      // });
-      return () => {
-          dispose();
-      };
-    })    
-    // const { height, width } = dimensions.current
-    props.api.onDidVisibilityChange(e => {
-      console.log({visibility: e})
-    })
-    return <SandpackPreviewPane style={{ height: '400px' }}/>
-    
+    return <SandpackPreview showOpenInCodeSandbox={false} showSandpackErrorOverlay={true} />
   }),
 };
 export const headers: PanelCollection<IDockviewPanelHeaderProps> = {
