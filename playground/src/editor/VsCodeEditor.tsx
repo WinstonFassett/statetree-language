@@ -103,7 +103,7 @@ export function ReactTs({
       userConfig={userConfig}
       style={{
         paddingTop: '5px',
-        height: '90vh',
+        height: '100%',
       }}
       onLoad={() => {
         const reactEditor = ref.current;

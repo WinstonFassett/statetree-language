@@ -40,10 +40,9 @@ export const components: PanelCollection<IDockviewPanelProps> = {
   },
   editor: (props: IDockviewPanelProps<{ filename: string; afterEdit: (code: string|undefined)=> void; language?: string; }>) => {
     // afterEdit: (code: string)=> void;
-    return <div>
-      {/* editor for:{props.params.filename} or {props.params.filename} */}
+    return (
       <SandpackMonacoEditor afterEdit={props.params.afterEdit} filename={props.params.filename} language={props.params.language} />
-    </div>;
+    )
   },
   preview: HoistedDockviewPanel((props: IDockviewPanelProps<{ someProps: string; }>) => {
     const dimensions = useRef({ height: 0, width: 0 })    

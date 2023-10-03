@@ -15,16 +15,14 @@ export function SandpackMonacoEditor ({ filename, afterEdit, ...rest }: { filena
   //     console.log('file was changed outside of editor', filename)
   //   }
   // },[code])
-  return <div>{language}
-    <MonacoReactEditor {...rest} language={language} code={code} filename={filename} onChange={code => {
-      // console.log('onchange', {code})
-      latestCode.current = code
-      // before update
-      sandpack.updateFile(filename, code)
-      // after update
-      if (afterEdit) {
-        afterEdit(code)
-      }
-    }}  />
-  </div>
+  return <MonacoReactEditor {...rest} language={language} code={code} filename={filename} onChange={code => {
+    // console.log('onchange', {code})
+    latestCode.current = code
+    // before update
+    sandpack.updateFile(filename, code)
+    // after update
+    if (afterEdit) {
+      afterEdit(code)
+    }
+  }}  />  
 }
