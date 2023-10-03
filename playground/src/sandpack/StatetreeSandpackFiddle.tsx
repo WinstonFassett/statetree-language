@@ -10,13 +10,15 @@ import { useStore } from "@nanostores/react";
 import * as store from "../store";
 import "./sandpack.css";
 import { ShareButton } from "./ShareButton";
+import { useActiveClass } from "../lib/useActiveClass";
 
 export default function StatetreeSandpackFiddle() {
   const isDark = useStore(store.theme.dark);
+  useActiveClass(['dark', 'light'], isDark ? 'dark' : 'light')
   return (
     <SandpackProvider
       template="react"
-      theme={isDark ? "dark" : "light"}
+      theme={isDark!==false ? "dark" : "light"}
       customSetup={STATETREE_TEMPLATE.customSetup}
       files={STATETREE_TEMPLATE.files}
       options={STATETREE_TEMPLATE.options}
