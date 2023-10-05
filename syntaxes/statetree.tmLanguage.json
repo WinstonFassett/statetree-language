@@ -1,0 +1,57 @@
+{
+  "name": "statetree",
+  "scopeName": "source.statetree",
+  "fileTypes": [
+    ".statetree"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "name": "keyword.control.statetree",
+      "match": "\\b(end|go|initialState|loop|on|sequence|state|statemachine|states|to)\\b"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "begin": "#",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.statetree"
+            }
+          },
+          "end": "(?=$)",
+          "name": "comment.line.statetree"
+        },
+        {
+          "name": "comment.block.statetree",
+          "begin": "/\\*",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.statetree"
+            }
+          },
+          "end": "\\*/",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.statetree"
+            }
+          }
+        },
+        {
+          "begin": "//",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.statetree"
+            }
+          },
+          "end": "(?=$)",
+          "name": "comment.line.statetree"
+        }
+      ]
+    }
+  }
+}
