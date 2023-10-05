@@ -6,14 +6,196 @@
   ],
   "patterns": [
     {
-      "include": "#comments"
-    },
-    {
-      "name": "keyword.control.statetree",
-      "match": "\\b(end|go|initialState|loop|on|sequence|state|statemachine|states|to)\\b"
+      "include": "#statements"
     }
   ],
   "repository": {
+    "statements": {
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#statemachine-name"
+        },
+        {
+          "include": "#initialState"
+        },
+        {
+          "include": "#states-statement"
+        }
+      ]
+    },
+    "statemachine-name": {
+      "match": "s*(statemachine) ([_a-zA-Z][\\w_]*)",
+      "captures": {
+        "1": {
+          "name": "keyword.control.states.js"
+        },
+        "2": {
+          "name": "entity.name.type.class.js"
+        }
+      }
+    },
+    "initialState": {
+      "match": "s*(initialState) ([_a-zA-Z][\\w_]*)",
+      "captures": {
+        "1": {
+          "name": "keyword.control.states.js"
+        },
+        "2": {
+          "name": "entity.name.type.class.js"
+        }
+      }
+    },
+    "sequence-event": {
+      "match": "(\\()(.*?)(\\))",
+      "captures": {
+        "1": {
+          "name": "meta.brace.round.js"
+        },
+        "2": {
+          "name": "entity.name.function.statetree"
+        },
+        "3": {
+          "name": "meta.brace.round.js"
+        }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": {
+          "name": "meta.brace.round.js"
+        }
+      },
+      "patterns": [
+        {
+          "match": "[_a-zA-Z][\\w_]*",
+          "name": "entity.name.function.statetree"
+        }
+      ]
+    },
+    "states-block": {
+      "name": "states-block.expr.js",
+      "patterns": [
+        {
+          "include": "#state-body"
+        }
+      ]
+    },
+    "case-clause": {
+      "name": "case-clause.expr.js",
+      "begin": "(?<!\\.|\\$)\\b(case|default(?=:))\\b(?!\\$)",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.states.js"
+        }
+      },
+      "end": ":",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.section.case-statement.js"
+        }
+      },
+      "patterns": [
+        {}
+      ]
+    },
+    "states-statement": {
+      "name": "states-statement.expr.js",
+      "begin": "(states|sequence)",
+      "end": "(loop|end)",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.control.states.statetree"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "keyword.control.states.statetree"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#sequence-event"
+        },
+        {
+          "include": "#state-name"
+        },
+        {
+          "include": "#state-block"
+        }
+      ]
+    },
+    "state-body": {
+      "patterns": [
+        {
+          "include": "#state-block"
+        }
+      ]
+    },
+    "transition-statement": {
+      "patterns": [
+        {
+          "include": "#prefix-transition-statement"
+        },
+        {
+          "include": "#midfix-transition-statement"
+        }
+      ]
+    },
+    "prefix-transition-statement": {
+      "match": "\\s*(on)\\s*([_a-zA-Z][\\w_]*)\\s*(=>)?\\s*(\\w*)\\s*",
+      "captures": {
+        "1": {
+          "name": "keyword.control.states.statetree"
+        },
+        "2": {
+          "name": "entity.name.function.statetree"
+        },
+        "3": {
+          "name": "storage.type.function.arrow.js\""
+        },
+        "4": {
+          "name": "entity.name.type.class.js"
+        }
+      }
+    },
+    "midfix-transition-statement": {
+      "match": "\\s*([_a-zA-Z][\\w_]*)\\s*(=>)\\s*(\\w*)\\s*",
+      "captures": {
+        "1": {
+          "name": "entity.name.function.statetree"
+        },
+        "2": {
+          "name": "storage.type.function.arrow.js\""
+        },
+        "3": {
+          "name": "entity.name.type.class.js"
+        }
+      }
+    },
+    "state-name": {
+      "match": "[_a-zA-Z][\\w_]*",
+      "name": "entity.name.type.class.js"
+    },
+    "state-block": {
+      "begin": "\\{",
+      "end": "\\}",
+      "patterns": [
+        {
+          "include": "#transition-statement"
+        },
+        {
+          "include": "#state-body"
+        },
+        {
+          "include": "#states-statement"
+        }
+      ]
+    },
+    "id": {
+      "match": "[_a-zA-Z][\\w_]*"
+    },
     "comments": {
       "patterns": [
         {
