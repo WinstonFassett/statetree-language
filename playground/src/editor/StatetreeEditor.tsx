@@ -22,6 +22,8 @@ extensionFilesOrContents.set('/statetree-grammar.json', monarchSyntaxRaw);
 // Language Server preparation
 const workerUrl = new URL(statetreeWorkerUrl, window.location.href);
 
+const getTheme = (isDark: boolean) => isDark ? 'Default Dark+' : 'Default Light+'
+
 export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { value: string, onChange: (value:string) => void, onAstCreated: (astJson: string) => void } & Record<string,any>) {
   const monacoEditor = useRef<MonacoEditorReactComp>(null)
   const isDark = useStore(theme.dark)
@@ -77,7 +79,7 @@ export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { v
           extensionFilesOrContents: extensionFilesOrContents,
           userConfiguration: {
             json: `{
-              "workbench.colorTheme": "Default Dark+",
+              "workbench.colorTheme": "${getTheme(isDark)}",
               "workbench.iconTheme": "vs-seti",
 "not.workbench.colorTheme": "Default Dark Modern",
 "editor.guides.bracketPairsHorizontal": "active",
@@ -107,6 +109,13 @@ export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { v
         if (!monacoEditor.current) {
             throw new Error("Unable to get a reference to the Monaco Editor");
         }
+        theme.dark.subscribe(isDark => {
+          monacoEditor.current?.getEditorWrapper().updateEditorOptions({
+            json: `{
+              "workbench.colorTheme": "${getTheme(isDark)}"
+            }`
+          })
+        })
         // verify we can get a ref to the language client
         const lc = monacoEditor.current.getEditorWrapper()
             ?.getLanguageClient();
