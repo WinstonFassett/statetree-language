@@ -15,6 +15,7 @@ import { useActiveClass } from "../lib/useActiveClass";
 export default function StatetreeSandpackFiddle() {
   const isDark = useStore(store.theme.dark);
   useActiveClass(['dark', 'light'], isDark ? 'dark' : 'light')
+  useActiveClass(['dockview-theme-dark', 'dockview-theme-light'], isDark ? 'dockview-theme-dark' : 'dockview-theme-light')
   return (
     <SandpackProvider
       template="react"
