@@ -30,10 +30,10 @@
       "match": "s*(statemachine) ([_a-zA-Z][\\w_]*)",
       "captures": {
         "1": {
-          "name": "keyword.control.states.js"
+          "name": "storage.type.class"
         },
         "2": {
-          "name": "entity.name.type.class.js"
+          "name": "support.type"
         }
       }
     },
@@ -41,15 +41,16 @@
       "match": "s*(initialState) ([_a-zA-Z][\\w_]*)",
       "captures": {
         "1": {
-          "name": "keyword.control.states.js"
+          "name": "variable.other.constant"
         },
         "2": {
-          "name": "entity.name.type.class.js"
+          "name": "variable.other.enummember"
         }
       }
     },
     "sequence-event": {
       "match": "(\\()(.*?)(\\))",
+      "begin": "^",
       "captures": {
         "1": {
           "name": "meta.brace.round.js"
@@ -144,24 +145,24 @@
       ]
     },
     "prefix-transition-statement": {
-      "match": "\\s*(on)\\s*([_a-zA-Z][\\w_]*)\\s*(=>)?\\s*(\\w*)\\s*",
+      "match": "\\s*(on)\\s*([_a-zA-Z][\\w_]*)\\s*(=>|go)?\\s*(\\w*)\\s*",
       "captures": {
         "1": {
-          "name": "keyword.control.states.statetree"
+          "name": "storage.type.function.arrow.js"
         },
         "2": {
           "name": "entity.name.function.statetree"
         },
         "3": {
-          "name": "storage.type.function.arrow.js\""
+          "name": "storage.type.function.arrow.js"
         },
         "4": {
-          "name": "entity.name.type.class.js"
+          "name": "variable.other.enummember"
         }
       }
     },
     "midfix-transition-statement": {
-      "match": "\\s*([_a-zA-Z][\\w_]*)\\s*(=>)\\s*(\\w*)\\s*",
+      "match": "\\s*([_a-zA-Z][\\w_]*)\\s*(=>|go)\\s*(\\w*)\\s*",
       "captures": {
         "1": {
           "name": "entity.name.function.statetree"
@@ -170,13 +171,13 @@
           "name": "storage.type.function.arrow.js\""
         },
         "3": {
-          "name": "entity.name.type.class.js"
+          "name": "variable.other.enummember"
         }
       }
     },
     "state-name": {
       "match": "[_a-zA-Z][\\w_]*",
-      "name": "entity.name.type.class.js"
+      "name": "variable.other.enummember"
     },
     "state-block": {
       "begin": "\\{",
