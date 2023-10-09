@@ -39,7 +39,7 @@ function TheStack() {
       <SandpackStack className="m-0 flex flex-col">
         <div className="flex items-center p-2">
           <div className="pl-4 flex-1 text-2xl font-extrabold">
-            Statetree Fiddle
+            Statetree Playground
           </div>
           <button className="btn btn-ghost" onClick={store.theme.toggleDark}>{isDark ? 'Dark' : 'Light'}</button>
           <ShareButton />
