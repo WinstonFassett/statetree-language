@@ -73,7 +73,8 @@ export function ReactTs({
             json: `{
 "workbench.colorTheme": "Default Dark Modern",
 "editor.guides.bracketPairsHorizontal": "active",
-"editor.lightbulb.enabled": true
+"editor.lightbulb.enabled": true,
+"editor.minimap.enabled": false
 }`
         }
       }
