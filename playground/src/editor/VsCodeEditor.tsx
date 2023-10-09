@@ -86,7 +86,7 @@ export function ReactTs({
   
   useEffect(() => {
     if (latestCode.current !== code) {
-      console.log('file was changed outside of editor', filename)
+      // console.log('file was changed outside of editor', filename)
       ref.current?.getEditorWrapper().updateModel({
         code
       })

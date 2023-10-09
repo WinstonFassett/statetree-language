@@ -20,14 +20,7 @@ export const DockView = () => {
     const { sandpack } = useSandpack()
     const onReady = (event: DockviewReadyEvent) => {
 
-        event.api.addPanel({
-          id: 'machine.statetree',
-          component: 'statetree',
-          tabComponent: 'customTab',
-          params: {
-              someProps: 'machine.statetree',
-          },
-        });
+
         // event.api.addPanel({
         //     id: 'machine2.statetree',
         //     component: 'statetree',
@@ -38,48 +31,48 @@ export const DockView = () => {
         //     position: { referencePanel: 'machine.statetree', direction: 'below' }
         //   });
         event.api.addPanel({
-            id: 'machine.json',
+            id: 'XState',
             component: 'editor',
             tabComponent: 'customTab',
             params: {
                 filename: '/machine.json',
                 language: 'json',
-                afterEdit:  debounce((code: string, filename: string) => {
-                  // try import and update statetree
-                  console.log('user changed machine.json')
-                  console.log('todo: import xstate', code)
-                  // let data
-                  // try {
-                  //     importXState(sandpack, code)
-                  //     data = JSON.parse(code)
-                  //     console.log({ data })
+                // afterEdit:  debounce((code: string, filename: string) => {
+                //   // try import and update statetree
+                // //   console.log('user changed machine.json')
+                // //   console.log('todo: import xstate', code)
+                //   // let data
+                //   // try {
+                //   //     importXState(sandpack, code)
+                //   //     data = JSON.parse(code)
+                //   //     console.log({ data })
                       
-                  // } catch (err) {
-                  //     console.log('failed to import xstate', err)
-                  // }
-                }, 500)
+                //   // } catch (err) {
+                //   //     console.log('failed to import xstate', err)
+                //   // }
+                // }, 500)
             },          
           });
         event.api.addPanel({
-            id: 'App.js',
+            id: 'DSL',
+            component: 'statetree',
+            tabComponent: 'customTab',
+            params: {
+                someProps: 'machine.statetree',
+            },
+        });
+        event.api.addPanel({
+            id: 'Code',
             component: 'editor',
             tabComponent: 'customTab',
             params: {
                 filename: '/App.js',
                 language: 'json',
             },
-            position: { referencePanel: 'machine.statetree', direction: 'below' },
+            position: { referencePanel: 'DSL', direction: 'below' },
         });          
        
-        event.api.addPanel({
-            id: 'viz',
-            component: 'viz',
-            tabComponent: 'customTab',
-            params: {
-                someProps: 'World',
-            },
-            position: { referencePanel: 'machine.statetree', direction: 'right' },
-        });
+       
         // event.api.addPanel({
         //   id: 'forceGraph',
         //   component: 'forceGraph',
@@ -103,14 +96,23 @@ export const DockView = () => {
         // });
         
         event.api.addPanel({
-            id: 'plantuml',
+            id: 'Diagram',
             component: 'plantuml',
             tabComponent: 'customTab',
             params: {
                 someProps: 'World',
             },
-            // position: { referencePanel: 'machine.statetree', direction: 'right' },
+            position: { referencePanel: 'DSL', direction: 'right' },
         });
+        event.api.addPanel({
+            id: 'State',
+            component: 'viz',
+            tabComponent: 'customTab',
+            params: {
+                someProps: 'World',
+            },
+            // position: { referencePanel: 'machine.statetree', direction: 'right' },
+        }); 
         // event.api.addPanel({
         //     id: 'xstate.json',
         //     component: 'editor',
@@ -142,13 +144,13 @@ export const DockView = () => {
       //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
       // });
         event.api.addPanel({
-            id: 'preview',
+            id: 'Preview',
             component: 'preview',
             tabComponent: 'customTab',
             params: {
                 someProps: 'World',
             },
-            position: { referencePanel: 'App.js', direction: 'right' },
+            position: { referencePanel: 'Code', direction: 'right' },
         });        
         
     };
