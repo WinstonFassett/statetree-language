@@ -15,6 +15,7 @@ import { StateMachinePlantUmlPane } from '../viz/StateMachinePlantUmlPane';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { SandpackPreviewPane } from '../sandpack/SandpackPreviewPane';
 import { HoistedDockviewPanel } from './HoistedDockViewPanel';
+import { RenderWhenVisible } from './RenderWhenVisible';
 
 export const components: PanelCollection<IDockviewPanelProps> = {
   default: (props: IDockviewPanelProps<{ someProps: string; }>) => {
@@ -33,15 +34,19 @@ export const components: PanelCollection<IDockviewPanelProps> = {
   //   return (<StateMachineForceGraph />);
   // },
   plantuml: (props: IDockviewPanelProps<{ someProps: string; }>) => {
-    return <StateMachinePlantUmlPane />;
+    const PlantUml = RenderWhenVisible(StateMachinePlantUmlPane)
+    return <PlantUml {...props} />;
   },
   statetree: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return <StatetreeEditorPane />;
   },
   editor: (props: IDockviewPanelProps<{ filename: string; afterEdit: (code: string|undefined)=> void; language?: string; }>) => {
     // afterEdit: (code: string)=> void;
+    const Editor = RenderWhenVisible((props: IDockviewPanelProps<{ filename: string; afterEdit: (code: string|undefined)=> void; language?: string; }>) => {
+      return <SandpackMonacoEditor afterEdit={props.params.afterEdit} filename={props.params.filename} language={props.params.language} />
+    })
     return (
-      <SandpackMonacoEditor afterEdit={props.params.afterEdit} filename={props.params.filename} language={props.params.language} />
+      <Editor {...props} />
     )
   },
   preview: HoistedDockviewPanel((props: IDockviewPanelProps<{ someProps: string; }>) => {

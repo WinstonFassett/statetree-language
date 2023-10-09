@@ -23,7 +23,7 @@ export const DockView = () => {
         event.api.addPanel({
           id: 'machine.statetree',
           component: 'statetree',
-          tabComponent: 'customTab', // optional custom header
+          tabComponent: 'customTab',
           params: {
               someProps: 'machine.statetree',
           },
@@ -38,8 +38,43 @@ export const DockView = () => {
         //     position: { referencePanel: 'machine.statetree', direction: 'below' }
         //   });
         event.api.addPanel({
+            id: 'machine.json',
+            component: 'editor',
+            tabComponent: 'customTab',
+            params: {
+                filename: '/machine.json',
+                language: 'json',
+                afterEdit:  debounce((code: string, filename: string) => {
+                  // try import and update statetree
+                  console.log('user changed machine.json')
+                  console.log('todo: import xstate', code)
+                  // let data
+                  // try {
+                  //     importXState(sandpack, code)
+                  //     data = JSON.parse(code)
+                  //     console.log({ data })
+                      
+                  // } catch (err) {
+                  //     console.log('failed to import xstate', err)
+                  // }
+                }, 500)
+            },          
+          });
+        event.api.addPanel({
+            id: 'App.js',
+            component: 'editor',
+            tabComponent: 'customTab',
+            params: {
+                filename: '/App.js',
+                language: 'json',
+            },
+            position: { referencePanel: 'machine.statetree', direction: 'below' },
+        });          
+       
+        event.api.addPanel({
             id: 'viz',
             component: 'viz',
+            tabComponent: 'customTab',
             params: {
                 someProps: 'World',
             },
@@ -66,32 +101,11 @@ export const DockView = () => {
         //   },
         //   position: { referencePanel: 'machine.statetree', direction: 'right' },
         // });
-        event.api.addPanel({
-          id: 'machine.json',
-          component: 'editor',
-          // tabComponent: 'customTab', // optional custom header
-          params: {
-              filename: '/machine.json',
-              language: 'json',
-              afterEdit:  debounce((code: string, filename: string) => {
-                // try import and update statetree
-                console.log('user changed machine.json')
-                console.log('todo: import xstate', code)
-                // let data
-                // try {
-                //     importXState(sandpack, code)
-                //     data = JSON.parse(code)
-                //     console.log({ data })
-                    
-                // } catch (err) {
-                //     console.log('failed to import xstate', err)
-                // }
-              }, 500)
-          },          
-        });
+        
         event.api.addPanel({
             id: 'plantuml',
             component: 'plantuml',
+            tabComponent: 'customTab',
             params: {
                 someProps: 'World',
             },
@@ -116,16 +130,7 @@ export const DockView = () => {
         //       filename: '/state.json',
         //   },
         // })
-        event.api.addPanel({
-            id: 'App.js',
-            component: 'editor',
-            // tabComponent: 'customTab', // optional custom header
-            params: {
-                filename: '/App.js',
-                language: 'json',
-            },
-            position: { referencePanel: 'machine.statetree', direction: 'below' },
-        });
+
       //   event.api.addPanel({
       //     id: 'state.json',
       //     component: 'editor',
@@ -139,11 +144,13 @@ export const DockView = () => {
         event.api.addPanel({
             id: 'preview',
             component: 'preview',
+            tabComponent: 'customTab',
             params: {
                 someProps: 'World',
             },
-            position: { referencePanel: 'viz', direction: 'below' },
-        });
+            position: { referencePanel: 'App.js', direction: 'right' },
+        });        
+        
     };
 
     return (
