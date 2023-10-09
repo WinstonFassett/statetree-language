@@ -1,3 +1,4 @@
+import React from 'react'
 import visualize from "xstate-plantuml";
 import encoder from "plantuml-encoder";
 import { useEffect, useMemo, useState } from "react";
@@ -8,7 +9,7 @@ import { theme } from "../store";
 
 type PlantUmlConfig = Record<string, any>;
 
-export function StateMachinePlantUmlPane() {
+export function StateMachinePlantUmlPane(props: {} = {}) {
   const { sandpack } = useSandpack();
   const xstateJson = sandpack.files["/machine.json"].code;
   const [xstateConfig, setXStateConfig] = useState<PlantUmlConfig>()
@@ -21,7 +22,7 @@ export function StateMachinePlantUmlPane() {
   useEffect(() => {
     debouncedChangeHandler(xstateJson)
   }, [xstateJson])
-  return xstateConfig && <XStatePlantUml config={xstateConfig} />;
+  return xstateConfig ? <XStatePlantUml config={xstateConfig} /> : <></>;
 }
 
 function XStatePlantUml({ config }: { config: PlantUmlConfig }) {
