@@ -169,32 +169,5 @@ const splitViewComponents = {
   },
 };
 
-export const DockView2 = () => {
-  const onReady = (event: SplitviewReadyEvent) => {
-      event.api.addPanel({
-          id: 'panel_1',
-          component: 'default',
-          params: {
-              title: 'Panel 1',
-          },
-      });
-      event.api.addPanel({
-          id: 'panel_2',
-          component: 'default',
-          params: {
-              title: 'Panel 2',
-          },
-      });
 
       
-  };
-  const isDark = useStore(theme.dark)
-  return (
-      <SplitviewReact
-          components={splitViewComponents}
-          onReady={onReady}
-          orientation={Orientation.VERTICAL}
-          className={`dockview-theme-${isDark ? "dark" : "light"}`}
-      />
-  );
-};
