@@ -4,7 +4,7 @@ import { ReactTs as MonacoReactEditor } from '../editor/VsCodeEditor'
 import { useEffect, useMemo, useRef } from "react";
 import { getLanguageOfFile } from "../editor/getLanguageOfFile";
 
-export function SandpackMonacoEditor ({ filename, afterEdit, ...rest }: { filename: string, afterEdit?: (code: string|undefined) => void } & Record<string,any>) {
+export default function SandpackMonacoEditor ({ filename, afterEdit, ...rest }: { filename: string, afterEdit?: (code: string|undefined) => void } & Record<string,any>) {
   const ref = useRef<typeof MonacoReactEditor>(null);
   const { sandpack } = useSandpack();
   const code = sandpack.files[filename].code

@@ -9,7 +9,7 @@ import { theme } from "../store";
 
 type PlantUmlConfig = Record<string, any>;
 
-export function StateMachinePlantUmlPane(props: {} = {}) {
+export default function StateMachinePlantUmlPane(props: {} = {}) {
   const { sandpack } = useSandpack();
   const xstateJson = sandpack.files["/machine.json"].code;
   const [xstateConfig, setXStateConfig] = useState<PlantUmlConfig>()
