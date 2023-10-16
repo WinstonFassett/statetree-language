@@ -1,8 +1,8 @@
 import styles from './Editor.module.css';
 import monarchSyntaxRaw from "../../../syntaxes/statetree.tmLanguage.json?raw";
-import React, { useMemo, useRef } from 'react';
-import { MonacoEditorReactComp } from './monaco-editor-react';
-import { UserConfig } from 'monaco-editor-wrapper';
+import React, { lazy, useMemo, useRef } from 'react';
+
+import type { UserConfig } from 'monaco-editor-wrapper';
 import statetreeWorkerUrl from '../../libs/statetree-server-worker.js?url'
 
 import languageConfigurationRaw from '../../../language-configuration.json?raw'
@@ -15,6 +15,8 @@ import { Statemachine } from '../../../src/language/generated/ast';
 import { code as codeStore, theme } from '../store'
 import { useStore } from '@nanostores/react';
 
+const MonacoEditorReactComp = lazy(() => import('./monaco-editor-react')) ;
+
 const extensionFilesOrContents = new Map<string, string | URL>();
 extensionFilesOrContents.set('/statetree-configuration.json', languageConfigurationRaw);
 extensionFilesOrContents.set('/statetree-grammar.json', monarchSyntaxRaw);
@@ -25,7 +27,7 @@ const workerUrl = new URL(statetreeWorkerUrl, window.location.href);
 const getTheme = (isDark: boolean) => isDark ? 'Default Dark+' : 'Default Light+'
 
 export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { value: string, onChange: (value:string) => void, onAstCreated: (astJson: string) => void } & Record<string,any>) {
-  const monacoEditor = useRef<MonacoEditorReactComp>(null)
+  const monacoEditor = useRef<typeof MonacoEditorReactComp>(null)
   const isDark = useStore(theme.dark)
   const userConfig: UserConfig = useMemo(
     () => ({

@@ -26,7 +26,7 @@ const Editor = RenderWhenVisible((props: IDockviewPanelProps<{ filename: string;
   return <Suspense fallback={<Loader />}><SandpackMonacoEditor afterEdit={props.params.afterEdit} filename={props.params.filename} language={props.params.language} /></Suspense>
 })
 
-const Loader = () => <div>Itsa Loading</div>
+const Loader = () => <div>Itsa Loading...</div>
 
 
 export const components: PanelCollection<IDockviewPanelProps> = {

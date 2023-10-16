@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { lazy, useEffect, useMemo, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
-import { MonacoEditorReactComp } from './monaco-editor-react';
 import { UserConfig } from 'monaco-editor-wrapper';
 
 // import getExtensionServiceOverride from 'vscode/service-override/extensions'
@@ -22,6 +21,7 @@ import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js';
 // import 'monaco-editor/esm/vs/language/'
 
 import '../userWorker'
+const MonacoEditorReactComp = lazy(() => import('./monaco-editor-react')) ;
 // import { toWorkerConfig } from './vscode/tools/workers';
 
 monaco.languages.typescript.typescriptDefaults.setCompilerOptions({

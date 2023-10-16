@@ -19,7 +19,7 @@ function enqueueMonacoInitializer(makePromise:any) {
     return monacoInitializerQueue;
 }
 
-export class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
+export default class MonacoEditorReactComp extends React.Component<MonacoEditorProps> {
 
     private wrapper: MonacoEditorLanguageClientWrapper = new MonacoEditorLanguageClientWrapper();
     private containerElement?: HTMLDivElement;
