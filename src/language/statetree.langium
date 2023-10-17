@@ -1,39 +1,37 @@
 grammar Statetree
 
 entry Statemachine:
-    ('statemachine' name=ID)?
-    // state parts:
-    ('initialState' init=[State])?
-    transitions+=Transition*
-    (StateSet)? 
+    ('statemachine' name=ID)?    
+    Stateful 
 ;
 
-fragment StateSet:
-    (('states')? | (sequence?='sequence'))
-    ('('event=ID')')?
+fragment Stateful:
+    ('initialState' init=[State])?
+    transitions+=Transition*
+    (('states')? | (sequence?='sequence')|(loop?='loop'))
+    ('on' event=ID)?
+    ('{'
         states+=State*     
-    ('end'|(loop?='loop')?);
+    '}')?;
 
 State:
     ('state')?
     name=ID
-    ('{' 
-        /* Stateparts */
-        ('initialState' init=[State])?
-        transitions+=Transition*
-        (StateSet)? 
+    ('{'        
+        Stateful
     '}')?
     ;
 
 Transition: 
-// midfix
-(event=ID ('=>' | 'to' | ':' | 'go') to=[State])
-|
-// prefix
-('on' event=ID ('=>'|'go'|':')? to=[State]);
+    (event=ID ('=>' | 'to' | ':' | 'go') to=[State])
+;
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 hidden terminal HASH_COMMENT: /\#[^\n\r]*/;
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
+
+// Note that Langiums behavior can be overriden by overriding the TokenBuilder service in Langium.
+// override https://github.com/eclipse-langium/langium/blob/main/packages/langium/src/parser/token-builder.ts
+// https://github.com/eclipse-langium/langium/discussions/782

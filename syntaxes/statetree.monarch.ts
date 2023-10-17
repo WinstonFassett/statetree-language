@@ -1,12 +1,12 @@
 // Monarch syntax highlighting for the statetree language.
 export default {
     keywords: [
-        'end','go','initialState','loop','on','sequence','state','statemachine','states','to'
+        'go','initialState','loop','on','sequence','state','statemachine','states','to'
     ],
     operators: [
         ':','=>'
     ],
-    symbols:  /\(|\)|:|=>|\{|\}/,
+    symbols:  /:|=>|\{|\}/,
 
     tokenizer: {
         initial: [

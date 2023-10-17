@@ -103,11 +103,17 @@
     },
     "states-statement": {
       "name": "states-statement.expr.js",
-      "begin": "(states|sequence)",
-      "end": "(loop|end)",
+      "begin": "(states|sequence|loop)\\s+(?:(on)\\s+([_a-zA-Z][\\w_]*)\\s*)?{",
+      "end": "}",
       "beginCaptures": {
         "0": {
           "name": "keyword.control.states.statetree"
+        },
+        "2": {
+          "name": "storage.type.function.arrow.js\""
+        },
+        "3": {
+          "name": "entity.name.function.statetree"
         }
       },
       "endCaptures": {
@@ -136,9 +142,6 @@
     },
     "transition-statement": {
       "patterns": [
-        {
-          "include": "#prefix-transition-statement"
-        },
         {
           "include": "#midfix-transition-statement"
         }
