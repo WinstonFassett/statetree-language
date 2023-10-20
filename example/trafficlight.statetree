@@ -1,4 +1,4 @@
-sequence on switch {
+loop on switch {
   On { loop on tick { Red  Green Yellow } }
   Off { loop on flash { RedOn RedOff } }
 }
