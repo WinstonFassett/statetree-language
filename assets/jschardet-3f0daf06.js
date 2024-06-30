@@ -1,0 +1,9 @@
+const detect = () => {
+  return {
+    encoding: "utf8",
+    confidence: 1
+  };
+};
+export {
+  detect
+};
