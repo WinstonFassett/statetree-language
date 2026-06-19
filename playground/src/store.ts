@@ -28,7 +28,8 @@ onMount(latestValidModel, () => {
   })
 })
 
-const code = atom (``)
+const code = atom(``)
+const requestedDslContent = atom<string | null>(null)
 // history
 const api  = {
   send (event: any) {
@@ -46,7 +47,7 @@ const dark = atom(true)
 const toggleDark = () => dark.set(!dark.get())
 const theme = { dark, toggleDark }
 
-export { theme, code, model, modelErrors, modelIsValid, latestValidModel, machine }
+export { theme, code, requestedDslContent, model, modelErrors, modelIsValid, latestValidModel, machine }
 
 ;(window as any).app = {
   theme,

@@ -3,7 +3,7 @@ import { cn } from "../lib/utils"
 
 let checkedUri = false
 
-export function ShareButton({className="btn btn-primary", ...props} = {} as any) {
+export function ShareButton({className="px-3 py-1 text-sm rounded font-medium transition-colors bg-[var(--accent)] text-[var(--accent-foreground)] hover:opacity-90", ...props} = {} as any) {
   const {sandpack} = useSandpack()
   if (!checkedUri) {
     restoreSharedText()

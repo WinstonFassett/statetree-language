@@ -71,9 +71,8 @@ export const components: PanelCollection<IDockviewPanelProps> = {
 export const headers: PanelCollection<IDockviewPanelHeaderProps> = {
   customTab: (props: IDockviewPanelHeaderProps) => {
     return (
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center', height: '100%', padding: '0 12px', fontSize: 13, fontFamily: 'var(--font-sans)' }}>
         <span>{props.api.title}</span>
-        {/* <span onClick={() => props.api.close()}>{'[x]'}</span> */}
       </div>
     );
   },

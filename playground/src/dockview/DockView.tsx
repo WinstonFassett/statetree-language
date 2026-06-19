@@ -31,29 +31,6 @@ export const DockView = () => {
         //     position: { referencePanel: 'machine.statetree', direction: 'below' }
         //   });
         event.api.addPanel({
-            id: 'XState',
-            component: 'editor',
-            tabComponent: 'customTab',
-            params: {
-                filename: '/machine.json',
-                language: 'json',
-                // afterEdit:  debounce((code: string, filename: string) => {
-                //   // try import and update statetree
-                // //   console.log('user changed machine.json')
-                // //   console.log('todo: import xstate', code)
-                //   // let data
-                //   // try {
-                //   //     importXState(sandpack, code)
-                //   //     data = JSON.parse(code)
-                //   //     console.log({ data })
-                      
-                //   // } catch (err) {
-                //   //     console.log('failed to import xstate', err)
-                //   // }
-                // }, 500)
-            },          
-          });
-        event.api.addPanel({
             id: 'Matchina',
             component: 'editor',
             tabComponent: 'customTab',
@@ -61,7 +38,16 @@ export const DockView = () => {
                 filename: '/machine.matchina.ts',
                 language: 'typescript',
             },
-            position: { referencePanel: 'XState', direction: 'within' },
+          });
+        event.api.addPanel({
+            id: 'XState',
+            component: 'editor',
+            tabComponent: 'customTab',
+            params: {
+                filename: '/machine.json',
+                language: 'json',
+            },
+            position: { referencePanel: 'Matchina', direction: 'within' },
         });
         event.api.addPanel({
             id: 'DSL',

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Statemachine } from "../../../src/language/generated/ast";
 import * as store from '../store';
 import { useStore } from "@nanostores/react";
-import { expandAst, generateMatchina } from "../../../src/language/codegen";
+import { expandAst, generateMatchina, generateXState } from "../../../src/language/codegen";
 import { StateMachineInstance, useStateMachineContext } from "../statetree-machine/useStateMachine";
 import { sendToSandpackBundlers } from "./sendToSandpackBundlers";
 
@@ -44,6 +44,7 @@ function sendStateMachineToSandpack(model: Statemachine | undefined, machine: St
   if (model) {
     const expanded = expandAst(model);
     sandpack.updateFile('/machine.matchina.ts', generateMatchina(expanded));
+    sandpack.updateFile('/machine.json', JSON.stringify(generateXState(expanded), null, 2));
     sendToSandpackBundlers(sandpack, {
       type: 'model',
       model: generateMatchina(expanded),

@@ -79,7 +79,7 @@ function TransitionList({ transitions, send }: { transitions: Transition[], send
     {transitions.map((transition, index) => {
       const { event, to } = transition
       return <div key={event||index}>
-        <button className="btn btn-sm btn-ghost rounded-btn normal-case" onClick={() => send(event)}>
+        <button className="px-2 py-0.5 text-sm rounded transition-colors hover:bg-[var(--muted)] text-[var(--muted-foreground)]" onClick={() => send(event)}>
           {event}
         </button> {'->'} {to?.ref?.name}
         {/* <Button variant='ghost'  size='xs'  className="my-1 px-1">

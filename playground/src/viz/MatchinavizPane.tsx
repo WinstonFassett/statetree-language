@@ -21,14 +21,14 @@ export function MatchinavizPane() {
 
   if (!shape) {
     return (
-      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0f17', color: 'rgba(100,116,139,0.55)', fontFamily: 'monospace', fontSize: 12 }}>
+      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--background)', color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)', fontSize: 12 }}>
         no model
       </div>
     );
   }
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '100%', background: 'var(--background)' }}>
       <SvgInspector
         shape={shape}
         value={stateName}
