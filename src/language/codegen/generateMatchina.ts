@@ -175,21 +175,22 @@ function generateHsmOn(state: State): Generated {
 /**
  * Resolve a transition target to a Matchina flattened-HSM relative reference.
  *
- * Matchina resolves child names relative to the current parent, and `^` escapes
- * one level up. statetree references are absolute (by AST node), so we compute
- * the target relative to the source state's parent.
- *
- * NOTE: trafficlight.statetree does not exercise cross-level jumps; this handles
- * sibling targets and same-level targets. Deeper cross-subtree jumps fall back
- * to the bare target name.
+ * Matchina's declarative config resolves names relative to the current parent.
+ * - Same parent → bare name (e.g. "Green" from "On.Red" → "On.Green")
+ * - Target is sibling of source's parent → "^Name" (escape one level up)
+ * - Otherwise → FQN (absolute dot-notation, Matchina passes through unchanged)
  */
 function resolveHsmTarget(source: State, target: State | undefined): string {
   if (!target) return "";
-  // Sibling under the same parent -> bare name (Matchina resolves relatively).
+  // Sibling under the same parent → bare name
   if (source.$container === target.$container) {
     return target.name;
   }
-  // Fallback: emit FQN so it is at least inspectable. Flagged for follow-up.
+  // Target is a sibling of the source's parent (one level up) → ^ escape
+  if (source.$container && target.$container === (source.$container as State | Statemachine)?.$container) {
+    return "^" + target.name;
+  }
+  // Fallback: absolute FQN (Matchina treats dot-containing strings as absolute)
   return getFQN(target);
 }
 

@@ -8,9 +8,9 @@ import { useStateMachineContext } from '../statetree-machine/useStateMachine'
 
 export function DebugPane({}) {
   const machine = useStateMachineContext()
-  const { state, model } = machine
+  const { stateKey, model } = machine
   return <Inspector data={{
-    state, 
+    stateKey,
     model,
     // code: store.code
   }} />

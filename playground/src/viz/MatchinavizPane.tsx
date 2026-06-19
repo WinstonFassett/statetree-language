@@ -8,8 +8,7 @@ import { useStateMachineContext } from '../statetree-machine/useStateMachine';
 export function MatchinavizPane() {
   const model = useStore(store.latestValidModel);
   const machine = useStateMachineContext();
-  const currentState = machine.state as any;
-  const stateName: string = currentState?.name ?? '';
+  const stateName: string = machine.stateKey ?? '';
 
   const shape = useMemo(() => {
     if (!model) return null;

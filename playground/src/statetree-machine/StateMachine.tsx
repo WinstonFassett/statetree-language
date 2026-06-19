@@ -15,16 +15,12 @@ export function StateMachine({ model, instance }: { model: Statemachine, instanc
   const{ states } = model
   const { send } = instance
 
-  const activeStates = useMemo(() => {
-    return instance.state ? [instance.state] : []
-  }, [instance.state])
-  // console.log({ activeStates })
+  const { stateKey } = instance;
   return <div className="h-full flex flex-col was-bg-base-100">
     <div>
       <div className="flex gap-2 was-bg-base-200">
         <div className="flex-1 p-2">
-          <p>State: {instance.state?.name}</p>
-          <p>Active States: {activeStates.map(state => state.name).join(', ')}</p>
+          <p>State: {stateKey}</p>
         </div>
         <div className="menu menu-horizontal">
         </div>
@@ -32,7 +28,7 @@ export function StateMachine({ model, instance }: { model: Statemachine, instanc
 
     </div>
     <div className="flex-1 overflow-auto">
-      <StateList states={states} activeStateName={instance.state?.name} send={send} />
+      <StateList states={states} activeStateName={stateKey} send={send} />
     </div>
   </div>
 

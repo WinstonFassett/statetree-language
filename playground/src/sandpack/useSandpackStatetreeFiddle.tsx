@@ -14,10 +14,9 @@ export function useStatetreeSandpackFiddle() {
   const { sandpack } = useSandpack();
   const model = useStore(store.latestValidModel);
   const machine = useStateMachineContext();
-  const { state } = machine;
   const isDark = useStore(store.theme.dark);
   useEffect(() => { sendStateMachineToSandpack(model, machine, sandpack); }, [model]);
-  useEffect(() => { sendMachineToSandpacks(machine, sandpack); }, [machine.state]);
+  useEffect(() => { sendMachineToSandpacks(machine, sandpack); }, [machine.stateKey]);
   useEffect(() => { sendToSandpackBundlers(sandpack, { type: 'dark', dark: isDark }); }, [isDark]);
   useEffect(() => {
     function onMessage(event: MessageEvent) {
@@ -30,13 +29,14 @@ export function useStatetreeSandpackFiddle() {
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
   }, [machine, model]);
-  return { model, state, machine };
+  return { model, machine };
 }
 
 function sendMachineToSandpacks(machine: StateMachineInstance, sandpack: SandpackState) {
   sendToSandpackBundlers(sandpack, {
     type: 'state',
-    state: machine.state?.name,
+    state: machine.stateKey,
+    events: machine.events,
   });
 }
 

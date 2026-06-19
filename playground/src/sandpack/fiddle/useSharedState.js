@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 export function useSharedState() {
   const [model, setModel] = useState();
-  const [mode, setMode] = useState();
+  const [stateKey, setStateKey] = useState();
   const [events, setEvents] = useState([]);
   const [isDark, setIsDark] = useState(true);
   useEffect(() => {
@@ -16,7 +16,8 @@ export function useSharedState() {
           if (data.events) setEvents(data.events);
         }
         if (type === 'state') {
-          setMode(data.state);
+          setStateKey(data.state);
+          if (data.events) setEvents(data.events);
         }
         if (type === 'dark') {
           setIsDark(data.dark);
@@ -27,5 +28,5 @@ export function useSharedState() {
   function send(event) {
     window.parent.postMessage({ type: 'send', event }, '*');
   }
-  return { mode, model, events, isDark, send };
+  return { stateKey, model, events, isDark, send };
 }
