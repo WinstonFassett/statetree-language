@@ -73,7 +73,7 @@ function getFQN(state: State): string {
   let node: State | Statemachine | undefined = state;
   while (node && "name" in node && node.name) {
     path.unshift(node.name);
-    node = node.$container;
+    node = node.$container as State | Statemachine | undefined;
   }
   return path.join(".");
 }

@@ -14,6 +14,7 @@ import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState } from 're
 import { SandpackPreviewPane } from '../sandpack/SandpackPreviewPane';
 import { HoistedDockviewPanel } from './HoistedDockViewPanel';
 import { RenderWhenVisible } from './RenderWhenVisible';
+import { MatchinavizPane } from '../viz/MatchinavizPane';
 
 const StateMachinePlantUmlPane = lazy(() => import('../viz/StateMachinePlantUmlPane'));
 
@@ -38,6 +39,9 @@ export const components: PanelCollection<IDockviewPanelProps> = {
   },
   viz: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return (<StateMachinePane />);
+  },
+  'matchina-viz': (props: IDockviewPanelProps<{}>) => {
+    return (<MatchinavizPane />);
   },
   // mermaid: (props: IDockviewPanelProps<{}>) => {
   //   return (<StateMachineMermaidPane />)

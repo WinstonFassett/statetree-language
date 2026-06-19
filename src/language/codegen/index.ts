@@ -1,4 +1,6 @@
+export * from './buildShapeFromAst'
 export * from './expandAst'
 export * from './generateJavaScript'
+export * from './generateMatchina'
 export * from './generateStatetree'
 export * from './generateXState'

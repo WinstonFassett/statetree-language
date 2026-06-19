@@ -24,6 +24,7 @@
         "commander": "~10.0.0",
         "express": "~4.18.2",
         "langium": "~1.2.0",
+        "matchina": "^0.3.0",
         "vscode-languageclient": "~8.0.2"
     },
     "devDependencies": {

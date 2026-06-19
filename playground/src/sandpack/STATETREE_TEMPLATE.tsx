@@ -8,7 +8,7 @@ const externalResources = [
   "https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css"
 ]
 
-export const DERIVED_FILENAMES = ['/machine.json']
+export const DERIVED_FILENAMES = ['/machine.json', '/machine.matchina.ts']
 const SUPPORT_FILENAMES = ['useSharedState.js']
 export const STATETREE_TEMPLATE = {
   files: {
@@ -23,6 +23,7 @@ export const STATETREE_TEMPLATE = {
     '/machine2.statetree': example,
     // '/xstate.json': '{}',
     '/machine.json': '{}',
+    '/machine.matchina.ts': '',
     '/useSharedState.js': useSharedStateJS
   },
   customSetup: {

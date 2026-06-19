@@ -54,6 +54,16 @@ export const DockView = () => {
             },          
           });
         event.api.addPanel({
+            id: 'Matchina',
+            component: 'editor',
+            tabComponent: 'customTab',
+            params: {
+                filename: '/machine.matchina.ts',
+                language: 'typescript',
+            },
+            position: { referencePanel: 'XState', direction: 'within' },
+        });
+        event.api.addPanel({
             id: 'DSL',
             component: 'statetree',
             tabComponent: 'customTab',
@@ -96,23 +106,12 @@ export const DockView = () => {
         // });
         
         event.api.addPanel({
-            id: 'Diagram',
-            component: 'plantuml',
+            id: 'Viz',
+            component: 'matchina-viz',
             tabComponent: 'customTab',
-            params: {
-                someProps: 'World',
-            },
+            params: {},
             position: { referencePanel: 'DSL', direction: 'right' },
         });
-        event.api.addPanel({
-            id: 'State',
-            component: 'viz',
-            tabComponent: 'customTab',
-            params: {
-                someProps: 'World',
-            },
-            // position: { referencePanel: 'machine.statetree', direction: 'right' },
-        }); 
         // event.api.addPanel({
         //     id: 'xstate.json',
         //     component: 'editor',
