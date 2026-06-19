@@ -87,7 +87,7 @@ function generateFlat(model: Statemachine): Generated {
   const initial = getInitialState(model);
 
   return toNode`
-import { createMachine, defineStates } from "matchina";
+import { matchina, defineStates } from "matchina";
 
 const states = defineStates({
   ${join(states, (s) => toNode`${s.name}: undefined,`, {
@@ -95,15 +95,11 @@ const states = defineStates({
   })}
 });
 
-const transitions = {
+export const machine = matchina(states, {
   ${join(states, (s) => generateFlatTransitions(s), {
     appendNewLineIfNotEmpty: true,
   })}
-};
-
-export const machine = createMachine(states, transitions, "${
-    initial?.name ?? states[0]?.name ?? ""
-  }");
+}, "${initial?.name ?? states[0]?.name ?? ""}");
 `;
 }
 

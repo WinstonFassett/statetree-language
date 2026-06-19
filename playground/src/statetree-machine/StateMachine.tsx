@@ -13,20 +13,12 @@ import { theme } from "../store";
 export function StateMachine({ model, instance }: { model: Statemachine, instance: StateMachineInstance }) {
   const isDark = useState(theme.dark)
   const{ states } = model
-  const { send, undo, redo, canUndo, canRedo, reset } = instance
+  const { send } = instance
 
-  // refactoring
   const activeStates = useMemo(() => {
-    const items: State[] = []
-    let state: State | undefined = instance.state
-    while (state) {
-      items.push(state)
-      state = getParentState(state)
-    }
-    return items.reverse()
-  }, [states, instance.state])
+    return instance.state ? [instance.state] : []
+  }, [instance.state])
   // console.log({ activeStates })
-  const getState = (name: string) => instance.state
   return <div className="h-full flex flex-col was-bg-base-100">
     <div>
       <div className="flex gap-2 was-bg-base-200">
@@ -35,24 +27,12 @@ export function StateMachine({ model, instance }: { model: Statemachine, instanc
           <p>Active States: {activeStates.map(state => state.name).join(', ')}</p>
         </div>
         <div className="menu menu-horizontal">
-          {/* <button className="btn btn-sm btn-ghost rounded-btn" onClick={exportJS}>Export JS</button>
-          <button className="btn btn-sm btn-ghost rounded-btn" onClick={exportXState}>Export XState</button> */}
-          <button className="btn btn-sm btn-ghost rounded-btn" onClick={reset}>
-            <ArrowPathIcon className="h-6 w-6" />
-          </button>
-          <button disabled={!canUndo} className="btn btn-sm btn-ghost rounded-btn" onClick={undo}>
-            <ArrowUturnLeftIcon className="h-6 w-6" />
-          </button>
-          <button disabled={!canRedo} className="btn btn-sm btn-ghost rounded-btn" onClick={redo}>
-          <ArrowUturnRightIcon className="h-6 w-6" />
-          </button>
-
         </div>
       </div>
 
     </div>
     <div className="flex-1 overflow-auto">
-      <StateList states={states} state={instance.state} send={send} />
+      <StateList states={states} activeStateName={instance.state?.name} send={send} />
     </div>
   </div>
 
@@ -75,17 +55,17 @@ const copyToClipboard = (str: string) => {
 
 type Send = (event: string) => void
 
-function StateList({state: currentState, states, send, path=[]}:{state: State|undefined, states: State[], send: Send, path?: State[]}) {
+function StateList({activeStateName, states, send}:{activeStateName: string|undefined, states: State[], send: Send}) {
   return <ul className="pl-2 mt-2 flex flex-wrap gap-2">
     {states.map((state, index) => {
       const { name, states: substates, transitions } = state
-      const active = currentState && (state === currentState || name === currentState.name)
+      const active = name === activeStateName
       return (
         <div key={state.name} className={`border card was-bg-base-100 shadow-xl ${active ? 'was-bg-slate-800 border border-accent' : 'was-bg-base-200 border-slate-700'} `} >
           <div className={`card-body rounded py-2 px-2`}>
             <h2 className="card-title text-base"> {name}</h2>
             {!!transitions && <TransitionList transitions={transitions} send={send} />}
-        {substates?.length > 0 && <StateList states={substates} state={currentState} send={send} />}
+        {substates?.length > 0 && <StateList states={substates} activeStateName={activeStateName} send={send} />}
 
             {/* <p>If a dog chews shoes whose shoes does he choose?</p> */}
             {/* <div className="card-actions justify-end">
