@@ -15,7 +15,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@matchina/viz-svg": "^0.1.0-alpha.3",
+    "@matchina/viz-svg": "^0.1.0",
     "@types/uuid": "^9.0.2",
     "daisyui": "^3.1.5",
     "matchina": "^0.3.0",
