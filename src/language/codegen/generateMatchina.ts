@@ -13,7 +13,7 @@ import { expandAst } from "./expandAst";
  *
  * The statetree DSL has no concept of state data, so all generated states are
  * data-less (`Idle: undefined` / `data: () => ({})`). That is a known gap vs.
- * Matchina's TypeScript-first design — see MATCHINA_SPIKE_NOTES.md.
+ * Matchina's TypeScript-first design.
  *
  * Three output modes, inferred from the AST shape (see {@link inferMode}):
  *   - "flat":     no nested states anywhere      -> createMachine(...)
@@ -181,7 +181,7 @@ function generateHsmOn(state: State): Generated {
  *
  * NOTE: trafficlight.statetree does not exercise cross-level jumps; this handles
  * sibling targets and same-level targets. Deeper cross-subtree jumps fall back
- * to the bare target name and are flagged in MATCHINA_SPIKE_NOTES.md.
+ * to the bare target name.
  */
 function resolveHsmTarget(source: State, target: State | undefined): string {
   if (!target) return "";

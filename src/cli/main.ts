@@ -44,7 +44,7 @@ export default function(): void {
         .command('generate')
         .argument('<file>', `source file (possible file extensions: ${fileExtensions})`)
         .option('-d, --destination <dir>', 'destination directory of generating')
-        .description('generates JavaScript code that prints "Hello, {name}!" for each greeting in a source file')
+        .description('generates a JavaScript state machine from a Statetree source file')
         .action(generateAction);
 
     const xstateFileExtensions = ['json'].join(', ');

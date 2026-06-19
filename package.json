@@ -1,6 +1,6 @@
 {
     "name": "statetree-language",
-    "description": "Please enter a brief description here",
+    "description": "A little DSL for sketching state machines, with code generators (Matchina, XState, JS), a CLI, a VSCode extension, and a web playground.",
     "version": "0.0.1",
     "files": [
         "bin"
@@ -12,7 +12,7 @@
         "langium:generate": "langium generate",
         "langium:watch": "langium generate --watch",
         "vscode:prepublish": "npm run build && npm run lint",
-        "build:worker": "esbuild --minify ./src/language/statetree-worker-main.js --bundle --format=iife --outfile=./out/language/statetree-server-worker.js",
+        "build:worker": "esbuild --minify ./src/language/statetree-worker-main.ts --bundle --format=iife --outfile=./out/language/statetree-server-worker.js",
         "old:prepare:public": "shx mkdir -p ./public && shx cp -fr ./src/static/* ./public/",
         "build:deps": "npm run langium:generate && npm run build && npm run build:worker && npm run build:monarch",
         "build:monarch": "tsc -b tsconfig.monarch.json",
