@@ -1,7 +1,7 @@
 import { REACT_TEMPLATE } from "@codesandbox/sandpack-react";
 import AppJS from './fiddle/App.js?raw';
 import useSharedStateJS from './fiddle/useSharedState?raw'
-import example from '../../../example/trafficlight.statetree?raw'
+import example from '../../../example/trafficlight-minimal.statetree?raw'
 
 const externalResources = [
   "https://cdn.tailwindcss.com",
