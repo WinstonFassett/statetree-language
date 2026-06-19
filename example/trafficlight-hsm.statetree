@@ -1,0 +1,12 @@
+initialState On
+
+states {
+  On {
+    switch => Off
+    loop on tick { Red  Green  Yellow }
+  }
+  Off {
+    switch => On
+    loop on flash { RedOn  RedOff }
+  }
+}
