@@ -25,8 +25,8 @@ export const STATETREE_TEMPLATE = {
       --pc: 40 19% 8% !important;
       --pf: 203 42% 59% !important;
     }
-    /* Kill daisyUI's forced uppercase on buttons */
-    .btn { text-transform: none; }
+    /* daisyUI forces uppercase — use capitalize instead */
+    .btn { text-transform: capitalize; }
     `,
     '/Wrapper.js': `export default ({ children }) => (<h2>
       Hello {children}!
