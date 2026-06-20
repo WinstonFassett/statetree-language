@@ -2,6 +2,7 @@ import {
   SandpackLayout,
   SandpackProvider,
   SandpackStack,
+  useSandpack,
 } from "@codesandbox/sandpack-react";
 import { useEffect } from "react";
 import { DockView } from "../dockview/DockView";
@@ -14,9 +15,10 @@ import "./sandpack.css";
 import { ShareButton } from "./ShareButton";
 import { useActiveClass } from "../lib/useActiveClass";
 
-import trafficLightMinimal from "../../../example/trafficlight-minimal.statetree?raw";
+import trafficLight from "../../../example/trafficlight.statetree?raw";
+import trafficLightLoop from "../../../example/trafficlight-loop.statetree?raw";
 import trafficLightHsm from "../../../example/trafficlight-hsm.statetree?raw";
-import trafficLightLoops from "../../../example/trafficlight.statetree?raw";
+import trafficLightHsmLoop from "../../../example/trafficlight-hsm-loop.statetree?raw";
 import toggle from "../../../example/toggle.statetree?raw";
 import authFlow from "../../../example/auth-flow.statetree?raw";
 import rockPaperScissors from "../../../example/rock-paper-scissors.statetree?raw";
@@ -24,19 +26,31 @@ import fetcherAdvanced from "../../../example/fetcher-advanced.statetree?raw";
 import comboboxHsm from "../../../example/combobox-hsm.statetree?raw";
 import hsmCheckout from "../../../example/hsm-checkout.statetree?raw";
 
+import defaultAppJs from "./fiddle/App.js?raw";
+import appAuthFlow from "./fiddle/AppAuthFlow.js?raw";
+import appRPS from "./fiddle/AppRPS.js?raw";
+import appCheckout from "./fiddle/AppCheckout.js?raw";
+import appCombobox from "./fiddle/AppCombobox.js?raw";
+
 // Examples adapted from the Matchina example gallery
 // (https://github.com/WinstonFassett/matchina) — topology only, since the DSL
 // models states + events and has no state data.
 const EXAMPLES = [
   {
-    label: "Traffic Light (minimal)",
-    description: "Bare minimum — three states, one looping event",
-    code: trafficLightMinimal,
+    label: "Auth Flow",
+    description: "Login / register / reset — returns full circle to logged out",
+    code: authFlow,
+    appJs: appAuthFlow,
   },
   {
-    label: "Toggle",
-    description: "Two states, on/off with explicit events",
-    code: toggle,
+    label: "Traffic Light",
+    description: "Three states, explicit Red → Green → Yellow transitions",
+    code: trafficLight,
+  },
+  {
+    label: "Traffic Light (loops)",
+    description: "Same cycle written with a single looping event",
+    code: trafficLightLoop,
   },
   {
     label: "Traffic Light (HSM)",
@@ -44,19 +58,20 @@ const EXAMPLES = [
     code: trafficLightHsm,
   },
   {
-    label: "Traffic Light (HSM using loops)",
-    description: "On / Off, each wrapping a loop — the default example",
-    code: trafficLightLoops,
+    label: "Traffic Light (HSM loops)",
+    description: "On / Off, each wrapping a loop",
+    code: trafficLightHsmLoop,
   },
   {
-    label: "Auth Flow",
-    description: "Login / register / reset — returns full circle to logged out",
-    code: authFlow,
+    label: "Toggle",
+    description: "Two states, on/off with explicit events",
+    code: toggle,
   },
   {
     label: "Rock Paper Scissors",
     description: "Round loop with game-over branch",
     code: rockPaperScissors,
+    appJs: appRPS,
   },
   {
     label: "Fetcher (advanced)",
@@ -67,11 +82,13 @@ const EXAMPLES = [
     label: "Combobox (HSM)",
     description: "Inactive / Active, with Empty ↔ Suggesting child states",
     code: comboboxHsm,
+    appJs: appCombobox,
   },
   {
     label: "Checkout (HSM)",
     description: "Cart → Shipping → Payment submachine → Review → Confirmation",
     code: hsmCheckout,
+    appJs: appCheckout,
   },
 ];
 
@@ -101,9 +118,11 @@ export default function StatetreeSandpackFiddle() {
 function TheStack() {
   useStatetreeSandpackFiddle();
   const isDark = useStore(store.theme.dark)
+  const { sandpack } = useSandpack()
 
-  function loadExample(code: string) {
-    requestedDslContent.set(code);
+  function loadExample(ex: typeof EXAMPLES[number]) {
+    requestedDslContent.set(ex.code);
+    sandpack.updateFile('/App.js', ex.appJs ?? defaultAppJs);
   }
 
   return (
@@ -129,7 +148,7 @@ function TheStack() {
             defaultValue=""
             onChange={e => {
               const ex = EXAMPLES.find(x => x.label === e.target.value);
-              if (ex) loadExample(ex.code);
+              if (ex) loadExample(ex);
               e.target.value = "";
             }}
           >

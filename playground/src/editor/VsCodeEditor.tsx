@@ -86,9 +86,21 @@ export function ReactTs({
   
   useEffect(() => {
     if (latestCode.current !== code) {
-      // console.log('file was changed outside of editor', filename)
-      ref.current?.getEditorWrapper().updateModel({
-        code
+      // File changed outside the editor (e.g. example switch seeding /App.js
+      // via sandpack.updateFile). Push it into the monaco model AND record it
+      // as the latest known code — otherwise this ref stays stale and the next
+      // external update (or the echo of the user's own edit) re-fires
+      // updateModel, clobbering edits and desyncing the rebundle.
+      latestCode.current = code
+      const comp = ref.current as any
+      // updateModel is async: it disposes the old monaco model and creates a new
+      // one. The onDidChangeContent subscription was bound to the OLD (now
+      // disposed) model, so once the swap settles we must re-bind to the new
+      // model — otherwise edits after an example switch never reach sandpack and
+      // the preview stops updating. Re-bind without re-emitting (the new content
+      // was just pushed by the host; echoing it would clobber the host file).
+      Promise.resolve(comp?.getEditorWrapper().updateModel({ code })).then(() => {
+        comp?.subscribeToModel?.(false)
       })
     }
   },[code, filename])

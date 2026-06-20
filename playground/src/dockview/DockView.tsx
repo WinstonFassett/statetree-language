@@ -66,7 +66,7 @@ export const DockView = () => {
                 'XState': { id: 'XState', contentComponent: 'editor', tabComponent: 'customTab', params: { filename: '/machine.json', language: 'json' }, title: 'XState' },
                 'React JSX': { id: 'React JSX', contentComponent: 'editor', tabComponent: 'customTab', params: { filename: '/App.js', language: 'javascript' }, title: 'React JSX' },
                 'Viz': { id: 'Viz', contentComponent: 'matchina-viz', tabComponent: 'customTab', params: {}, title: 'Viz' },
-                'Preview': { id: 'Preview', contentComponent: 'preview', tabComponent: 'customTab', params: { someProps: 'World' }, title: 'Preview' },
+                'Preview': { id: 'Preview', contentComponent: 'preview', tabComponent: 'customTab', params: {}, title: 'Preview' },
             },
             activeGroup: '1',
         } as any);

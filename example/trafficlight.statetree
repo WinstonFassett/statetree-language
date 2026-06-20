@@ -1,5 +1,13 @@
-loop on switch {
-  On { loop on tick { Red  Green Yellow } }
-  Off { loop on flash { RedOn RedOff } }
-}
+initialState Red
 
+states {
+  Red {
+    tick => Green
+  }
+  Green {
+    tick => Yellow
+  }
+  Yellow {
+    tick => Red
+  }
+}
