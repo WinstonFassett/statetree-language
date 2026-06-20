@@ -3,11 +3,21 @@ import { State, Statemachine } from "../generated/ast";
 import { expandAst } from "./expandAst";
 
 /**
- * Build a Matchina MachineShape directly from the statetree AST.
- * Uses the same logic as generateMatchina but emits a MachineShape
- * instead of source code — usable for SvgInspector without live execution.
+ * Build a machine **definition** from the statetree AST: the structural data
+ * (states, transitions, hierarchy, initial) needed to *construct* a Matchina
+ * machine via `createHSM`/`matchina(...)`.
+ *
+ * This is deliberately NOT "the shape". The AST is the front-end that produces
+ * the machine; the authoritative runtime **shape** lives on the constructed
+ * machine itself (`machine.shape`) and is what visualization/introspection read.
+ * Do not feed this output to the viz — read `machine.shape.getState()` instead.
+ *
+ * It happens to reuse Matchina's `MachineShape` data layout (same maps), but the
+ * intent is "definition for construction", not "shape for rendering".
  */
-export function buildShapeFromAst(model: Statemachine): MachineShape {
+export type MachineDefinition = MachineShape;
+
+export function buildDefinitionFromAst(model: Statemachine): MachineDefinition {
   const expanded = expandAst(model);
   const states = new Map<string, StateNode>();
   const transitions = new Map<string, Map<string, string>>();
