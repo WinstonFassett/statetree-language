@@ -1,7 +1,7 @@
 import { REACT_TEMPLATE } from "@codesandbox/sandpack-react";
-import AppJS from './fiddle/App.js?raw';
+import AppJS from './fiddle/AppAuthFlow.js?raw';
 import useSharedStateJS from './fiddle/useSharedState?raw'
-import example from '../../../example/trafficlight.statetree?raw'
+import example from '../../../example/auth-flow.statetree?raw'
 
 const externalResources: string[] = [
   "https://cdn.tailwindcss.com",
@@ -15,6 +15,15 @@ export const STATETREE_TEMPLATE = {
     '/App.js': AppJS,
     '/styles.css': REACT_TEMPLATE.files["/styles.css"].code + `
     html, body, #root { height: 100%; }
+
+    /* Sync daisyUI primary to editorial accent (#8fb9d6 light-blue) */
+    [data-theme="dark"], [data-theme="light"] {
+      --p: 203 42% 69%;         /* #8fb9d6 editorial accent blue */
+      --pc: 40 19% 8%;          /* #15130f — foreground on primary */
+      --pf: 203 42% 59%;        /* focus/active variant, slightly darker */
+    }
+    /* Kill daisyUI's forced uppercase on buttons */
+    .btn { text-transform: none; }
     `,
     '/Wrapper.js': `export default ({ children }) => (<h2>
       Hello {children}!
