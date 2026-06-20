@@ -16,11 +16,14 @@ export const STATETREE_TEMPLATE = {
     '/styles.css': REACT_TEMPLATE.files["/styles.css"].code + `
     html, body, #root { height: 100%; }
 
-    /* Sync daisyUI primary to editorial accent (#8fb9d6 light-blue) */
-    [data-theme="dark"], [data-theme="light"] {
-      --p: 203 42% 69%;         /* #8fb9d6 editorial accent blue */
-      --pc: 40 19% 8%;          /* #15130f — foreground on primary */
-      --pf: 203 42% 59%;        /* focus/active variant, slightly darker */
+    /* Sync daisyUI primary to editorial accent (#8fb9d6 light-blue).
+       Must beat daisyUI's [data-theme=dark] specificity — use !important
+       since our styles.css loads before Tailwind but after daisyUI CDN,
+       and [data-theme=dark] on a parent div overrides our :root block. */
+    :root, [data-theme] {
+      --p: 203 42% 69% !important;
+      --pc: 40 19% 8% !important;
+      --pf: 203 42% 59% !important;
     }
     /* Kill daisyUI's forced uppercase on buttons */
     .btn { text-transform: none; }
