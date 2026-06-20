@@ -1,6 +1,16 @@
 /* auto height */
-.sp-layout, 
-.sp-stack, 
+.sp-layout,
+.sp-stack,
 .sp-wrapper {
+    height: 100% !important;
+}
+
+/* Drop the preview action bar (reload button) and its reserved whitespace so
+   the preview iframe fills the pane flush to the top. */
+.sp-preview-actions {
+    display: none !important;
+}
+.sp-preview-container,
+.sp-preview-iframe {
     height: 100% !important;
 }

@@ -65,7 +65,7 @@ export const components: PanelCollection<IDockviewPanelProps> = {
     )
   },
   preview: HoistedDockviewPanel((props: IDockviewPanelProps<{ someProps: string; }>) => {
-    return <SandpackPreview showOpenInCodeSandbox={false} showSandpackErrorOverlay={true} />
+    return <SandpackPreview showOpenInCodeSandbox={false} showRefreshButton={false} showNavigator={false} showSandpackErrorOverlay={true} />
   }),
 };
 export const headers: PanelCollection<IDockviewPanelHeaderProps> = {
