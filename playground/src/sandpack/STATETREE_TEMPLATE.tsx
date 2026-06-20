@@ -3,7 +3,10 @@ import AppJS from './fiddle/App.js?raw';
 import useSharedStateJS from './fiddle/useSharedState?raw'
 import example from '../../../example/trafficlight.statetree?raw'
 
-const externalResources: string[] = []
+const externalResources: string[] = [
+  "https://cdn.tailwindcss.com",
+  "https://cdn.jsdelivr.net/npm/daisyui@3.1.6/dist/full.css",
+]
 
 export const DERIVED_FILENAMES = ['/machine.json', '/machine.matchina.ts']
 const SUPPORT_FILENAMES = ['useSharedState.js']
