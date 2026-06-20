@@ -16,6 +16,7 @@ import { useActiveClass } from "../lib/useActiveClass";
 
 import trafficLightMinimal from "../../../example/trafficlight-minimal.statetree?raw";
 import trafficLightHsm from "../../../example/trafficlight-hsm.statetree?raw";
+import trafficLightLoops from "../../../example/trafficlight.statetree?raw";
 import toggle from "../../../example/toggle.statetree?raw";
 import authFlow from "../../../example/auth-flow.statetree?raw";
 import rockPaperScissors from "../../../example/rock-paper-scissors.statetree?raw";
@@ -41,6 +42,11 @@ const EXAMPLES = [
     label: "Traffic Light (HSM)",
     description: "Broken / Working / Maintenance; Working runs the light cycle",
     code: trafficLightHsm,
+  },
+  {
+    label: "Traffic Light (HSM using loops)",
+    description: "On / Off, each wrapping a loop — the default example",
+    code: trafficLightLoops,
   },
   {
     label: "Auth Flow",
