@@ -1,9 +1,3 @@
-import {
-  expandToNode as toNode,
-  joinToNode as join,
-  toString,
-  Generated,
-} from "langium";
 import { State, Statemachine } from "../generated/ast";
 import { expandAst } from "./expandAst";
 
@@ -16,12 +10,16 @@ import { expandAst } from "./expandAst";
  * Matchina's TypeScript-first design.
  *
  * Three output modes, inferred from the AST shape (see {@link inferMode}):
- *   - "flat":     no nested states anywhere      -> createMachine(...)
+ *   - "flat":      no nested states anywhere     -> matchina(...)
  *   - "flattened": nested states                 -> createHSM({ initial, states })
  *   - "nested":    nested states                 -> submachine() + nestedHsmRoot()
  *
  * For an HSM input the default is "flattened"; pass `mode: "nested"` for the
  * non-flattened submachine form.
+ *
+ * Output is built as plain strings with explicit 2-space indentation rather than
+ * via Langium's `toNode` template tag — `toNode`'s indentation model does not
+ * compose cleanly through nested interpolations and produced drifting indents.
  */
 
 export type MatchinaMode = "flat" | "flattened" | "nested";
@@ -30,6 +28,18 @@ export type MatchinaOptions = {
   /** Force a specific output mode. Default: inferred from AST. */
   mode?: MatchinaMode;
 };
+
+const INDENT = "  ";
+
+/** Indent every non-empty line of `text` by `level` units of two spaces. */
+function indent(text: string, level: number): string {
+  if (level <= 0) return text;
+  const pad = INDENT.repeat(level);
+  return text
+    .split("\n")
+    .map((line) => (line.length > 0 ? pad + line : line))
+    .join("\n");
+}
 
 export function generateMatchina(
   model: Statemachine,
@@ -40,11 +50,11 @@ export function generateMatchina(
 
   switch (mode) {
     case "flat":
-      return toString(generateFlat(expanded));
+      return generateFlat(expanded);
     case "flattened":
-      return toString(generateFlattened(expanded));
+      return generateFlattened(expanded);
     case "nested":
-      return toString(generateNested(expanded));
+      return generateNested(expanded);
   }
 }
 
@@ -79,97 +89,95 @@ function getFQN(state: State): string {
 }
 
 // ---------------------------------------------------------------------------
-// Mode: flat -> createMachine(states, transitions, init)
+// Mode: flat -> matchina(states, transitions, init)
 // ---------------------------------------------------------------------------
 
-function generateFlat(model: Statemachine): Generated {
+function generateFlat(model: Statemachine): string {
   const states = model.states ?? [];
   const initial = getInitialState(model);
 
-  return toNode`
-import { matchina, defineStates } from "matchina";
+  const stateDefs = states.map((s) => `${INDENT}${s.name}: undefined,`).join("\n");
+  const transitions = states.map((s) => indent(generateFlatTransitions(s), 1)).join("\n");
+  const init = initial?.name ?? states[0]?.name ?? "";
 
-const states = defineStates({
-  ${join(states, (s) => toNode`${s.name}: undefined,`, {
-    appendNewLineIfNotEmpty: true,
-  })}
-});
-
-export const machine = matchina(states, {
-  ${join(states, (s) => generateFlatTransitions(s), {
-    appendNewLineIfNotEmpty: true,
-  })}
-}, "${initial?.name ?? states[0]?.name ?? ""}");
-`;
+  return [
+    `import { matchina, defineStates } from "matchina";`,
+    ``,
+    `const states = defineStates({`,
+    stateDefs,
+    `});`,
+    ``,
+    `export const machine = matchina(states, {`,
+    transitions,
+    `}, "${init}");`,
+    ``,
+  ].join("\n");
 }
 
-function generateFlatTransitions(state: State): Generated {
+function generateFlatTransitions(state: State): string {
   const ts = state.transitions ?? [];
   if (ts.length === 0) {
-    return toNode`${state.name}: {},`;
+    return `${state.name}: {},`;
   }
-  return toNode`${state.name}: {
-  ${join(
-    ts,
-    (t) => toNode`${quoteEvent(t.event)}: "${t.to?.ref?.name ?? t.to?.$refText}",`,
-    { appendNewLineIfNotEmpty: true }
-  )}
-  },`;
+  const body = ts
+    .map((t) => `${INDENT}${quoteEvent(t.event)}: "${t.to?.ref?.name ?? t.to?.$refText}",`)
+    .join("\n");
+  return `${state.name}: {\n${body}\n},`;
 }
 
 // ---------------------------------------------------------------------------
 // Mode: flattened -> createHSM({ initial, states })
 // ---------------------------------------------------------------------------
 
-function generateFlattened(model: Statemachine): Generated {
+function generateFlattened(model: Statemachine): string {
   const states = model.states ?? [];
   const initial = getInitialState(model);
+  const init = initial?.name ?? states[0]?.name ?? "";
 
-  return toNode`
-import { createHSM } from "matchina";
+  const stateDefs = states.map((s) => indent(generateHsmState(s), 2)).join("\n");
 
-export const machine = createHSM({
-  initial: "${initial?.name ?? states[0]?.name ?? ""}",
-  states: {
-    ${join(states, (s) => generateHsmState(s), {
-      appendNewLineIfNotEmpty: true,
-    })}
-  },
-});
-`;
+  return [
+    `import { createHSM } from "matchina";`,
+    ``,
+    `export const machine = createHSM({`,
+    `${INDENT}initial: "${init}",`,
+    `${INDENT}states: {`,
+    stateDefs,
+    `${INDENT}},`,
+    `});`,
+    ``,
+  ].join("\n");
 }
 
-function generateHsmState(state: State): Generated {
+function generateHsmState(state: State): string {
   const children = state.states ?? [];
-  const transitions = state.transitions ?? [];
   const hasChildren = children.length > 0;
-  const initial = getInitialState(state);
 
-  return toNode`${state.name}: {
-  ${
-    hasChildren
-      ? toNode`initial: "${initial?.name ?? children[0]?.name ?? ""}",
-  states: {
-    ${join(children, (c) => generateHsmState(c), {
-      appendNewLineIfNotEmpty: true,
-    })}
-  },`
-      : toNode``
+  const lines: string[] = [`${state.name}: {`];
+
+  if (hasChildren) {
+    const initial = getInitialState(state);
+    const init = initial?.name ?? children[0]?.name ?? "";
+    lines.push(`${INDENT}initial: "${init}",`);
+    lines.push(`${INDENT}states: {`);
+    lines.push(children.map((c) => indent(generateHsmState(c), 2)).join("\n"));
+    lines.push(`${INDENT}},`);
   }
-  ${generateHsmOn(state)}
-  },`;
+
+  const on = generateHsmOn(state);
+  if (on) lines.push(indent(on, 1));
+
+  lines.push(`},`);
+  return lines.join("\n");
 }
 
-function generateHsmOn(state: State): Generated {
+function generateHsmOn(state: State): string {
   const ts = state.transitions ?? [];
-  if (ts.length === 0) return toNode``;
-  return toNode`on: {
-  ${join(
-    ts,
-    (t) => toNode`${quoteEvent(t.event)}: "${resolveHsmTarget(state, t.to?.ref)}",`,
-    { appendNewLineIfNotEmpty: true }
-  )}
-  },`;
+  if (ts.length === 0) return "";
+  const body = ts
+    .map((t) => `${INDENT}${quoteEvent(t.event)}: "${resolveHsmTarget(state, t.to?.ref)}",`)
+    .join("\n");
+  return `on: {\n${body}\n},`;
 }
 
 /**
@@ -198,37 +206,37 @@ function resolveHsmTarget(source: State, target: State | undefined): string {
 // Mode: nested -> submachine() + nestedHsmRoot()
 // ---------------------------------------------------------------------------
 
-function generateNested(model: Statemachine): Generated {
+function generateNested(model: Statemachine): string {
   const states = model.states ?? [];
   // Each state with children becomes its own child machine factory.
   const factories = collectSubmachineStates(model);
+  const init = getInitialState(model)?.name ?? states[0]?.name ?? "";
 
-  return toNode`
-import { createMachine, defineStates } from "matchina";
-import { submachine, nestedHsmRoot } from "matchina/hsm";
+  const factoryDefs = factories.map((s) => generateNestedFactory(s)).join("\n\n");
+  const rootStateDefs = states.map((s) => `${INDENT}${generateNestedStateDef(s)}`).join("\n");
+  const rootTransitions = states.map((s) => indent(generateNestedRootTransitions(s), 2)).join("\n");
 
-${join(factories, (s) => generateNestedFactory(s), {
-    appendNewLineIfNotEmpty: true,
-  })}
-
-const rootStates = defineStates({
-  ${join(states, (s) => generateNestedStateDef(s), {
-    appendNewLineIfNotEmpty: true,
-  })}
-});
-
-const root = createMachine(
-  rootStates,
-  {
-    ${join(states, (s) => generateNestedRootTransitions(s), {
-      appendNewLineIfNotEmpty: true,
-    })}
-  },
-  "${getInitialState(model)?.name ?? states[0]?.name ?? ""}"
-);
-
-export const machine = nestedHsmRoot(root);
-`;
+  return [
+    `import { createMachine, defineStates } from "matchina";`,
+    `import { submachine, nestedHsmRoot } from "matchina/hsm";`,
+    ``,
+    factoryDefs,
+    ``,
+    `const rootStates = defineStates({`,
+    rootStateDefs,
+    `});`,
+    ``,
+    `const root = createMachine(`,
+    `${INDENT}rootStates,`,
+    `${INDENT}{`,
+    rootTransitions,
+    `${INDENT}},`,
+    `${INDENT}"${init}"`,
+    `);`,
+    ``,
+    `export const machine = nestedHsmRoot(root);`,
+    ``,
+  ].join("\n");
 }
 
 function collectSubmachineStates(model: State | Statemachine): State[] {
@@ -246,49 +254,46 @@ function factoryName(state: State): string {
   return `create${getFQN(state).split(".").join("")}`;
 }
 
-function generateNestedFactory(state: State): Generated {
+function generateNestedFactory(state: State): string {
   const children = state.states ?? [];
   const initial = getInitialState(state);
+  const init = initial?.name ?? children[0]?.name ?? "";
 
-  return toNode`
-function ${factoryName(state)}() {
-  const states = defineStates({
-    ${join(children, (c) => generateNestedStateDef(c), {
-      appendNewLineIfNotEmpty: true,
-    })}
-  });
-  return createMachine(
-    states,
-    {
-      ${join(children, (c) => generateNestedRootTransitions(c), {
-        appendNewLineIfNotEmpty: true,
-      })}
-    },
-    "${initial?.name ?? children[0]?.name ?? ""}"
-  );
-}
-`;
+  const stateDefs = children.map((c) => `${INDENT.repeat(2)}${generateNestedStateDef(c)}`).join("\n");
+  const transitions = children.map((c) => indent(generateNestedRootTransitions(c), 3)).join("\n");
+
+  return [
+    `function ${factoryName(state)}() {`,
+    `${INDENT}const states = defineStates({`,
+    stateDefs,
+    `${INDENT}});`,
+    `${INDENT}return createMachine(`,
+    `${INDENT.repeat(2)}states,`,
+    `${INDENT.repeat(2)}{`,
+    transitions,
+    `${INDENT.repeat(2)}},`,
+    `${INDENT.repeat(2)}"${init}"`,
+    `${INDENT});`,
+    `}`,
+  ].join("\n");
 }
 
-function generateNestedStateDef(state: State): Generated {
+function generateNestedStateDef(state: State): string {
   if ((state.states?.length ?? 0) > 0) {
-    return toNode`${state.name}: submachine(${factoryName(state)}, { id: "${state.name}" }),`;
+    return `${state.name}: submachine(${factoryName(state)}, { id: "${state.name}" }),`;
   }
-  return toNode`${state.name}: undefined,`;
+  return `${state.name}: undefined,`;
 }
 
-function generateNestedRootTransitions(state: State): Generated {
+function generateNestedRootTransitions(state: State): string {
   const ts = state.transitions ?? [];
   if (ts.length === 0) {
-    return toNode`${state.name}: {},`;
+    return `${state.name}: {},`;
   }
-  return toNode`${state.name}: {
-  ${join(
-    ts,
-    (t) => toNode`${quoteEvent(t.event)}: "${t.to?.ref?.name ?? t.to?.$refText}",`,
-    { appendNewLineIfNotEmpty: true }
-  )}
-  },`;
+  const body = ts
+    .map((t) => `${INDENT}${quoteEvent(t.event)}: "${t.to?.ref?.name ?? t.to?.$refText}",`)
+    .join("\n");
+  return `${state.name}: {\n${body}\n},`;
 }
 
 // ---------------------------------------------------------------------------

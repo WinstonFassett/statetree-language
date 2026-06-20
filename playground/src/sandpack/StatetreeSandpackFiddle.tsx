@@ -14,26 +14,58 @@ import "./sandpack.css";
 import { ShareButton } from "./ShareButton";
 import { useActiveClass } from "../lib/useActiveClass";
 
+import trafficLightMinimal from "../../../example/trafficlight-minimal.statetree?raw";
+import trafficLightHsm from "../../../example/trafficlight-hsm.statetree?raw";
+import toggle from "../../../example/toggle.statetree?raw";
+import authFlow from "../../../example/auth-flow.statetree?raw";
+import rockPaperScissors from "../../../example/rock-paper-scissors.statetree?raw";
+import fetcherAdvanced from "../../../example/fetcher-advanced.statetree?raw";
+import comboboxHsm from "../../../example/combobox-hsm.statetree?raw";
+import hsmCheckout from "../../../example/hsm-checkout.statetree?raw";
+
+// Examples adapted from the Matchina example gallery
+// (https://github.com/WinstonFassett/matchina) — topology only, since the DSL
+// models states + events and has no state data.
 const EXAMPLES = [
   {
-    label: "Traffic Light (HSM)",
-    description: "Hierarchical: On/Off wrapping tick loop",
-    code: `initialState On\n\nstates {\n  On {\n    switch => Off\n    loop on tick { Red  Green  Yellow }\n  }\n  Off {\n    switch => On\n    loop on flash { RedOn  RedOff }\n  }\n}`,
-  },
-  {
-    label: "Traffic Light",
-    description: "Simple loop — one switch drives three states",
-    code: `loop on switch {\n  On { loop on tick { Red  Green Yellow } }\n  Off { loop on flash { RedOn RedOff } }\n}`,
-  },
-  {
     label: "Traffic Light (minimal)",
-    description: "Bare minimum — three states, one event",
-    code: `loop on tick { Red  Green Yellow }`,
+    description: "Bare minimum — three states, one looping event",
+    code: trafficLightMinimal,
+  },
+  {
+    label: "Toggle",
+    description: "Two states, on/off with explicit events",
+    code: toggle,
+  },
+  {
+    label: "Traffic Light (HSM)",
+    description: "Broken / Working / Maintenance; Working runs the light cycle",
+    code: trafficLightHsm,
   },
   {
     label: "Auth Flow",
-    description: "Multi-step: email → OTP → authenticated",
-    code: `initialState Initializing\n\nstates {\n  Initializing {\n    validUser => Authenticated\n    noUser    => AwaitingEmail\n  }\n  AwaitingEmail {\n    gotEmail => CheckingEmail\n  }\n  CheckingEmail {\n    sentOtp => AwaitingOtp\n  }\n  AwaitingOtp {\n    submit => SubmittingOtp\n  }\n  SubmittingOtp {\n    valid   => Authenticated\n    invalid => OtpInvalid\n  }\n  OtpInvalid {\n    resend => RequestingNewOtp\n  }\n  RequestingNewOtp {\n    sentOtp => AwaitingOtp\n  }\n  Authenticated {}\n}`,
+    description: "Login / register / reset — returns full circle to logged out",
+    code: authFlow,
+  },
+  {
+    label: "Rock Paper Scissors",
+    description: "Round loop with game-over branch",
+    code: rockPaperScissors,
+  },
+  {
+    label: "Fetcher (advanced)",
+    description: "Fetch lifecycle with refetch/reset from every terminal state",
+    code: fetcherAdvanced,
+  },
+  {
+    label: "Combobox (HSM)",
+    description: "Inactive / Active, with Empty ↔ Suggesting child states",
+    code: comboboxHsm,
+  },
+  {
+    label: "Checkout (HSM)",
+    description: "Cart → Shipping → Payment submachine → Review → Confirmation",
+    code: hsmCheckout,
   },
 ];
 

@@ -1,9 +1,10 @@
 import constate from 'constate';
 import { useRef } from 'react';
 import { Statemachine } from '../../../src/language/generated/ast';
-import { buildShapeFromAst } from '../../../src/language/codegen/buildShapeFromAst';
+import { buildDefinitionFromAst } from '../../../src/language/codegen/buildDefinitionFromAst';
 import { matchina, defineStates, createHSM } from 'matchina';
 import { useMachineMaybe } from 'matchina/react';
+import type { MachineShape } from 'matchina/shape';
 
 export const [StateMachineInstanceProvider, useStateMachineContext] = constate(useStateMachine)
 
@@ -12,6 +13,10 @@ export type StateMachineInstance = {
   model: Statemachine | undefined
   events: string[]
   send(event: string): void
+  /** The live Matchina machine (has `.shape`, `.getState()`, etc.). */
+  machine: any
+  /** Authoritative runtime shape, read from the live machine. */
+  shape: MachineShape | undefined
 }
 
 /** Collect available events from the current state and all ancestor states (HSM parent fallback). */
@@ -35,17 +40,17 @@ function getAvailableActionsHsm(transitions: Record<string, Record<string, strin
   return events;
 }
 
-function isHsmShape(shape: ReturnType<typeof buildShapeFromAst>): boolean {
-  for (const parent of shape.hierarchy.values()) {
+function isHsm(def: ReturnType<typeof buildDefinitionFromAst>): boolean {
+  for (const parent of def.hierarchy.values()) {
     if (parent !== undefined) return true;
   }
   return false;
 }
 
-function buildHsmConfig(shape: ReturnType<typeof buildShapeFromAst>): any {
+function buildHsmConfig(def: ReturnType<typeof buildDefinitionFromAst>): any {
   // Find root states (no parent)
   const rootKeys: string[] = [];
-  for (const [fqn, parent] of shape.hierarchy.entries()) {
+  for (const [fqn, parent] of def.hierarchy.entries()) {
     if (parent === undefined) rootKeys.push(fqn);
   }
 
@@ -53,13 +58,13 @@ function buildHsmConfig(shape: ReturnType<typeof buildShapeFromAst>): any {
     const node: any = {};
     // direct children
     const children: string[] = [];
-    for (const [f, p] of shape.hierarchy.entries()) {
+    for (const [f, p] of def.hierarchy.entries()) {
       if (p === fqn) children.push(f);
     }
     if (children.length > 0) {
       // find initial child
       const initialChild = children.find(c => {
-        const initial = shape.initialKey;
+        const initial = def.initialKey;
         return initial === c || initial?.startsWith(c + '.');
       }) ?? children[0];
       node.initial = initialChild.split('.').pop();
@@ -68,16 +73,16 @@ function buildHsmConfig(shape: ReturnType<typeof buildShapeFromAst>): any {
         node.states[child.split('.').pop()!] = buildNode(child);
       }
     }
-    const eventMap = shape.transitions.get(fqn);
+    const eventMap = def.transitions.get(fqn);
     if (eventMap && eventMap.size > 0) {
       node.on = {};
-      const parentFqn = shape.hierarchy.get(fqn); // undefined for root states
+      const parentFqn = def.hierarchy.get(fqn); // undefined for root states
       for (const [event, target] of eventMap.entries()) {
-        const targetParentFqn = shape.hierarchy.get(target);
+        const targetParentFqn = def.hierarchy.get(target);
         if (targetParentFqn === parentFqn) {
           // target is a sibling of fqn — bare name (Matchina resolves relative to same level)
           node.on[event] = target.split('.').pop()!;
-        } else if (targetParentFqn === shape.hierarchy.get(parentFqn ?? '')) {
+        } else if (targetParentFqn === def.hierarchy.get(parentFqn ?? '')) {
           // target is a sibling of fqn's parent — needs ^ escape
           node.on[event] = '^' + target.split('.').pop()!;
         } else {
@@ -94,7 +99,7 @@ function buildHsmConfig(shape: ReturnType<typeof buildShapeFromAst>): any {
     states[key] = buildNode(key);
   }
 
-  return { initial: shape.initialKey.split('.')[0], states };
+  return { initial: def.initialKey.split('.')[0], states };
 }
 
 export function useStateMachine({ model }: { model: Statemachine | undefined }) {
@@ -102,31 +107,33 @@ export function useStateMachine({ model }: { model: Statemachine | undefined }) 
   const shapeKeysRef = useRef<string>('');
 
   if (model) {
-    const shape = buildShapeFromAst(model);
-    const transitionFingerprint = [...shape.transitions.entries()]
+    // AST → machine *definition* (structural data for construction). The
+    // authoritative shape is read back off the live machine below, not here.
+    const def = buildDefinitionFromAst(model);
+    const transitionFingerprint = [...def.transitions.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([s, m]) => `${s}:${[...m.entries()].map(([e, t]) => `${e}->${t}`).join(',')}`)
       .join(';');
-    const shapeKeys = [...shape.states.keys()].sort().join(',') + '|' + transitionFingerprint;
+    const defKeys = [...def.states.keys()].sort().join(',') + '|' + transitionFingerprint;
 
-    if (shapeKeys !== shapeKeysRef.current) {
-      shapeKeysRef.current = shapeKeys;
+    if (defKeys !== shapeKeysRef.current) {
+      shapeKeysRef.current = defKeys;
 
-      if (isHsmShape(shape)) {
-        const config = buildHsmConfig(shape);
+      if (isHsm(def)) {
+        const config = buildHsmConfig(def);
         machineRef.current = createHSM(config);
       } else {
         const transitions: Record<string, Record<string, string>> = {};
-        for (const [stateKey, eventMap] of shape.transitions) {
+        for (const [stateKey, eventMap] of def.transitions) {
           transitions[stateKey] = {};
           for (const [event, target] of eventMap) {
-            if (shape.states.has(target)) {
+            if (def.states.has(target)) {
               transitions[stateKey][event] = target;
             }
           }
         }
-        const stateKeys = [...shape.states.keys()];
-        const initialKey = shape.initialKey || stateKeys[0];
+        const stateKeys = [...def.states.keys()];
+        const initialKey = def.initialKey || stateKeys[0];
         const states = defineStates(Object.fromEntries(stateKeys.map(k => [k, undefined])));
         machineRef.current = matchina(states, transitions, initialKey);
       }
@@ -137,6 +144,8 @@ export function useStateMachine({ model }: { model: Statemachine | undefined }) 
   useMachineMaybe(machine);
 
   const stateKey: string | undefined = machine?.getState()?.key;
+  // Authoritative runtime shape, straight off the live machine.
+  const shape: MachineShape | undefined = machine?.shape?.getState();
   const events: string[] = machine && stateKey
     ? getAvailableActionsHsm(machine.transitions, stateKey)
     : [];
@@ -145,5 +154,5 @@ export function useStateMachine({ model }: { model: Statemachine | undefined }) 
     machine?.send(event);
   }
 
-  return { stateKey, send, model, events } satisfies StateMachineInstance;
+  return { stateKey, send, model, events, machine, shape } satisfies StateMachineInstance;
 }

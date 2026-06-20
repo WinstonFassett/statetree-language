@@ -1,0 +1,12 @@
+initialState Off
+
+states {
+  Off {
+    toggle => On
+    turnOn => On
+  }
+  On {
+    toggle  => Off
+    turnOff => Off
+  }
+}

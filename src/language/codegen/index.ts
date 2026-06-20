@@ -1,4 +1,4 @@
-export * from './buildShapeFromAst'
+export * from './buildDefinitionFromAst'
 export * from './expandAst'
 export * from './generateJavaScript'
 export * from './generateMatchina'

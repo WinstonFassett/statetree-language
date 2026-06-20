@@ -58,15 +58,15 @@ export const DockView = () => {
             },
         });
         event.api.addPanel({
-            id: 'Code',
+            id: 'React JSX',
             component: 'editor',
             tabComponent: 'customTab',
             params: {
                 filename: '/App.js',
-                language: 'json',
+                language: 'javascript',
             },
             position: { referencePanel: 'DSL', direction: 'below' },
-        });          
+        });
        
        
         // event.api.addPanel({
@@ -135,8 +135,8 @@ export const DockView = () => {
             params: {
                 someProps: 'World',
             },
-            position: { referencePanel: 'Code', direction: 'right' },
-        });        
+            position: { referencePanel: 'React JSX', direction: 'right' },
+        });
         
     };
 

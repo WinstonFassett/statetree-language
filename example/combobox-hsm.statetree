@@ -1,0 +1,19 @@
+initialState Inactive
+
+states {
+  Inactive {
+    focus => Active
+  }
+  Active {
+    blur => Inactive
+    states {
+      Empty {
+        type => Suggesting
+      }
+      Suggesting {
+        select => Empty
+        type   => Suggesting
+      }
+    }
+  }
+}

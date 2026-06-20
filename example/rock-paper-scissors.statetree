@@ -1,0 +1,20 @@
+initialState WaitingForPlayer
+
+states {
+  WaitingForPlayer {
+    selectMove => PlayerChose
+  }
+  PlayerChose {
+    computerSelectMove => Judging
+  }
+  Judging {
+    judge => RoundComplete
+  }
+  RoundComplete {
+    nextRound => WaitingForPlayer
+    gameOver  => GameOver
+  }
+  GameOver {
+    newGame => WaitingForPlayer
+  }
+}

@@ -1,12 +1,16 @@
-initialState On
+initialState Working
 
 states {
-  On {
-    switch => Off
+  Broken {
+    repair      => Working
+    maintenance => Maintenance
+  }
+  Working {
+    break       => Broken
+    maintenance => Maintenance
     loop on tick { Red  Green  Yellow }
   }
-  Off {
-    switch => On
-    loop on flash { RedOn  RedOff }
+  Maintenance {
+    complete => Working
   }
 }

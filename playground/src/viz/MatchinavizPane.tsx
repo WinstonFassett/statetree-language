@@ -1,23 +1,12 @@
-import { useStore } from '@nanostores/react';
 import { SvgInspector } from '@matchina/viz-svg';
-import { buildShapeFromAst } from '../../../src/language/codegen';
-import * as store from '../store';
-import { useMemo } from 'react';
 import { useStateMachineContext } from '../statetree-machine/useStateMachine';
 
 export function MatchinavizPane() {
-  const model = useStore(store.latestValidModel);
   const machine = useStateMachineContext();
   const stateName: string = machine.stateKey ?? '';
 
-  const shape = useMemo(() => {
-    if (!model) return null;
-    try {
-      return buildShapeFromAst(model);
-    } catch {
-      return null;
-    }
-  }, [model]);
+  // Authoritative shape comes from the live machine, not a re-derivation of the AST.
+  const shape = machine.shape ?? null;
 
   if (!shape) {
     return (

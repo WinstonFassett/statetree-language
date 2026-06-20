@@ -1,0 +1,40 @@
+initialState Cart
+
+states {
+  Cart {
+    proceed => Shipping
+  }
+  Shipping {
+    back    => Cart
+    proceed => Payment
+  }
+  Payment {
+    back      => Shipping
+    childExit => Review
+    states {
+      MethodEntry {
+        authorize => Authorizing
+      }
+      Authorizing {
+        authRequired  => AuthChallenge
+        authSucceeded => Authorized
+        authFailed    => AuthorizationError
+      }
+      AuthChallenge {
+        authSucceeded => Authorized
+        authFailed    => AuthorizationError
+      }
+      AuthorizationError {
+        retry => MethodEntry
+      }
+      Authorized {}
+    }
+  }
+  Review {
+    back        => Cart
+    submitOrder => Confirmation
+  }
+  Confirmation {
+    restart => Cart
+  }
+}
