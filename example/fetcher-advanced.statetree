@@ -1,0 +1,34 @@
+initialState Idle
+
+states {
+  Idle {
+    fetch => Fetching
+  }
+  Fetching {
+    fetched      => ProcessingResponse
+    reject       => Error
+    abort        => Aborted
+    timeout      => TimedOut
+    networkError => NetworkError
+  }
+  ProcessingResponse {
+    resolve => Resolved
+    error   => Error
+    refetch => Fetching
+  }
+  Resolved {
+    refetch => Fetching
+  }
+  Error {
+    refetch => Fetching
+  }
+  NetworkError {
+    refetch => Fetching
+  }
+  Aborted {
+    refetch => Fetching
+  }
+  TimedOut {
+    refetch => Fetching
+  }
+}

@@ -19,7 +19,7 @@ import { importXState } from '../sandpack/codegen';
 export const DockView = () => {
     const { sandpack } = useSandpack()
     const onReady = (event: DockviewReadyEvent) => {
-
+        (window as any).__dockviewApi = event.api;
 
         // event.api.addPanel({
         //     id: 'machine2.statetree',
@@ -30,128 +30,46 @@ export const DockView = () => {
         //     },
         //     position: { referencePanel: 'machine.statetree', direction: 'below' }
         //   });
-        event.api.addPanel({
-            id: 'XState',
-            component: 'editor',
-            tabComponent: 'customTab',
-            params: {
-                filename: '/machine.json',
-                language: 'json',
-                // afterEdit:  debounce((code: string, filename: string) => {
-                //   // try import and update statetree
-                // //   console.log('user changed machine.json')
-                // //   console.log('todo: import xstate', code)
-                //   // let data
-                //   // try {
-                //   //     importXState(sandpack, code)
-                //   //     data = JSON.parse(code)
-                //   //     console.log({ data })
-                      
-                //   // } catch (err) {
-                //   //     console.log('failed to import xstate', err)
-                //   // }
-                // }, 500)
-            },          
-          });
-        event.api.addPanel({
-            id: 'DSL',
-            component: 'statetree',
-            tabComponent: 'customTab',
-            params: {
-                someProps: 'machine.statetree',
+        event.api.fromJSON({
+            grid: {
+                root: {
+                    type: 'branch',
+                    data: [
+                        {
+                            type: 'branch',
+                            data: [
+                                { type: 'leaf', data: { views: ['DSL'], activeView: 'DSL', id: '1' }, size: 426 },
+                                { type: 'leaf', data: { views: ['Matchina'], activeView: 'Matchina', id: '2' }, size: 426 },
+                                { type: 'leaf', data: { views: ['XState'], activeView: 'XState', id: '3' }, size: 426 },
+                            ],
+                            size: 335,
+                        },
+                        {
+                            type: 'branch',
+                            data: [
+                                { type: 'leaf', data: { views: ['React JSX'], activeView: 'React JSX', id: '4' }, size: 426 },
+                                { type: 'leaf', data: { views: ['Viz'], activeView: 'Viz', id: '5' }, size: 426 },
+                                { type: 'leaf', data: { views: ['Preview'], activeView: 'Preview', id: '6' }, size: 426 },
+                            ],
+                            size: 335,
+                        },
+                    ],
+                    size: 671,
+                },
+                width: 1278,
+                height: 671,
+                orientation: 'VERTICAL',
             },
-        });
-        event.api.addPanel({
-            id: 'Code',
-            component: 'editor',
-            tabComponent: 'customTab',
-            params: {
-                filename: '/App.js',
-                language: 'json',
+            panels: {
+                'DSL': { id: 'DSL', contentComponent: 'statetree', tabComponent: 'customTab', params: { someProps: 'machine.statetree' }, title: 'DSL' },
+                'Matchina': { id: 'Matchina', contentComponent: 'editor', tabComponent: 'customTab', params: { filename: '/machine.matchina.ts', language: 'typescript' }, title: 'Matchina' },
+                'XState': { id: 'XState', contentComponent: 'editor', tabComponent: 'customTab', params: { filename: '/machine.json', language: 'json' }, title: 'XState' },
+                'React JSX': { id: 'React JSX', contentComponent: 'editor', tabComponent: 'customTab', params: { filename: '/App.js', language: 'javascript' }, title: 'React JSX' },
+                'Viz': { id: 'Viz', contentComponent: 'matchina-viz', tabComponent: 'customTab', params: {}, title: 'Viz' },
+                'Preview': { id: 'Preview', contentComponent: 'preview', tabComponent: 'customTab', params: {}, title: 'Preview' },
             },
-            position: { referencePanel: 'DSL', direction: 'below' },
-        });          
-       
-       
-        // event.api.addPanel({
-        //   id: 'forceGraph',
-        //   component: 'forceGraph',
-        //   params: {
-        //       someProps: 'World',
-        //   },
-        //   position: { referencePanel: 'viz', direction: 'right' },
-        // });
-        // event.api.addPanel({
-        //     id: 'mermaid',
-        //     component: 'mermaid',
-        //     params: {},            
-        //   });
-        // event.api.addPanel({
-        //   id: 'debug',
-        //   component: 'debug',
-        //   params: {
-        //       someProps: 'World',
-        //   },
-        //   position: { referencePanel: 'machine.statetree', direction: 'right' },
-        // });
-        
-        event.api.addPanel({
-            id: 'Diagram',
-            component: 'plantuml',
-            tabComponent: 'customTab',
-            params: {
-                someProps: 'World',
-            },
-            position: { referencePanel: 'DSL', direction: 'right' },
-        });
-        event.api.addPanel({
-            id: 'State',
-            component: 'viz',
-            tabComponent: 'customTab',
-            params: {
-                someProps: 'World',
-            },
-            // position: { referencePanel: 'machine.statetree', direction: 'right' },
-        }); 
-        // event.api.addPanel({
-        //     id: 'xstate.json',
-        //     component: 'editor',
-        //     // tabComponent: 'customTab', // optional custom header
-        //     params: {
-        //         filename: '/xstate.json',
-        //         language: 'json'
-        //     },
-        //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
-        // });
-        
-        // event.api.addPanel({
-        //   id: 'state.json',
-        //   component: 'editor',
-        //   // tabComponent: 'customTab', // optional custom header
-        //   params: {
-        //       filename: '/state.json',
-        //   },
-        // })
-
-      //   event.api.addPanel({
-      //     id: 'state.json',
-      //     component: 'editor',
-      //     // tabComponent: 'customTab', // optional custom header
-      //     params: {
-      //         filename: '/state.json',
-      //         language: 'json'
-      //     },
-      //     // position: { referencePanel: 'machine.statetree', direction: 'below' },
-      // });
-        event.api.addPanel({
-            id: 'Preview',
-            component: 'preview',
-            tabComponent: 'customTab',
-            params: {
-                someProps: 'World',
-            },
-            position: { referencePanel: 'Code', direction: 'right' },
-        });        
+            activeGroup: '1',
+        } as any);
         
     };
 

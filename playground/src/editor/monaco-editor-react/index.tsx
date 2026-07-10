@@ -77,22 +77,39 @@ export default class MonacoEditorReactComp extends React.Component<MonacoEditorP
             // once awaiting isStarting is done onLoad is called if available
             onLoad && onLoad();
 
-            if (onTextChanged) {
-                const model = this.wrapper.getModel();
-                if (model) {
-                    const verifyModelContent = () => {
-                        const modelText = model.getValue();
-                        onTextChanged(modelText, modelText !== userConfig.wrapperConfig.editorAppConfig.code);
-                    };
-
-                    this._subscription = model.onDidChangeContent(() => {
-                        verifyModelContent();
-                    });
-                    // do it initially
-                    verifyModelContent();
-                }
-            }
+            this.subscribeToModel(true);
         }
+    }
+
+    /**
+     * Bind onTextChanged to the wrapper's *current* model. The wrapper swaps the
+     * model on updateModel(), so this must be re-run after every model swap —
+     * otherwise the old subscription points at a dead model and edits to the new
+     * one never fire onTextChanged (the editor goes "read only" from the host's
+     * point of view). Disposes any prior subscription first.
+     *
+     * @param emitInitial Fire onTextChanged once with the current model text.
+     *   Only desired on first init. After a model SWAP the new content was just
+     *   pushed in by the host, so re-emitting it would echo stale text back and
+     *   clobber the host's file — pass false in that case.
+     */
+    subscribeToModel(emitInitial = false): void {
+        const { onTextChanged, userConfig } = this.props;
+        if (!onTextChanged) return;
+        const model = this.wrapper.getModel();
+        if (!model) return;
+        if (this._subscription) {
+            this._subscription.dispose();
+            this._subscription = null;
+        }
+        const verifyModelContent = () => {
+            const modelText = model.getValue();
+            onTextChanged(modelText, modelText !== userConfig.wrapperConfig.editorAppConfig.code);
+        };
+        this._subscription = model.onDidChangeContent(() => {
+            verifyModelContent();
+        });
+        if (emitInitial) verifyModelContent();
     }
 
     updateLayout(): void {

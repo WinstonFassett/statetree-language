@@ -1,0 +1,42 @@
+initialState LoggedOut
+
+states {
+  LoggedOut {
+    showLogin    => LoginForm
+    showRegister => RegisterForm
+  }
+  LoginForm {
+    login             => LoggingIn
+    goToRegister      => RegisterForm
+    goToPasswordReset => PasswordResetForm
+    cancel            => LoggedOut
+  }
+  RegisterForm {
+    register  => Registering
+    goToLogin => LoginForm
+    cancel    => LoggedOut
+  }
+  PasswordResetForm {
+    requestReset => RequestingPasswordReset
+    goToLogin    => LoginForm
+    cancel       => LoggedOut
+  }
+  LoggingIn {
+    success => LoggedIn
+    failure => LoginForm
+  }
+  Registering {
+    success => LoggedIn
+    failure => RegisterForm
+  }
+  RequestingPasswordReset {
+    success => PasswordResetSent
+    failure => PasswordResetForm
+  }
+  PasswordResetSent {
+    goToLogin => LoginForm
+  }
+  LoggedIn {
+    logout => LoggedOut
+  }
+}

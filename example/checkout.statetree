@@ -1,36 +1,31 @@
-initialState CheckingOutAsGuest
+initialState Initializing
 
-CheckingOutAsGuest {
-    // switch => CheckingOutAsSaved
+states {
+  Initializing {
+    validUser => Authenticated
+    noUser    => AwaitingEmail
+  }
+  AwaitingEmail {
+    gotEmail => CheckingEmail
+  }
+  CheckingEmail {
+    sentOtp => AwaitingOtp
+  }
+  AwaitingOtp {
+    submit => SubmittingOtp
+  }
+  SubmittingOtp {
+    valid   => Authenticated
+    invalid => OtpInvalid
+  }
+  OtpInvalid {
+    resend => RequestingNewOtp
+  }
+  RequestingNewOtp {
+    sentOtp => AwaitingOtp
+  }
+  Authenticated {
     continueAsGuest => ContinuingAsGuest
-    Initializing {
-        validUser => StartedAsSaved
-        noUser => AwaitingEmail
-    }
-    AwaitingEmail {
-        gotEmail => CheckingEmail
-    }
-    CheckingEmail {
-        sentOtp => AwaitingOtp
-    }
-    AwaitingOtp {
-        submit => SubmittingOtp
-    }
-    SubmittingOtp {
-        valid => Authenticated
-        invalid => OtpInvalid
-    }
-    OtpInvalid {
-        resent => RequestingNewOtp
-    }
-    RequestingNewOtp {
-        sentOtp => AwaitingOtp
-    }
-    ContinuingAsGuest {
-    }
-}
-CheckingOutAsSaved {
-    continueAsGuest => ContinuingAsGuest
-    StartedAsSaved {}
-    Authenticated {}
+  }
+  ContinuingAsGuest {}
 }

@@ -12,7 +12,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import { generateJavaScript } from '../../../src/language/codegen';
 import { DocumentChangeResponse, LangiumAST } from '../../../src/langium-utils/langium-ast';
 import { Statemachine } from '../../../src/language/generated/ast';
-import { code as codeStore, theme } from '../store'
+import { code as codeStore, theme, requestedDslContent } from '../store'
 import { useStore } from '@nanostores/react';
 
 const MonacoEditorReactComp = lazy(() => import('./monaco-editor-react')) ;
@@ -117,6 +117,14 @@ export function StatetreeEditor ({ value, onChange, onAstCreated, ...rest }: { v
               "workbench.colorTheme": "${getTheme(isDark)}"
             }`
           })
+        })
+        requestedDslContent.subscribe(content => {
+          if (content === null) return;
+          const m = monacoEditor.current?.getEditorWrapper()?.getModel();
+          if (m) {
+            m.setValue(content);
+            requestedDslContent.set(null);
+          }
         })
         // verify we can get a ref to the language client
         const lc = monacoEditor.current.getEditorWrapper()

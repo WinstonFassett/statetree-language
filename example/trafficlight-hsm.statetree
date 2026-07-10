@@ -1,0 +1,16 @@
+initialState Working
+
+states {
+  Broken {
+    repair      => Working
+    maintenance => Maintenance
+  }
+  Working {
+    break       => Broken
+    maintenance => Maintenance
+    loop on tick { Red  Green  Yellow }
+  }
+  Maintenance {
+    complete => Working
+  }
+}

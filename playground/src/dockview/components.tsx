@@ -14,6 +14,7 @@ import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState } from 're
 import { SandpackPreviewPane } from '../sandpack/SandpackPreviewPane';
 import { HoistedDockviewPanel } from './HoistedDockViewPanel';
 import { RenderWhenVisible } from './RenderWhenVisible';
+import { MatchinavizPane } from '../viz/MatchinavizPane';
 
 const StateMachinePlantUmlPane = lazy(() => import('../viz/StateMachinePlantUmlPane'));
 
@@ -39,6 +40,9 @@ export const components: PanelCollection<IDockviewPanelProps> = {
   viz: (props: IDockviewPanelProps<{ someProps: string; }>) => {
     return (<StateMachinePane />);
   },
+  'matchina-viz': (props: IDockviewPanelProps<{}>) => {
+    return (<MatchinavizPane />);
+  },
   // mermaid: (props: IDockviewPanelProps<{}>) => {
   //   return (<StateMachineMermaidPane />)
   // },
@@ -61,15 +65,14 @@ export const components: PanelCollection<IDockviewPanelProps> = {
     )
   },
   preview: HoistedDockviewPanel((props: IDockviewPanelProps<{ someProps: string; }>) => {
-    return <SandpackPreview showOpenInCodeSandbox={false} showSandpackErrorOverlay={true} />
+    return <SandpackPreview showOpenInCodeSandbox={false} showRefreshButton={false} showNavigator={false} showSandpackErrorOverlay={true} />
   }),
 };
 export const headers: PanelCollection<IDockviewPanelHeaderProps> = {
   customTab: (props: IDockviewPanelHeaderProps) => {
     return (
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center', height: '100%', padding: '0 12px', fontSize: 13, fontFamily: 'var(--font-sans)' }}>
         <span>{props.api.title}</span>
-        {/* <span onClick={() => props.api.close()}>{'[x]'}</span> */}
       </div>
     );
   },

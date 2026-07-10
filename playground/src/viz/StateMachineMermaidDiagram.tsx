@@ -74,10 +74,10 @@ ${rows.join('\n')}
     states.forEach((state, index) => {
       allStates.add(state)
       const key = state.name
-      const isActive = key === machine.state?.name
+      const isActive = key === machine.stateKey
       // const state = definition.states[key];
       // console.log("state", key, state);
-      const ifactive = key === machine.state?.name ? ":::active" : "";
+      const ifactive = key === machine.stateKey ? ":::active" : "";
       // rows.push(["    ", key, ifactive].join(""));
       let renderedState = false
       if (state.transitions) {
@@ -142,7 +142,7 @@ ${rows.join("\n")}
       const key = state.name
       // const state = definition.states[key];
       // console.log("state", key, state);
-      const ifactive = key === machine.state?.name ? ":::active" : "";
+      const ifactive = key === machine.stateKey ? ":::active" : "";
       rows.push(["    ", key, ifactive].join(""));
       if (state.transitions) {
         state.transitions.forEach((transition) => {

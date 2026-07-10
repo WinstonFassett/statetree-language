@@ -1,9 +1,18 @@
 import { AstNode, CstNode, DocumentState, Reference, getDocument, isAstNode, isAstNodeDescription, isLinkingError } from "langium";
 import { State, Statemachine } from "../generated/ast";
 
+// Marker key used to make expansion idempotent. expandAst mutates the model in
+// place by pushing sugar (sequence/loop) transitions; without this guard a
+// second call would push them again and duplicate every transition.
+const EXPANDED = Symbol.for("statetree.expandAst.expanded");
+
 export function expandAst<T extends(State|Statemachine)>(model: T): T {
   // console.log('EXPAND AST', model)
-  if (model.sequence || model.loop) {    
+  if ((model as any)[EXPANDED]) {
+    return model;
+  }
+  Object.defineProperty(model, EXPANDED, { value: true, enumerable: false, configurable: true });
+  if (model.sequence || model.loop) {
     if (!model.init) {
       const firstState = model.states?.[0]
       if (firstState) {

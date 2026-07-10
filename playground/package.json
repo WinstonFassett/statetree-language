@@ -8,6 +8,8 @@
     "dev": "NODE_OPTIONS=--experimental-import-meta-resolve vite --config vite.config.ts",
     "build": "NODE_OPTIONS=--max-old-space-size=8192 vite build",
     "prebuild": "npm run copy:worker && npm run copy:monarch-syntax",
+    "build:ghpages": "npm run copy:worker && npm run copy:monarch-syntax && NODE_OPTIONS=--max-old-space-size=8192 vite build --base=/statetree-language/",
+    "deploy:ghpages": "npm run build:ghpages && gh-pages -d dist",
     "copy:worker": "shx cp -fr ../out/language/statetree-server-worker.js ./libs/statetree-server-worker.js",
     "copy:monarch-syntax": "shx cp -fr ../out/syntaxes/ ./libs/syntaxes",
     "start": "npx serve dist",
@@ -15,8 +17,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@matchina/viz-svg": "^0.1.0",
     "@types/uuid": "^9.0.2",
     "daisyui": "^3.1.5",
+    "matchina": "^0.3.0",
     "mermaid": "^10.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -58,6 +62,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
     "force-graph": "^1.43.1",
+    "gh-pages": "^6.3.0",
     "lodash.debounce": "^4.0.8",
     "monaco-editor-wrapper": "^3.0.1",
     "monaco-jsx-syntax-highlight": "^1.2.0",

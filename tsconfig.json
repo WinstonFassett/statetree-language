@@ -11,6 +11,9 @@
     "noImplicitOverride": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "paths": {
+      "matchina/shape": ["./node_modules/matchina/dist/shape/index.d.ts"]
+    },
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
