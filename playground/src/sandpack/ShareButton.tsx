@@ -31,7 +31,8 @@ export function ShareButton({className="px-3 py-1 text-sm rounded font-medium tr
     const text = stringifySession()
     // const encodedText = encodeURIComponent(text);
     const encodedText = btoa(unescape(encodeURIComponent(text)));
-    const shareLink = `${window.location.origin}/#${encodedText}`;
+    const baseUrl = window.location.href.split('#')[0];
+    const shareLink = `${baseUrl}#${encodedText}`;
     window.history.pushState({ path: shareLink }, '', shareLink);
     copyToClipboard(shareLink);
     alert('Link copied to clipboard!');
