@@ -22,15 +22,15 @@ export function ShareButton({className="btn btn-primary", ...props} = {} as any)
     if (encodedText) {
       console.log({ encodedText })
       // const decodedText = decodeURIComponent(encodedText);
-      const decodedText = atob(encodedText);
+      const decodedText = decodeURIComponent(escape(atob(encodedText)));
       const sessionData = parseSession(decodedText)
-      restoreSession(sandpack, sessionData)      
+      restoreSession(sandpack, sessionData)
     }
   }
   function handleShareClick() {
     const text = stringifySession()
     // const encodedText = encodeURIComponent(text);
-    const encodedText = btoa(text);
+    const encodedText = btoa(unescape(encodeURIComponent(text)));
     const shareLink = `${window.location.origin}/#${encodedText}`;
     window.history.pushState({ path: shareLink }, '', shareLink);
     copyToClipboard(shareLink);
